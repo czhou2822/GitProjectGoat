@@ -47,6 +47,7 @@ AProjectGoatCharacter::AProjectGoatCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	UE_LOG(LogTemp, Warning, TEXT("Hello Iron Goat"));
+	UE_LOG(LogTemp, Warning, TEXT("Hello Sonw Boi"));
 }
 
 //////////////////////////////////////////////////////////////////////////
