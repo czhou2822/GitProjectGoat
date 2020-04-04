@@ -48,6 +48,7 @@ AProjectGoatCharacter::AProjectGoatCharacter()
 
 	UE_LOG(LogTemp, Warning, TEXT("Hello Iron Goat"));
 	UE_LOG(LogTemp, Warning, TEXT("Hello Sonw Boi"));
+	UE_LOG(LogTemp, Warning, TEXT("Hello Sonw girl"));
 }
 
 //////////////////////////////////////////////////////////////////////////
