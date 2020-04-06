@@ -116,6 +116,17 @@ void ATPSCharacter::AimEnd()
 
 void ATPSCharacter::FireStart()
 {
+	Fire();
+	GetWorld()->GetTimerManager().SetTimer(fireTimerHandle, this, &ATPSCharacter::Fire, 0.1, true);
+}
+
+void ATPSCharacter::FireEnd()
+{
+	GetWorld()->GetTimerManager().ClearTimer(fireTimerHandle);
+}
+
+void ATPSCharacter::Fire()
+{
 	if (bAiming)
 	{
 		PlayAnimMontage(fireAnima);
@@ -125,7 +136,7 @@ void ATPSCharacter::FireStart()
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
 
-		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
+		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 1.f, 0, 5.f);
 
 
 		FCollisionQueryParams cqp;
@@ -140,15 +151,13 @@ void ATPSCharacter::FireStart()
 				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 				//hr.GetActor()->Destroy();
-				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
+				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 100, FColor::Red, false, 2.f, 0, 5.f);
+				OnHitLandScape(hr.Location);
 			}
 		}
 	}
-
 }
 
-void ATPSCharacter::FireEnd()
-{
-}
+
 
 
