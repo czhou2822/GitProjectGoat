@@ -10,6 +10,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -150,9 +151,10 @@ void ATPSCharacter::Fire()
 				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Screen Message"));
 				//hr.GetActor()->Destroy();
 				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 100, FColor::Red, false, 2.f, 0, 5.f);
-				OnHitLandScape(hr.Location);
+				OnHitLandScape(hr.GetActor(), hr.Location);
 			}
 		}
 	}

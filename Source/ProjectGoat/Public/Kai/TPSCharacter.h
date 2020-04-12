@@ -52,7 +52,7 @@ public:
 	void Fire();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnHitLandScape(FVector location);
+	void OnHitLandScape(AActor *actorPtr,FVector location );
 
 protected:
 	// Called when the game starts or when spawned
