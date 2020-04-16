@@ -14,12 +14,6 @@ class PROJECTGOAT_API ATPSCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATPSCharacter();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -44,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class USoundBase* fireSound;
 
+	FTimerHandle fireTimerHandle;
+
 	void MoveForward(float v);
 	void MoveRight(float v);
 	void CrouchDown();
@@ -53,4 +49,12 @@ public:
 	void AimEnd();
 	void FireStart();
 	void FireEnd();
+	void Fire();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHitLandScape(AActor *actorPtr,FVector location );
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };
