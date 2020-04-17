@@ -16,6 +16,7 @@
 #include "Logging/LogMacros.h"
 #include "GameFramework/Actor.h"
 #include "Qi/AICharacter.h"
+#include "EnemyBase.h"
 #include "TowerSeed.h"
 
 
@@ -158,9 +159,9 @@ void ATPSCharacterQ::FireStart()
 				//hr.GetActor()->Destroy();
 				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
-				if (Cast<AAICharacter>(hr.GetActor()) != nullptr) {
-					AAICharacter* target = Cast<AAICharacter>(hr.GetActor());
-					target->onSlow();
+				if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
+					AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
+					target->SlowDown();
 					UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
 				}
 			}

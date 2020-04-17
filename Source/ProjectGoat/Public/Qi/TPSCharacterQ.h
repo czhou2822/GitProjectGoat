@@ -16,7 +16,7 @@ public:
 	// Sets default values for this character's properties
 	ATPSCharacterQ();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int  coinCount;
+	int32  coinCount;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
