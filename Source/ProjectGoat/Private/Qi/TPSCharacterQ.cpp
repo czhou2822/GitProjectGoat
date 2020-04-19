@@ -282,6 +282,7 @@ void ATPSCharacterQ::collectSnow()
 				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 				//hr.GetActor()->Destroy();
+				OnCollectSnow(hr.Location);
 				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
 				if (snowCount <= 99) {
 					snowCount++;
@@ -290,7 +291,7 @@ void ATPSCharacterQ::collectSnow()
 					snowCount = 100;
 				}
 				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(snowCount));
-				
+
 			}
 		}
 	}

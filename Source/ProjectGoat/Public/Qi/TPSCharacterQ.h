@@ -51,6 +51,10 @@ public:
 		class USoundBase* fireSound;
 	UPROPERTY(EditAnywhere, Category = seed)
 		TSubclassOf<class ATowerSeed> SeedClass;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnCollectSnow(FVector location);
+
 	void MoveForward(float v);
 	void MoveRight(float v);
 	void CrouchDown();
