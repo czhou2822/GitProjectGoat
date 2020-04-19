@@ -21,7 +21,7 @@ public:
 	// Sets default values for this actor's properties
 	ATowerSeed();
 	UPROPERTY(VisibleAnywhere, Category = Projectile)
-		UBoxComponent * seed;
+		UBoxComponent * Seed;
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 		UProjectileMovementComponent* SeedMovementComponent;
 protected:

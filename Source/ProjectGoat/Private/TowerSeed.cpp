@@ -13,20 +13,20 @@ ATowerSeed::ATowerSeed()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	seed = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	Seed = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	//seed->InitBoxExtent(FVector(15.0f));
-	RootComponent = seed;
+	RootComponent = Seed;
 
 	SeedMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-	SeedMovementComponent->SetUpdatedComponent(seed);
+	SeedMovementComponent->SetUpdatedComponent(Seed);
 	SeedMovementComponent->InitialSpeed = 1500.f;
 	SeedMovementComponent->MaxSpeed = 3000.0f;
 	SeedMovementComponent->bRotationFollowsVelocity = true;
-	SeedMovementComponent->bShouldBounce = true;
+	SeedMovementComponent->bShouldBounce = false;
 	SeedMovementComponent->Bounciness = 0.3f;
-	seed->BodyInstance.SetCollisionProfileName(TEXT("towerSeed"));
-	seed->OnComponentHit.AddDynamic(this, &ATowerSeed::OnHit);
-	seed->OnComponentBeginOverlap.AddDynamic(this, &ATowerSeed::onOverlap);
+	Seed->BodyInstance.SetCollisionProfileName(TEXT("towerSeed"));
+	Seed->OnComponentHit.AddDynamic(this, &ATowerSeed::OnHit);
+	Seed->OnComponentBeginOverlap.AddDynamic(this, &ATowerSeed::onOverlap);
 	
 
 }
@@ -62,7 +62,7 @@ void ATowerSeed::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 void ATowerSeed::onOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("i hit the ground"));
-	seed->DestroyComponent();
+	Seed->DestroyComponent();
 }
 
 void ATowerSeed::buildTower()
