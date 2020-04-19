@@ -39,7 +39,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool bAiming = false;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+		bool bAiming_collecting = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class UAnimMontage* fireAnima;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
