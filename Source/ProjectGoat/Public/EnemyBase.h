@@ -47,4 +47,10 @@ public:
 	UFUNCTION()
 	void HandleSlowDown();
 
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnSlowStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnSlowEnd();
 };

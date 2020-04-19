@@ -45,6 +45,7 @@ void AEnemyBase::SlowDown()
 		TickCount = SlowedTime / TimerTickInterval;
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowDownPercentage;
 		GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
+		OnSlowStart();
 	}
 	else
 	{
@@ -61,7 +62,7 @@ void AEnemyBase::HandleSlowDown()
 
 		GetWorldTimerManager().ClearTimer(SlowTimer);
 		UE_LOG(LogTemp, Warning, TEXT("Back Normal"));
-
+		OnSlowEnd();
 	}
 	else
 	{
