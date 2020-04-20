@@ -23,14 +23,14 @@ protected:
 		float DefaultMaxSpeed = 600.f;
 
 	UPROPERTY(EditDefaultsOnly)
-		float SlowDownPercentage = 0.5f;
+		float SlowDownPercentage = 0.7f;
 
 	FTimerHandle SlowTimer;
 
 	float TimerTickInterval = 0.1f;
 
 	UPROPERTY(EditDefaultsOnly)
-		float SlowedTime = 2.f;
+	float SlowedTime = 2.f;
 	int32 SlowCount = 0;
 	int32 MaxSlowCount = 6;
 	int32 TickCount = 0;

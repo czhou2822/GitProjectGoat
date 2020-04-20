@@ -44,10 +44,11 @@ void AEnemyBase::SlowDown()
 
 
 	TickCount = SlowedTime / TimerTickInterval;
+	float SlowPercentage = 1;
 	if (SlowCount < MaxSlowCount) 
 	{
 		SlowCount++;
-		float SlowPercentage = 1;
+		
 		for (int i = 0; i <= SlowCount; i++) 
 		{
 			SlowPercentage = SlowDownPercentage * SlowPercentage;
@@ -57,10 +58,11 @@ void AEnemyBase::SlowDown()
 	}
 	else 
 	{
-		SlowCount = MaxSlowCount + 1;
+		SlowCount = MaxSlowCount;
 		GetCharacterMovement()->MaxWalkSpeed = 0;
 		OnFrozenStart();
 	}
+	
 	GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
 
 }
