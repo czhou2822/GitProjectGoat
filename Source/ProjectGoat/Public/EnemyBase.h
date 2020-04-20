@@ -20,21 +20,22 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
-	float DefaultMaxSpeed = 600.f;
+		float DefaultMaxSpeed = 600.f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float SlowDownPercentage = 0.5f;
+		float SlowDownPercentage = 0.5f;
 
 	FTimerHandle SlowTimer;
 
 	float TimerTickInterval = 0.1f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float SlowedTime = 2.f;
-
+		float SlowedTime = 2.f;
+	int32 SlowCount = 0;
+	int32 MaxSlowCount = 6;
 	int32 TickCount = 0;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,15 +43,16 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SlowDown();
+		void SlowDown();
 
 	UFUNCTION()
-	void HandleSlowDown();
+		void HandleSlowDown();
 
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSlowStart();
-
+	void OnSlowStart();
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSlowEnd();
+	void OnSlowEnd();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFrozenStart();
 };
