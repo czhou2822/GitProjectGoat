@@ -44,16 +44,19 @@ void AEnemyBase::SlowDown()
 
 
 	TickCount = SlowedTime / TimerTickInterval;
-	if (SlowCount < MaxSlowCount) {
+	if (SlowCount < MaxSlowCount) 
+	{
 		SlowCount++;
 		float SlowPercentage = 1;
-		for (int i = 0; i <= SlowCount; i++) {
+		for (int i = 0; i <= SlowCount; i++) 
+		{
 			SlowPercentage = SlowDownPercentage * SlowPercentage;
 		}
 		OnSlowStart();
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
 	}
-	else {
+	else 
+	{
 		SlowCount = MaxSlowCount + 1;
 		GetCharacterMovement()->MaxWalkSpeed = 0;
 		OnFrozenStart();

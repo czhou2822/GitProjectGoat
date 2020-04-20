@@ -188,10 +188,13 @@ void ATPSCharacterQ::FireStart()
 		bool isHit= GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
 		snowCount--;
 		
-		if (isHit) {
-			for (int i = 0; i <= hrShape.Num();i++) {
+		if (isHit) 
+		{
+			for (int i = 0; i <= hrShape.Num();i++) 
+			{
 			hr = hrShape[0];
-				if (hr.GetActor() != this) {
+				if (hr.GetActor() != this) 
+				{
 
 					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
 					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
