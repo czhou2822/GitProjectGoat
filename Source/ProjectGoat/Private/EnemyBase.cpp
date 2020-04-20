@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
 #include "Math/UnrealMathUtility.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -41,29 +42,24 @@ void AEnemyBase::SlowDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("SlowDown"));
 
-	if (TickCount == 0)    //last count has finished, restart timer
-	{
-		TickCount = SlowedTime / TimerTickInterval;
-		if (SlowCount < MaxSlowCount) {
-			SlowCount++;
-			float SlowPercentage = 1;
-			for (int i = 0; i <= SlowCount; i++) {
-				SlowPercentage = SlowDownPercentage * SlowPercentage;
-			}
-			OnSlowStart();
-			GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
+
+	TickCount = SlowedTime / TimerTickInterval;
+	if (SlowCount < MaxSlowCount) {
+		SlowCount++;
+		float SlowPercentage = 1;
+		for (int i = 0; i <= SlowCount; i++) {
+			SlowPercentage = SlowDownPercentage * SlowPercentage;
 		}
-		else {
-			SlowCount = MaxSlowCount + 1;
-			OnFrozenStart();
-		}
-		GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
+		OnSlowStart();
+		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
+	}
+	else {
+		SlowCount = MaxSlowCount + 1;
 		GetCharacterMovement()->MaxWalkSpeed = 0;
+		OnFrozenStart();
 	}
-	else
-	{
-		TickCount = SlowedTime / TimerTickInterval;
-	}
+	GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
+
 }
 
 void AEnemyBase::HandleSlowDown()
@@ -84,4 +80,5 @@ void AEnemyBase::HandleSlowDown()
 		UE_LOG(LogTemp, Warning, TEXT("tick"));
 		TickCount--;
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
 }

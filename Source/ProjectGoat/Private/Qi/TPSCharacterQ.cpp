@@ -18,6 +18,9 @@
 #include "Qi/AICharacter.h"
 #include "EnemyBase.h"
 #include "TowerSeed.h"
+#include "CollisionShape.h"
+#include "Engine/EngineTypes.h"
+#include "Math/Quat.h"
 
 
 // Sets default values
@@ -83,7 +86,7 @@ void ATPSCharacterQ::Tick(float DeltaTime)
 	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, & ATPSCharacterQ::collectDown);
 	PlayerInputComponent->BindAction("Collect", IE_Released, this, & ATPSCharacterQ::collectUp);
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, & ATPSCharacterQ::throwSeed);
-	
+
 }*/
 
 void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -100,9 +103,9 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATPSCharacterQ::AimEnd);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireDown);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, & ATPSCharacterQ::collectDown);
-	PlayerInputComponent->BindAction("Collect", IE_Released, this, & ATPSCharacterQ::collectUp);
-	PlayerInputComponent->BindAction("Build", IE_Pressed, this, & ATPSCharacterQ::FireEnd);
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::collectDown);
+	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::collectUp);
+	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::FireEnd);
 
 }
 
@@ -155,45 +158,63 @@ void ATPSCharacterQ::FireStart()
 {
 	if (bAiming)
 	{
+		//if (snowCount > 0) {
+		snowCount -= 0.5;
+
 		PlayAnimMontage(fireAnima);
 		UGameplayStatics::PlaySoundAtLocation(this, fireSound, GetActorLocation());
 
 		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
+		FVector SweepEnd = tpsCamera->GetForwardVector() * 500 + SweepStart;
 
-		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
+		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
-
+		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(50.f, 400.f);
+		FVector CameraLocation;
+		FRotator CameraRotation;
+		GetActorEyesViewPoint(CameraLocation, CameraRotation);
+		CameraRotation.Pitch += 90;
+		FRotationConversionCache WorldRotationCache;
+		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
+		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * 400 + fireStartPoint, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Purple, true);
 		FCollisionQueryParams cqp;
 		FHitResult hr;
+		TArray<FHitResult> hrShape;
+		//DrawDebugBox(GetWorld(), tpsCamera->GetForwardVector() * 250 + fireStartPoint, FVector(100, 20, 50), FColor::Purple, true);
+		//GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECC_GameTraceChannel7, cqp);
+		bool isHit= GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
+		snowCount--;
+		
+		if (isHit) {
+			for (int i = 0; i <= hrShape.Num();i++) {
+			hr = hrShape[0];
+				if (hr.GetActor() != this) {
 
-		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECC_Visibility, cqp);
+					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
+					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
+					UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+					//hr.GetActor()->Destroy();
+					DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
-		if (hr.bBlockingHit == true) {
-			if (hr.GetActor() != this) {
-
-				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-				//hr.GetActor()->Destroy();
-				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
-
-				if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
-					AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
-					target->SlowDown();
-					UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
+					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
+						AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
+						target->SlowDown();
+						UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
+					}
 				}
 			}
+			//}
 		}
 	}
-
 }
 
-void ATPSCharacterQ::FireDown() 
+void ATPSCharacterQ::FireDown()
 {
-	GetWorld()->GetTimerManager().SetTimer(fireTimer,this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
-	
+	GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
+
 }
 void ATPSCharacterQ::FireUp()
 {
@@ -211,14 +232,14 @@ void ATPSCharacterQ::FireEnd()
 
 void ATPSCharacterQ::coinCollect() {
 	coinCount++;
-	UE_LOG(LogTemp, Warning,TEXT("coinCount:"),coinCount,coinCount);
+	UE_LOG(LogTemp, Warning, TEXT("coinCount:"), coinCount, coinCount);
 	//coinCount.ToString();
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(coinCount));
 }
 
 void ATPSCharacterQ::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+
 }
 
 void ATPSCharacterQ::throwSeed()
@@ -267,13 +288,18 @@ void ATPSCharacterQ::collectSnow()
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * 500 + fireStartPoint;
 
+
+
 		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
 
 
 		FCollisionQueryParams cqp;
 		FHitResult hr;
 
+
+
 		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
+
 
 		if (hr.bBlockingHit == true) {
 			if (hr.GetActor() != this) {
@@ -295,13 +321,15 @@ void ATPSCharacterQ::collectSnow()
 
 			}
 		}
-		
+
 	}
 }
 
 void ATPSCharacterQ::collectUp()
 {
 	GetWorld()->GetTimerManager().ClearTimer(snowTimer);
+	bAiming_collecting = false;
+
 }
 
 void ATPSCharacterQ::collectDown()
