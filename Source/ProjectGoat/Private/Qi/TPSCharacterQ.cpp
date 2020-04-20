@@ -179,7 +179,7 @@ void ATPSCharacterQ::FireStart()
 		CameraRotation.Pitch += 90;
 		FRotationConversionCache WorldRotationCache;
 		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
-		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * 400 + fireStartPoint, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Purple, true);
+		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * 400 + fireStartPoint, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
 		FCollisionQueryParams cqp;
 		FHitResult hr;
 		TArray<FHitResult> hrShape;
