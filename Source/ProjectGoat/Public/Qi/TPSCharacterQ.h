@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "TowerSeed.h"
+#include "CollisionShape.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacterQ.generated.h"
+
 
 UCLASS()
 class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
@@ -37,7 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USkeletalMeshComponent* tpsGun;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming_collecting = false;
@@ -45,6 +47,11 @@ public:
 		class UAnimMontage* fireAnima;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 		float snowCount;
+		float CapsuleHalfHeight = 500.f;
+		float CapsuleRadius = 10.f;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		
+		
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int coinCount;*/
 
