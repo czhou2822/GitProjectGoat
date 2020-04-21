@@ -168,18 +168,18 @@ void ATPSCharacterQ::FireStart()
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
 		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
-		FVector SweepEnd = tpsCamera->GetForwardVector() * 500 + SweepStart;
+		FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;
 
 		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
-		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(50.f, 400.f);
+		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight);
 		FVector CameraLocation;
 		FRotator CameraRotation;
 		GetActorEyesViewPoint(CameraLocation, CameraRotation);
 		CameraRotation.Pitch += 90;
 		FRotationConversionCache WorldRotationCache;
 		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
-		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * 400 + fireStartPoint, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Purple, true);
+		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
 		FCollisionQueryParams cqp;
 		FHitResult hr;
 		TArray<FHitResult> hrShape;
@@ -188,10 +188,13 @@ void ATPSCharacterQ::FireStart()
 		bool isHit= GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
 		snowCount--;
 		
-		if (isHit) {
-			for (int i = 0; i <= hrShape.Num();i++) {
+		if (isHit) 
+		{
+			for (int i = 0; i <= hrShape.Num();i++) 
+			{
 			hr = hrShape[0];
-				if (hr.GetActor() != this) {
+				if (hr.GetActor() != this) 
+				{
 
 					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
 					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
