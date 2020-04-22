@@ -167,6 +167,9 @@ void ATPSCharacterQ::FireStart()
 		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+
+
+		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
 		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
 		FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;
 
