@@ -158,7 +158,13 @@ void ATPSCharacterQ::FireStart()
 {
 	if (bAiming)
 	{
-		//if (snowCount > 0) {
+		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
+		{
+			if (snowCount <= 0)
+			{
+				return;
+			}
+		}
 		snowCount -= 0.5;
 
 		PlayAnimMontage(fireAnima);
@@ -203,7 +209,7 @@ void ATPSCharacterQ::FireStart()
 					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 					UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 					//hr.GetActor()->Destroy();
-					DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
+					//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
 					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
 						AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
@@ -212,7 +218,6 @@ void ATPSCharacterQ::FireStart()
 					}
 				}
 			}
-			//}
 		}
 	}
 }
@@ -296,7 +301,7 @@ void ATPSCharacterQ::collectSnow()
 
 
 
-		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
+		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
 
 
 		FCollisionQueryParams cqp;
@@ -316,7 +321,7 @@ void ATPSCharacterQ::collectSnow()
 				//hr.GetActor()->Destroy();
 				bAiming_collecting = true;
 				OnCollectSnow(hr.Location);
-				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
+				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
 				if (snowCount <= 99) {
 					snowCount++;
 				}

@@ -47,7 +47,9 @@ public:
 		class UAnimMontage* fireAnima;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 		float snowCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleHalfHeight = 500.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleRadius = 10.f;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		
@@ -57,11 +59,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class USoundBase* fireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadwrite)
+		bool bAllowSnowNegative;  //allow snow to go nagetive
 	UPROPERTY(EditAnywhere, Category = seed)
 		TSubclassOf<class ATowerSeed> SeedClass;
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnCollectSnow(FVector location);
+	
 
 	void MoveForward(float v);
 	void MoveRight(float v);
