@@ -199,19 +199,20 @@ void ATPSCharacterQ::FireStart()
 		
 		if (isHit) 
 		{
-			for (int i = 0; i <= hrShape.Num();i++) 
+			UE_LOG(LogTemp, Warning, TEXT("hitted actors: %d"), hrShape.Num());
+			for (int i = 0; i < hrShape.Num();i++) 
 			{
-			hr = hrShape[0];
-				if (hr.GetActor() != this) 
+				hr = hrShape[i];
+				if (hr.GetActor() && hr.GetActor() != this) 
 				{
-
 					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
 					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 					UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 					//hr.GetActor()->Destroy();
 					//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
-					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
+					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) 
+					{
 						AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
 						target->SlowDown();
 						UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
