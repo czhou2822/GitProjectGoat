@@ -142,7 +142,8 @@ void ATPSCharacterQ::AimStart()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
-	springArm->SetRelativeLocation(FVector(130, 70, 50));
+	springArm->SetRelativeLocation(AimOffsetTranslation);
+	tpsCamera->SetRelativeRotation(AimOffsetRotator);
 }
 
 void ATPSCharacterQ::AimEnd()
@@ -152,6 +153,7 @@ void ATPSCharacterQ::AimEnd()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	springArm->SetRelativeLocation(FVector(0, 0, 0));
+	tpsCamera->SetRelativeRotation(FRotator(0,0,0));
 }
 
 void ATPSCharacterQ::FireStart()
@@ -172,14 +174,41 @@ void ATPSCharacterQ::FireStart()
 
 		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
-		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;  //backup
+
+
+
+
+
+
+		int32 ScreenX;
+		int32 ScreenY;
+		GetWorld()->GetFirstPlayerController()->GetViewportSize(ScreenX, ScreenY);
+
+		//UE_LOG(LogTemp, Warning, TEXT("Screen size %d, %d"), ScreenX, ScreenY);
+
+		FVector WorldLocation;
+		FVector WorldDirection;
+		GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
+		FVector fireEndPoint = WorldDirection * 5000 + fireStartPoint;
+
+		UE_LOG(LogTemp, Warning, TEXT("deprojection: %s"), *fireEndPoint.ToString());
+
+		fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+
+
+		UE_LOG(LogTemp, Warning, TEXT("ForwardVector: %s"), *fireEndPoint.ToString());
+
+
+
 
 
 		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
 		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
-		FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;
+		//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
+		FVector SweepEnd = fireEndPoint;
 
-		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
+		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
 		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight);
 		FVector CameraLocation;

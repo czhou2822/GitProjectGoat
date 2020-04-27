@@ -51,6 +51,11 @@ public:
 		float CapsuleHalfHeight = 500.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleRadius = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FRotator AimOffsetRotator = FRotator(15, 0, 0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector AimOffsetTranslation = FVector(130, 70, 50);
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		
 		
