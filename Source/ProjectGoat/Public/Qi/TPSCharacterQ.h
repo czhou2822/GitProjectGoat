@@ -54,7 +54,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleHalfHeight = 500.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float CapsuleRadius = 10.f;
+		float CapsuleRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FRotator AimOffsetRotator = FRotator(15, 0, 0);
@@ -62,7 +62,7 @@ public:
 		FVector AimOffsetTranslation = FVector(130, 70, 50);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float WeaponRange = 500.f;
+		float WeaponRange = 700.f;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		
 		

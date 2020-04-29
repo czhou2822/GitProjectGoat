@@ -54,6 +54,7 @@ ATPSCharacterQ::ATPSCharacterQ()
 	//following is for collision test
 	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacterQ::onOverlap);
 	//UE_LOG(LogTemp, Warning, TEXT("start"));
+	//tpsCamera->
 }
 
 // Called when the game starts or when spawned
@@ -145,7 +146,7 @@ void ATPSCharacterQ::AimStart()
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
 	springArm->SetRelativeLocation(AimOffsetTranslation);
-	tpsCamera->SetRelativeRotation(AimOffsetRotator);
+	//tpsCamera->SetRelativeRotation(AimOffsetRotator);
 }
 
 void ATPSCharacterQ::AimEnd()
@@ -192,12 +193,14 @@ void ATPSCharacterQ::FireStart()
 		FVector WorldLocation;
 		FVector WorldDirection;
 		GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
-		FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
+		//FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
+
+
+		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
+		FVector fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
 
 		UE_LOG(LogTemp, Warning, TEXT("deprojection: %s"), *fireEndPoint.ToString());
-
-		fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
-
 
 		UE_LOG(LogTemp, Warning, TEXT("ForwardVector: %s"), *fireEndPoint.ToString());
 
@@ -212,16 +215,18 @@ void ATPSCharacterQ::FireStart()
 
 		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
-		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, WeaponRange/2);
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
-		CameraRotation.Pitch += 90;
+		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, (WeaponRange-2*CapsuleRadius)/2);
+		FVector eyeLocation;
+		FRotator eyeRotation;
+		GetActorEyesViewPoint(eyeLocation, eyeRotation);
+		//manual offset
+		/*eyeRotation.Pitch += 115;
+		eyeRotation.Yaw += 3;*/
 		FRotationConversionCache WorldRotationCache;
-		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
+		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(eyeRotation);
 		//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
 		
-		DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Red, false, 1.f);
+		DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(),ShapeQuat, FColor::Red, false, 1.f);
 
 
 		FCollisionQueryParams cqp;
