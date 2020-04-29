@@ -21,6 +21,7 @@
 #include "CollisionShape.h"
 #include "Engine/EngineTypes.h"
 #include "Math/Quat.h"
+#include "Components/InventoryComponent.h"
 
 
 // Sets default values
@@ -37,6 +38,7 @@ ATPSCharacterQ::ATPSCharacterQ()
 	tpsCamera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
 	tpsCamera->SetupAttachment(springArm);
 
+	InventoryComp = CreateDefaultSubobject<UInventoryComponent>("InventoryComp");
 
 	tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
 	tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
@@ -48,7 +50,7 @@ ATPSCharacterQ::ATPSCharacterQ()
 
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
-	coinCount = 0;
+
 	//following is for collision test
 	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacterQ::onOverlap);
 	//UE_LOG(LogTemp, Warning, TEXT("start"));
@@ -190,11 +192,11 @@ void ATPSCharacterQ::FireStart()
 		FVector WorldLocation;
 		FVector WorldDirection;
 		GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
-		FVector fireEndPoint = WorldDirection * 5000 + fireStartPoint;
+		FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
 
 		UE_LOG(LogTemp, Warning, TEXT("deprojection: %s"), *fireEndPoint.ToString());
 
-		fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+		fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
 
 
 		UE_LOG(LogTemp, Warning, TEXT("ForwardVector: %s"), *fireEndPoint.ToString());
@@ -208,16 +210,20 @@ void ATPSCharacterQ::FireStart()
 		//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
 		FVector SweepEnd = fireEndPoint;
 
-		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
+		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
-		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight);
+		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, WeaponRange/2);
 		FVector CameraLocation;
 		FRotator CameraRotation;
 		GetActorEyesViewPoint(CameraLocation, CameraRotation);
 		CameraRotation.Pitch += 90;
 		FRotationConversionCache WorldRotationCache;
 		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
-		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
+		//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
+		
+		DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Red, false, 1.f);
+
+
 		FCollisionQueryParams cqp;
 		FHitResult hr;
 		TArray<FHitResult> hrShape;
@@ -234,9 +240,9 @@ void ATPSCharacterQ::FireStart()
 				hr = hrShape[i];
 				if (hr.GetActor() && hr.GetActor() != this) 
 				{
-					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-					UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 					//hr.GetActor()->Destroy();
 					//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
@@ -271,11 +277,11 @@ void ATPSCharacterQ::FireEnd()
 	ATPSCharacterQ::coinCount++;
 }*/
 
-void ATPSCharacterQ::coinCollect() {
-	coinCount++;
-	UE_LOG(LogTemp, Warning, TEXT("coinCount:"), coinCount, coinCount);
-	//coinCount.ToString();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(coinCount));
+void ATPSCharacterQ::coinCollect()
+{
+
+	InventoryComp->Gold++;
+
 }
 
 void ATPSCharacterQ::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

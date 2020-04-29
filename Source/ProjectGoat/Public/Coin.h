@@ -34,8 +34,7 @@ public:
 	UFUNCTION()
 	//void OnDelegateExampleOverlap();
 	void collect(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	
 
 
