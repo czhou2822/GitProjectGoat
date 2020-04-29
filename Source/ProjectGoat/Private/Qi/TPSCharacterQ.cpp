@@ -166,6 +166,7 @@ void ATPSCharacterQ::FireStart()
 		{
 			if (snowCount <= 0)
 			{
+				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Frost Cannon empty! Aim and Press F to collect snow"));
 				return;
 			}
 		}
