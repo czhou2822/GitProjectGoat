@@ -3,7 +3,7 @@
 
 #include "TowerSeed.h"
 #include "GameFramework/Actor.h"
-#include "Qi/TPSCharacterQ.h"
+//#include "Qi/TPSCharacterQ.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/PrimitiveComponent.h"
 

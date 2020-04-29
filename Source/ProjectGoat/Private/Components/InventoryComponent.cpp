@@ -48,6 +48,7 @@ bool UInventoryComponent::Purchase(AActor* Item)
 			else
 			{
 				UE_LOG(LogTemp, Log, TEXT("Not enough money"));
+				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Not enough money"));
 				return false;
 			}
 		}
