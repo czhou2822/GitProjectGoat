@@ -21,6 +21,7 @@
 #include "CollisionShape.h"
 #include "Engine/EngineTypes.h"
 #include "Math/Quat.h"
+#include "Components/InventoryComponent.h"
 
 
 // Sets default values
@@ -37,6 +38,7 @@ ATPSCharacterQ::ATPSCharacterQ()
 	tpsCamera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
 	tpsCamera->SetupAttachment(springArm);
 
+	InventoryComp = CreateDefaultSubobject<UInventoryComponent>("InventoryComp");
 
 	tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
 	tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
@@ -48,10 +50,11 @@ ATPSCharacterQ::ATPSCharacterQ()
 
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
-	coinCount = 0;
+
 	//following is for collision test
 	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacterQ::onOverlap);
 	//UE_LOG(LogTemp, Warning, TEXT("start"));
+	//tpsCamera->
 }
 
 // Called when the game starts or when spawned
@@ -142,7 +145,8 @@ void ATPSCharacterQ::AimStart()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
-	springArm->SetRelativeLocation(FVector(130, 70, 50));
+	springArm->SetRelativeLocation(AimOffsetTranslation);
+	//tpsCamera->SetRelativeRotation(AimOffsetRotator);
 }
 
 void ATPSCharacterQ::AimEnd()
@@ -152,13 +156,20 @@ void ATPSCharacterQ::AimEnd()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	springArm->SetRelativeLocation(FVector(0, 0, 0));
+	tpsCamera->SetRelativeRotation(FRotator(0,0,0));
 }
 
 void ATPSCharacterQ::FireStart()
 {
 	if (bAiming)
 	{
-		//if (snowCount > 0) {
+		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
+		{
+			if (snowCount <= 0)
+			{
+				return;
+			}
+		}
 		snowCount -= 0.5;
 
 		PlayAnimMontage(fireAnima);
@@ -166,20 +177,58 @@ void ATPSCharacterQ::FireStart()
 
 		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
-		FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;  //backup
+
+
+
+
+
+
+		int32 ScreenX;
+		int32 ScreenY;
+		GetWorld()->GetFirstPlayerController()->GetViewportSize(ScreenX, ScreenY);
+
+		//UE_LOG(LogTemp, Warning, TEXT("Screen size %d, %d"), ScreenX, ScreenY);
+
+		FVector WorldLocation;
+		FVector WorldDirection;
+		GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
+		//FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
+
+
+		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
+		FVector fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
+
+		UE_LOG(LogTemp, Warning, TEXT("deprojection: %s"), *fireEndPoint.ToString());
+
+		UE_LOG(LogTemp, Warning, TEXT("ForwardVector: %s"), *fireEndPoint.ToString());
+
+
+
+
+
+		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
 		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
-		FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;
+		//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
+		FVector SweepEnd = fireEndPoint;
 
 		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
 
-		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight);
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		GetActorEyesViewPoint(CameraLocation, CameraRotation);
-		CameraRotation.Pitch += 90;
+		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, (WeaponRange-2*CapsuleRadius)/2);
+		FVector eyeLocation;
+		FRotator eyeRotation;
+		GetActorEyesViewPoint(eyeLocation, eyeRotation);
+		//manual offset
+		/*eyeRotation.Pitch += 115;
+		eyeRotation.Yaw += 3;*/
 		FRotationConversionCache WorldRotationCache;
-		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(CameraRotation);
-		DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
+		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(eyeRotation);
+		//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
+		
+		DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(),ShapeQuat, FColor::Red, false, 1.f);
+
+
 		FCollisionQueryParams cqp;
 		FHitResult hr;
 		TArray<FHitResult> hrShape;
@@ -190,26 +239,26 @@ void ATPSCharacterQ::FireStart()
 		
 		if (isHit) 
 		{
-			for (int i = 0; i <= hrShape.Num();i++) 
+			UE_LOG(LogTemp, Warning, TEXT("hitted actors: %d"), hrShape.Num());
+			for (int i = 0; i < hrShape.Num();i++) 
 			{
-			hr = hrShape[0];
-				if (hr.GetActor() != this) 
+				hr = hrShape[i];
+				if (hr.GetActor() && hr.GetActor() != this) 
 				{
-
-					UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-					UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-					UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
+					//UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
 					//hr.GetActor()->Destroy();
-					DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
+					//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
 
-					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) {
+					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) 
+					{
 						AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
 						target->SlowDown();
 						UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
 					}
 				}
 			}
-			//}
 		}
 	}
 }
@@ -233,11 +282,11 @@ void ATPSCharacterQ::FireEnd()
 	ATPSCharacterQ::coinCount++;
 }*/
 
-void ATPSCharacterQ::coinCollect() {
-	coinCount++;
-	UE_LOG(LogTemp, Warning, TEXT("coinCount:"), coinCount, coinCount);
-	//coinCount.ToString();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(coinCount));
+void ATPSCharacterQ::coinCollect()
+{
+
+	InventoryComp->Gold++;
+
 }
 
 void ATPSCharacterQ::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -293,7 +342,7 @@ void ATPSCharacterQ::collectSnow()
 
 
 
-		DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
+		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
 
 
 		FCollisionQueryParams cqp;
@@ -313,7 +362,7 @@ void ATPSCharacterQ::collectSnow()
 				//hr.GetActor()->Destroy();
 				bAiming_collecting = true;
 				OnCollectSnow(hr.Location);
-				DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
+				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
 				if (snowCount <= 99) {
 					snowCount++;
 				}

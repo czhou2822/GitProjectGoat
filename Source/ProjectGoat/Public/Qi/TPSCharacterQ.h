@@ -9,6 +9,8 @@
 #include "TPSCharacterQ.generated.h"
 
 
+class UInventoryComponent;
+
 UCLASS()
 class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 {
@@ -17,8 +19,7 @@ class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATPSCharacterQ();
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32  coinCount;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,6 +40,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class USkeletalMeshComponent* tpsGun;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UInventoryComponent* InventoryComp;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
@@ -47,8 +51,18 @@ public:
 		class UAnimMontage* fireAnima;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 		float snowCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleHalfHeight = 500.f;
-		float CapsuleRadius = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CapsuleRadius = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FRotator AimOffsetRotator = FRotator(15, 0, 0);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector AimOffsetTranslation = FVector(130, 70, 50);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float WeaponRange = 700.f;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		
 		
@@ -57,11 +71,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class USoundBase* fireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadwrite)
+		bool bAllowSnowNegative;  //allow snow to go nagetive
 	UPROPERTY(EditAnywhere, Category = seed)
 		TSubclassOf<class ATowerSeed> SeedClass;
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnCollectSnow(FVector location);
+	
 
 	void MoveForward(float v);
 	void MoveRight(float v);
