@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UInventoryComponent* InventoryComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UChildActorComponent* WeaponSlot;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)

@@ -22,6 +22,7 @@
 #include "Engine/EngineTypes.h"
 #include "Math/Quat.h"
 #include "Components/InventoryComponent.h"
+#include "Weapon/WeaponBase.h"
 
 
 // Sets default values
@@ -42,6 +43,12 @@ ATPSCharacterQ::ATPSCharacterQ()
 
 	tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
 	tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
+
+	WeaponSlot = CreateDefaultSubobject<UChildActorComponent>("WeaponSlot");
+	WeaponSlot->SetupAttachment(GetMesh(), "weapon_socket");
+	//WeaponSlot->SetChildActorClass(AWeaponBase::StaticClass());
+	//WeaponSlot->CreateChildActor();
+
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
@@ -161,6 +168,8 @@ void ATPSCharacterQ::AimEnd()
 
 void ATPSCharacterQ::FireStart()
 {
+
+
 	if (bAiming)
 	{
 		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
@@ -200,11 +209,6 @@ void ATPSCharacterQ::FireStart()
 		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
 		FVector fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
 		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
-
-		UE_LOG(LogTemp, Warning, TEXT("deprojection: %s"), *fireEndPoint.ToString());
-
-		UE_LOG(LogTemp, Warning, TEXT("ForwardVector: %s"), *fireEndPoint.ToString());
-
 
 
 
@@ -266,13 +270,25 @@ void ATPSCharacterQ::FireStart()
 
 void ATPSCharacterQ::FireDown()
 {
-	GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
+	//GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
+
+	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
+	if (WeaponDummy)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
+		WeaponDummy->FireStart();
+	}
 
 }
 void ATPSCharacterQ::FireUp()
 {
-	GetWorld()->GetTimerManager().ClearTimer(fireTimer);
-
+	//GetWorld()->GetTimerManager().ClearTimer(fireTimer);
+	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
+	if (WeaponDummy)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
+		WeaponDummy->FireEnd();
+	}
 }
 void ATPSCharacterQ::FireEnd()
 {
