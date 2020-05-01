@@ -275,7 +275,7 @@ void ATPSCharacterQ::FireDown()
 	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
 	if (WeaponDummy)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
+		//UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
 		WeaponDummy->FireStart();
 	}
 
@@ -286,7 +286,7 @@ void ATPSCharacterQ::FireUp()
 	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
 	if (WeaponDummy)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
+		//UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
 		WeaponDummy->FireEnd();
 	}
 }
