@@ -15,6 +15,8 @@ AEnemyBase::AEnemyBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 
+	//GetCapsuleComponent()->OnComponentBeginOverlap->AddDynamic(this, &AEnemyBase::onOverlap);
+
 }
 
 // Called when the game starts or when spawned
@@ -23,7 +25,10 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 
 }
-
+/*void AEnemyBase::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	this->SlowDown();
+}*/
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
@@ -45,25 +50,37 @@ void AEnemyBase::SlowDown()
 
 	TickCount = SlowedTime / TimerTickInterval;
 	float SlowPercentage = 1;
-	if (SlowCount < MaxSlowCount) 
+	if (SlowCount < MaxSlowCount)
 	{
 		SlowCount++;
-		
-		for (int i = 0; i <= SlowCount; i++) 
+
+		for (int i = 0; i <= SlowCount; i++)
 		{
 			SlowPercentage = SlowDownPercentage * SlowPercentage;
 		}
 		OnSlowStart();
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
 	}
-	else 
+	else
 	{
 		SlowCount = MaxSlowCount;
 		GetCharacterMovement()->MaxWalkSpeed = 0;
 		OnFrozenStart();
 	}
-	
+
 	GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
+
+}
+
+void AEnemyBase::StartSlow()
+{
+	GetWorld()->GetTimerManager().SetTimer(slowListener, this, &AEnemyBase::SlowDown, 0.2f, true, 0.f);
+
+}
+
+void AEnemyBase::EndSlow()
+{
+	GetWorld()->GetTimerManager().ClearTimer(slowListener);
 
 }
 

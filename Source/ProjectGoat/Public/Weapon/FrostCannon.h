@@ -7,7 +7,7 @@
 #include "FrostCannon.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROJECTGOAT_API AFrostCannon : public AWeaponBase
@@ -18,11 +18,17 @@ class PROJECTGOAT_API AFrostCannon : public AWeaponBase
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* FrostHitCapsule;
-	
+		class UCapsuleComponent* FrostHitCapsule;
+
 public:
 	AFrostCannon();
 
 	virtual void Fire() override;
+	virtual void FireEnd() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnFireStart();
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnFireEnd();
 
 };

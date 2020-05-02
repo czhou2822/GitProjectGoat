@@ -30,7 +30,7 @@ protected:
 	float TimerTickInterval = 0.1f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float SlowedTime = 2.f;
+		float SlowedTime = 2.f;
 	int32 SlowCount = 0;
 	int32 MaxSlowCount = 6;
 	int32 TickCount = 0;
@@ -44,15 +44,21 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SlowDown();
+	UFUNCTION(BlueprintCallable)
+		void StartSlow();
+	UFUNCTION(BlueprintCallable)
+		void EndSlow();
 
 	UFUNCTION()
 		void HandleSlowDown();
 
+	FTimerHandle slowListener;
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnSlowStart();
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnSlowEnd();
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnFrozenStart();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnSlowStart();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnSlowEnd();
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnFrozenStart();
+	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
