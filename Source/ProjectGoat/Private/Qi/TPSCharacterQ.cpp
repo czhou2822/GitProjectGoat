@@ -153,7 +153,7 @@ void ATPSCharacterQ::AimStart()
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
 	springArm->SetRelativeLocation(AimOffsetTranslation);
-	//tpsCamera->SetRelativeRotation(AimOffsetRotator);
+	tpsCamera->SetRelativeRotation(AimOffsetRotator);
 }
 
 void ATPSCharacterQ::AimEnd()
