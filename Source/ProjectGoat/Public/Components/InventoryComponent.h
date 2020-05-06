@@ -20,11 +20,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+private:
+	bool PurchaseInternal(float Cost);
+
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Gold = 0;
 
 	UFUNCTION(BlueprintCallable)
-	bool Purchase(AActor* Item);
+	bool PurchaseItem(AActor* Item);
+
+	UFUNCTION(BlueprintCallable)
+	bool Purchase(float Cost);
 		
 };
