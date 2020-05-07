@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBulkChangedSigniture, int32, CurrentBulkCount);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTGOAT_API UInventoryComponent : public UActorComponent
@@ -36,6 +37,12 @@ public:
 	bool PurchaseItem(AActor* Item);
 
 	UFUNCTION(BlueprintCallable)
+	bool PurchaseBulk(float Cost);
+
+	UFUNCTION(BlueprintCallable)
 	bool Purchase(float Cost);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnBulkChangedSigniture OnBulkChanged;
 		
 };

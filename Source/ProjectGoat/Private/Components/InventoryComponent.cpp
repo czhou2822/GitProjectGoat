@@ -71,6 +71,20 @@ bool UInventoryComponent::PurchaseItem(AActor* Item)
 	return false;
 }
 
+bool UInventoryComponent::PurchaseBulk(float Cost)
+{
+	if (PurchaseInternal(Cost))
+	{
+		BulkCount++;
+		OnBulkChanged.Broadcast(BulkCount);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 
 
 
