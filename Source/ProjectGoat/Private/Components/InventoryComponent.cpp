@@ -26,13 +26,34 @@ void UInventoryComponent::BeginPlay()
 	
 }
 
+bool UInventoryComponent::PurchaseInternal(float Cost)
+{
+	if (Gold - Cost >= 0)
+	{
+		Gold -= Cost;
+		return true;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Not enough money"));
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Not enough money"));
+		return false;
+	}
+}
+
+
+bool UInventoryComponent::Purchase(float Cost)
+{
+	return PurchaseInternal(Cost);
+}
+
 
 
 /*
 checks if the item can be bought. 
 if so, check if enough money
 */
-bool UInventoryComponent::Purchase(AActor* Item)
+bool UInventoryComponent::PurchaseItem(AActor* Item)
 {
 	UCostComponent* CostComp;
 	if (Item)
@@ -40,17 +61,7 @@ bool UInventoryComponent::Purchase(AActor* Item)
 		CostComp = Item->FindComponentByClass<UCostComponent>();
 		if (CostComp)
 		{
-			if (Gold - CostComp->Cost >= 0)
-			{
-				Gold -= CostComp->Cost;
-				return true;
-			}
-			else
-			{
-				UE_LOG(LogTemp, Log, TEXT("Not enough money"));
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Not enough money"));
-				return false;
-			}
+			return PurchaseInternal(CostComp->Cost);
 		}
 		else
 		{
