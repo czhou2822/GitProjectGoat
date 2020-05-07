@@ -6,25 +6,43 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBulkChangedSigniture, int32, CurrentBulkCount);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTGOAT_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+
 public:	
-	// Sets default values for this component's properties
-	UInventoryComponent();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Gold = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BulkCount = 0;
+
+private:
+	bool PurchaseInternal(float Cost);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Gold = 0;
+	// Sets default values for this component's properties
+	UInventoryComponent();
 
 	UFUNCTION(BlueprintCallable)
-	bool Purchase(AActor* Item);
+	bool PurchaseItem(AActor* Item);
+
+	UFUNCTION(BlueprintCallable)
+	bool PurchaseBulk(float Cost);
+
+	UFUNCTION(BlueprintCallable)
+	bool Purchase(float Cost);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnBulkChangedSigniture OnBulkChanged;
 		
 };
