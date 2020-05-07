@@ -12,8 +12,8 @@ class PROJECTGOAT_API AEnemyBase : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AEnemyBase();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float GoldDropRate = 1.f;
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,6 +36,8 @@ protected:
 	int32 TickCount = 0;
 
 public:
+	// Sets default values for this character's properties
+	AEnemyBase();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
