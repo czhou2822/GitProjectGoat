@@ -143,6 +143,8 @@ void ATPSCharacterQ::CrouchUp()
 
 void ATPSCharacterQ::JumpFunction()
 {
+
+	//UE_LOG(LogTemp, Warning, TEXT("Jump"));
 	Jump();
 }
 
