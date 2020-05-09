@@ -89,7 +89,11 @@ public:
 	void CrouchUp();
 	void JumpFunction();
 	void AimStart();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void AimStartBlueprintInterface();
 	void AimEnd();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void AimEndBlueprintInterface();
 	void FireStart();
 	void FireDown();
 	void FireUp();

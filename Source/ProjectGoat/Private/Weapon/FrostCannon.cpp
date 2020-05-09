@@ -20,6 +20,11 @@ AFrostCannon::AFrostCannon()
 
 	FrostHitCapsule->SetupAttachment(RootComponent);
 
+	AimBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AimBox"));
+	AimBox->SetupAttachment(RootComponent);
+	AimBox->SetHiddenInGame(false);
+	AimBox->bVisible = false;
+
 }
 
 void AFrostCannon::Fire()

@@ -45,7 +45,7 @@ void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void AEnemyBase::SlowDown()
 {
-	UE_LOG(LogTemp, Warning, TEXT("SlowDown"));
+	//UE_LOG(LogTemp, Warning, TEXT("SlowDown"));
 
 
 	TickCount = SlowedTime / TimerTickInterval;
@@ -99,7 +99,7 @@ void AEnemyBase::HandleSlowDown()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("tick"));
+		UE_LOG(LogTemp, Log, TEXT("slow down tick"));
 		TickCount--;
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));

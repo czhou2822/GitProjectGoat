@@ -156,6 +156,7 @@ void ATPSCharacterQ::AimStart()
 	GetCharacterMovement()->MaxWalkSpeed = 300;
 	springArm->SetRelativeLocation(AimOffsetTranslation);
 	tpsCamera->SetRelativeRotation(AimOffsetRotator);
+	AimStartBlueprintInterface();
 }
 
 void ATPSCharacterQ::AimEnd()
@@ -166,6 +167,7 @@ void ATPSCharacterQ::AimEnd()
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	springArm->SetRelativeLocation(FVector(0, 0, 0));
 	tpsCamera->SetRelativeRotation(FRotator(0,0,0));
+	AimEndBlueprintInterface();
 }
 
 void ATPSCharacterQ::FireStart()

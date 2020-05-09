@@ -49,6 +49,6 @@ void AWeaponBase::FireEnd()
 
 void AWeaponBase::Fire()
 {
-	UE_LOG(LogTemp, Log, TEXT("Base Weapon Fire"));
+	//UE_LOG(LogTemp, Log, TEXT("Base Weapon Fire"));
 }
 
