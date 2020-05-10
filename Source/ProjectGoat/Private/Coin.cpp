@@ -43,7 +43,7 @@ void ACoin::BeginPlay()
 }
 void ACoin::HandleOnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("!!!!!!"));
+	//UE_LOG(LogTemp, Warning, TEXT("!!!!!!"));
 	ATPSCharacterQ* PlayerCharacter = Cast<ATPSCharacterQ>(OtherActor);
 	if (PlayerCharacter)
 	{
