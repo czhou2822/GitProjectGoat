@@ -357,9 +357,12 @@ void ATPSCharacterQ::collectSnow()
 		/*PlayAnimMontage(fireAnima);
 		UGameplayStatics::PlaySoundAtLocation(this, fireSound, GetActorLocation());*/
 
-		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
+		//FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
+		FVector fireStartPoint = tpsCamera->GetComponentLocation();
+
+		//FVector fireStartPoint =  Scene->GetLocation
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
-		FVector fireEndPoint = tpsCamera->GetForwardVector() * 500 + fireStartPoint;
+		FVector fireEndPoint = tpsCamera->GetForwardVector() * 1000 + tpsCamera->GetComponentLocation();
 
 
 
