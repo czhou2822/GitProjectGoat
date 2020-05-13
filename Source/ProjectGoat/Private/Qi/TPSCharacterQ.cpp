@@ -393,7 +393,7 @@ void ATPSCharacterQ::collectSnow()
 				else {
 					snowCount = 100;
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(snowCount));
+				//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(snowCount));
 
 			}
 		}

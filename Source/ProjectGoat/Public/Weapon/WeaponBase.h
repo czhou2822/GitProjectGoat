@@ -21,7 +21,7 @@ public:
 	AWeaponBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent* WeaponMesh;
+	UStaticMeshComponent* WeaponBaseMesh;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
