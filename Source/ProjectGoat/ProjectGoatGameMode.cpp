@@ -2,6 +2,7 @@
 
 #include "ProjectGoatGameMode.h"
 #include "ProjectGoatCharacter.h"
+#include "BulkheadGameState.h"
 #include "UObject/ConstructorHelpers.h"
 
 AProjectGoatGameMode::AProjectGoatGameMode()
@@ -12,4 +13,10 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 	//{
 	//	DefaultPawnClass = PlayerPawnBPClass.Class;
 	//}
+
+
+	GameStateClass = ABulkheadGameState::StaticClass();
+
+	//UE_LOG(LogTemp, Warning, TEXT("Project goat game mode"));
+
 }

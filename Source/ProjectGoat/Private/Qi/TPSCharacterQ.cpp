@@ -16,7 +16,7 @@
 #include "Logging/LogMacros.h"
 #include "GameFramework/Actor.h"
 #include "Qi/AICharacter.h"
-#include "EnemyBase.h"
+#include "Character/Enemy/EnemyBase.h"
 #include "TowerSeed.h"
 #include "CollisionShape.h"
 #include "Engine/EngineTypes.h"
