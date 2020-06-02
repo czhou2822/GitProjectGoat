@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Tower.generated.h"
+#include "Character/Core/BulkheadCharacterBase.h"
+#include "TowerBase.generated.h"
 
 UCLASS()
-class PROJECTGOAT_API ATower : public AActor
+class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATower();
+	ATowerBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,5 +22,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
 
 };

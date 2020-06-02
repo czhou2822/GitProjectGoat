@@ -21,6 +21,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 public:	
 
 	//virtual FCharacterData& GetCharacterData();
@@ -35,6 +37,22 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual FCharacterData& GetCharacterData();
+
+	virtual bool IsDead();
+
+	virtual float GetHealth();
+
+	virtual float GetMaxHealth();
+
+	virtual void Dying();
+
+	virtual void Dead();
+
+	UFUNCTION(Blueprintable, BlueprintPure, Category = "Towers|Attribute")
+	bool IsActive() { return !IsDead(); }
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack(ABulkheadCharacterBase* DamageCauser, AActor* Target, float DamageValue);
 
 	FORCEINLINE ABulkheadGameState* GetGameState() { return GetWorld() ? GetWorld()->GetGameState<ABulkheadGameState>() : NULL; }
 

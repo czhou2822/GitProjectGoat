@@ -7,7 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 //#include "Qi/TPSCharacterQ.h"
-#include "Qi/Tower.h"
+#include "Character/Tower/TowerBase.h"
 #include "TowerSeed.generated.h"
 
 

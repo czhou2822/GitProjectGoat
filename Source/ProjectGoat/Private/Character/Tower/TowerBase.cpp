@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Qi/Tower.h"
+#include "Character/Tower/TowerBase.h"
 
 // Sets default values
-ATower::ATower()
+ATowerBase::ATowerBase()
+	:ABulkheadCharacterBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +13,14 @@ ATower::ATower()
 }
 
 // Called when the game starts or when spawned
-void ATower::BeginPlay()
+void ATowerBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ATower::Tick(float DeltaTime)
+void ATowerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
