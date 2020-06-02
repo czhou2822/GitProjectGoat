@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Character/Core/BulkheadCharacterBase.h"
 
 // Sets default values
@@ -37,11 +36,11 @@ void ABulkheadCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 }
 
-//FCharacterData& ABulkheadCharacterBase::GetCharacterData()
-//{
-//	if (GetGameState())
-//	{
-//		return GetGameState()->GetCharacterData(GUID);
-//	}
-//	return CharacterDataNULL;
-//}
+FCharacterData& ABulkheadCharacterBase::GetCharacterData()
+{
+	if (GetGameState())
+	{
+		return GetGameState()->GetCharacterData(GUID);
+	}
+	return CharacterDataNULL;
+}

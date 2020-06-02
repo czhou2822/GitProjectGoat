@@ -4,11 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
+#include "Data/CharacterData.h"
 #include "BulkheadGameState.generated.h"
 
 class UDataTable;
 class ABulkheadCharacterBase;
 class AEnemyBase;
+
+extern FCharacterData CharacterDataNULL;
+
+
 /**
  * 
  */
@@ -19,7 +24,11 @@ class PROJECTGOAT_API ABulkheadGameState : public AGameState
 
 private:
 	UPROPERTY()
-	UDataTable* EnemyDataTable;
+	UDataTable* GruntDataTable;
+
+public:
+	UPROPERTY(SaveGame)
+	TMap<FGuid, FCharacterData> InGameEnemyData;
 	
 protected:
 
@@ -34,6 +43,11 @@ protected:
 public:
 	ABulkheadGameState();
 
+	const FCharacterData& AddCharacterData(const FGuid& ID, const FCharacterData& Data);
+
+	bool RemoveCharacterData(const FGuid& ID);
+
+	FCharacterData& GetCharacterData(const FGuid& ID);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	AEnemyBase* SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator);

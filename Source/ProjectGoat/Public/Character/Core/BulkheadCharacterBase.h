@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BulkheadGameState.h"
 #include "Data/CharacterData.h"
-
 #include "BulkheadCharacterBase.generated.h"
 
 UCLASS()
@@ -33,5 +33,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual FCharacterData& GetCharacterData();
+
+	FORCEINLINE ABulkheadGameState* GetGameState() { return GetWorld() ? GetWorld()->GetGameState<ABulkheadGameState>() : NULL; }
 
 };

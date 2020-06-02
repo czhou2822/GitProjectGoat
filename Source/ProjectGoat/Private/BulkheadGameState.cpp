@@ -2,11 +2,12 @@
 
 
 #include "BulkheadGameState.h"
-#include "Data/CharacterData.h"
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Character/Enemy/EnemyBase.h"
-
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif
 
 
 FCharacterData CharacterDataNULL;
@@ -14,9 +15,9 @@ FCharacterData CharacterDataNULL;
 
 ABulkheadGameState::ABulkheadGameState()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> MyTable_Enemy(TEXT("/Game/DataTable/EnemyDataTable"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> MyTable_Enemy(TEXT("/Game/DataTable/GruntDataTable"));
 
-	EnemyDataTable = MyTable_Enemy.Object;
+	GruntDataTable = MyTable_Enemy.Object;
 }
 
 ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
@@ -50,8 +51,8 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 			{
 				if (ABulkheadCharacterBase* RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator))
 				{
-					//NewCharacterData->UpdateHealth();
-					//AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
+					NewCharacterData->UpdateHealth();
+					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
 				}
 			}
 		}
@@ -64,5 +65,33 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 
 AEnemyBase* ABulkheadGameState::SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
 {
-	return SpawnCharacter<AEnemyBase>(CharacterID, CharacterLevel, EnemyDataTable, Location, Rotator);
+	return SpawnCharacter<AEnemyBase>(CharacterID, CharacterLevel, GruntDataTable, Location, Rotator);
 }
+
+
+const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, const FCharacterData& Data)
+{
+	return InGameEnemyData.Add(ID, Data);
+}
+
+bool ABulkheadGameState::RemoveCharacterData(const FGuid& ID)
+{
+	return (bool)InGameEnemyData.Remove(ID);
+}
+
+FCharacterData& ABulkheadGameState::GetCharacterData(const FGuid& ID)
+{
+
+	if (InGameEnemyData.Contains(ID))
+	{
+		InGameEnemyData[ID];
+	}
+
+
+	return CharacterDataNULL;
+}
+
+
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif

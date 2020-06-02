@@ -32,23 +32,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Attribute")
 		int32 Lv;
 
-
-public:
-	FCharacterData();
-
-	bool IsValid() const;
-
-	
-
-};
-
-USTRUCT(BlueprintType)
-struct FEnemyData : public FCharacterData
-{
-	GENERATED_BODY()
-
-public:
-
 	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
 		float MaxHealth;
 
@@ -56,8 +39,33 @@ public:
 		float Health;
 
 
+
 public:
-	FEnemyData();
+	FCharacterData();
+
+	bool IsValid() const;
 
 	void UpdateHealth();
+
+
 };
+
+//USTRUCT(BlueprintType)
+//struct FEnemyData : public FCharacterData
+//{
+//	GENERATED_BODY()
+//
+//public:
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
+//		float MaxHealth;
+//
+//	UPROPERTY()
+//		float Health;
+//
+//
+//public:
+//	FEnemyData();
+//
+//	void UpdateHealth();
+//};
