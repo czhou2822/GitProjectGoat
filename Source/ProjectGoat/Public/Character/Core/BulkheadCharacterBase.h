@@ -13,6 +13,11 @@ class PROJECTGOAT_API ABulkheadCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BaseAttribute", meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* HealthWidget;
+
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)
 	FGuid GUID;
@@ -47,6 +52,8 @@ public:
 	virtual void Dying();
 
 	virtual void Dead();
+
+	virtual void UpdateUI();
 
 	UFUNCTION(Blueprintable, BlueprintPure, Category = "Towers|Attribute")
 	bool IsActive() { return !IsDead(); }

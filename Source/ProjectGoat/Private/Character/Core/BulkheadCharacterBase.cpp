@@ -2,6 +2,8 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
+#include "Components/WidgetComponent.h"
+#include "UI/Character/UI_Health.h"
 #include "Character/Core/BulkheadCharacterBase.h"
 
 // Sets default values
@@ -10,6 +12,10 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GUID = FGuid::NewGuid();
+
+	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
+	HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
 }
 
 // Called when the game starts or when spawned
@@ -48,7 +54,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 	//	}
 	//}
 
-	//UpdateUI();
+	UpdateUI();
 
 	return Damage;
 }
@@ -112,3 +118,15 @@ void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, AActor
 		UDamageType::StaticClass());
 }
 
+void ABulkheadCharacterBase::UpdateUI()
+{
+	if (HealthWidget)
+	{
+		if (UUI_Health* HealthUI = Cast<UUI_Health>(HealthWidget->GetUserWidgetObject()))
+		{
+			HealthUI->SetTitle(GetCharacterData().Name.ToString());
+			HealthUI->SetHealth(GetHealth() / GetMaxHealth());
+		}
+	}
+
+}

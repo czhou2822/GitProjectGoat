@@ -13,7 +13,9 @@ public class ProjectGoat : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore", 
-			"HeadMountedDisplay" 
+			"HeadMountedDisplay",
+			"Slate",
+			"SlateCore",
 		});
 	}
 }

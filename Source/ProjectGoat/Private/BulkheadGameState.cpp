@@ -84,7 +84,7 @@ FCharacterData& ABulkheadGameState::GetCharacterData(const FGuid& ID)
 
 	if (InGameEnemyData.Contains(ID))
 	{
-		InGameEnemyData[ID];
+		return InGameEnemyData[ID];
 	}
 
 
