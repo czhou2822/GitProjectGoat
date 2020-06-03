@@ -57,6 +57,7 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 				{
 					NewCharacterData->UpdateHealth();
 					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
+					return RuleOfTheCharacter;
 				}
 			}
 		}
