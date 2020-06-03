@@ -110,9 +110,10 @@ void ABulkheadCharacterBase::Dead()
 
 void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, AActor* Target, float DamageValue)
 {
+	float RealDamageValue = GetCharacterData().Attack;
 	UGameplayStatics::ApplyDamage(
 		Target,
-		DamageValue,
+		RealDamageValue,
 		DamageCauser->GetController(),
 		DamageCauser,
 		UDamageType::StaticClass());

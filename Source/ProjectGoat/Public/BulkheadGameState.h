@@ -10,6 +10,7 @@
 class UDataTable;
 class ABulkheadCharacterBase;
 class AEnemyBase;
+class ATowerBase;
 
 extern FCharacterData CharacterDataNULL;
 
@@ -25,6 +26,9 @@ class PROJECTGOAT_API ABulkheadGameState : public AGameState
 private:
 	UPROPERTY()
 	UDataTable* GruntDataTable;
+
+	UPROPERTY()
+	UDataTable* TeslaTowerDataTable;
 
 public:
 	UPROPERTY(SaveGame)
@@ -51,6 +55,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	AEnemyBase* SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+
+	UFUNCTION(BlueprintCallable, Category = Spawn)
+	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 
 

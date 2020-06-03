@@ -5,6 +5,8 @@
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Character/Enemy/EnemyBase.h"
+#include "Character/Tower/TowerBase.h"
+
 #if PLATFORM_WINDOWS
 #pragma optimize("", off)
 #endif
@@ -15,9 +17,11 @@ FCharacterData CharacterDataNULL;
 
 ABulkheadGameState::ABulkheadGameState()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> MyTable_Enemy(TEXT("/Game/DataTable/GruntDataTable"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> GruntTable(TEXT("/Game/DataTable/DataTable_Grunt"));
+	GruntDataTable = GruntTable.Object;
 
-	GruntDataTable = MyTable_Enemy.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> TeslaTowerTable(TEXT("/Game/DataTable/DataTable_TeslaTower"));
+	TeslaTowerDataTable = TeslaTowerTable.Object;
 }
 
 ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
@@ -68,6 +72,11 @@ AEnemyBase* ABulkheadGameState::SpawnMonster(int32 CharacterID, int32 CharacterL
 	return SpawnCharacter<AEnemyBase>(CharacterID, CharacterLevel, GruntDataTable, Location, Rotator);
 }
 
+ATowerBase* ABulkheadGameState::SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
+{
+	return SpawnCharacter<ATowerBase>(CharacterID, CharacterLevel, TeslaTowerDataTable, Location, Rotator);
+}
+
 
 const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, const FCharacterData& Data)
 {
@@ -86,8 +95,6 @@ FCharacterData& ABulkheadGameState::GetCharacterData(const FGuid& ID)
 	{
 		return InGameEnemyData[ID];
 	}
-
-
 	return CharacterDataNULL;
 }
 

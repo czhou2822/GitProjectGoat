@@ -38,6 +38,9 @@ public:
 	UPROPERTY()
 		float Health;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
+		float Attack;
+
 
 
 public:
