@@ -30,9 +30,17 @@ private:
 	UPROPERTY()
 	UDataTable* TeslaTowerDataTable;
 
+	UPROPERTY()
+	UDataTable* WaveStructDataTable;
+
 public:
 	UPROPERTY(SaveGame)
 	TMap<FGuid, FCharacterData> InGameEnemyData;
+
+	UPROPERTY(EditAnywhere)
+	ABulkheadCharacterBase* SpawningPoint;
+
+	TArray<FWaveStructData*> WaveData;
 	
 protected:
 
@@ -58,6 +66,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+
+	UFUNCTION(BlueprintCallable, Category = Spawn)
+	void GetAllWaveStats();
+
+
 
 
 

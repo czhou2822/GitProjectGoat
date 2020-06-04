@@ -6,7 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Character/Enemy/EnemyBase.h"
 #include "Character/Tower/TowerBase.h"
-
+#include "Engine/World.h"
 #if PLATFORM_WINDOWS
 #pragma optimize("", off)
 #endif
@@ -22,6 +22,22 @@ ABulkheadGameState::ABulkheadGameState()
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> TeslaTowerTable(TEXT("/Game/DataTable/DataTable_TeslaTower"));
 	TeslaTowerDataTable = TeslaTowerTable.Object;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> WaveStructTable(TEXT("/Game/DataTable/DataTable_WaveStruct"));
+	WaveStructDataTable = WaveStructTable.Object;
+
+}
+
+void ABulkheadGameState::GetAllWaveStats()
+{
+	WaveData.Empty();
+	if (WaveStructDataTable)
+	{
+		WaveStructDataTable->GetAllRows(TEXT("Character Data"), WaveData);
+	}
+
+
+
 }
 
 ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
@@ -53,6 +69,8 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 
 			if (GetWorld() && NewClass)
 			{
+				FActorSpawnParameters SpawnParam;
+				SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 				if (ABulkheadCharacterBase* RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator))
 				{
 					NewCharacterData->UpdateHealth();
@@ -77,6 +95,8 @@ ATowerBase* ABulkheadGameState::SpawnTower(int32 CharacterID, int32 CharacterLev
 {
 	return SpawnCharacter<ATowerBase>(CharacterID, CharacterLevel, TeslaTowerDataTable, Location, Rotator);
 }
+
+
 
 
 const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, const FCharacterData& Data)
