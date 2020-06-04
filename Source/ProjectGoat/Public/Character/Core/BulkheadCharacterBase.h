@@ -19,6 +19,12 @@ class PROJECTGOAT_API ABulkheadCharacterBase : public ACharacter
 
 
 public:
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulkheadCharacterDead);
+
+	UPROPERTY(BlueprintAssignable, Category = "Test")
+	FOnBulkheadCharacterDead OnBulkheadCharacterDead;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)
 	FGuid GUID;
 

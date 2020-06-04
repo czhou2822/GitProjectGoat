@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Character/Core/BulkheadCharacterBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Character/UI_Health.h"
-#include "Character/Core/BulkheadCharacterBase.h"
 
 // Sets default values
 ABulkheadCharacterBase::ABulkheadCharacterBase()
@@ -100,6 +100,7 @@ float ABulkheadCharacterBase::GetMaxHealth()
 void ABulkheadCharacterBase::Dying()
 {
 	GetGameState()->RemoveCharacterData(GUID);
+	OnBulkheadCharacterDead.Broadcast();
 	Dead();
 }
 
