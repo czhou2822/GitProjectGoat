@@ -70,7 +70,7 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 			if (GetWorld() && NewClass)
 			{
 				FActorSpawnParameters SpawnParam;
-				SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 				if (ABulkheadCharacterBase* RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam))
 				{
 					NewCharacterData->UpdateHealth();

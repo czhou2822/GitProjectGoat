@@ -13,6 +13,8 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GUID = FGuid::NewGuid();
 
+	
+
 	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
