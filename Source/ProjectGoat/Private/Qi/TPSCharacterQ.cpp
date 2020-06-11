@@ -31,18 +31,18 @@ ATPSCharacterQ::ATPSCharacterQ()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	springArm = CreateDefaultSubobject<USpringArmComponent>("springArm");
-	springArm->bUsePawnControlRotation = true;
-	springArm->SetRelativeLocation(FVector(0, 0, 0));
-	springArm->bEnableCameraLag = true;
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>("springArm");
+	SpringArm->bUsePawnControlRotation = true;
+	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
+	SpringArm->bEnableCameraLag = true;
 
-	tpsCamera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
-	tpsCamera->SetupAttachment(springArm);
+	Camera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
+	Camera->SetupAttachment(SpringArm);
 
 	InventoryComp = CreateDefaultSubobject<UInventoryComponent>("InventoryComp");
 
-	tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
-	tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
+	//tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
+	//tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
 
 	WeaponSlot = CreateDefaultSubobject<UChildActorComponent>("WeaponSlot");
 	WeaponSlot->SetupAttachment(GetMesh(), "weapon_socket");
@@ -154,8 +154,8 @@ void ATPSCharacterQ::AimStart()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
-	springArm->SetRelativeLocation(AimOffsetTranslation);
-	tpsCamera->SetRelativeRotation(AimOffsetRotator);
+	SpringArm->SetRelativeLocation(AimOffsetTranslation);
+	Camera->SetRelativeRotation(AimOffsetRotator);
 	AimStartBlueprintInterface();
 }
 
@@ -165,112 +165,117 @@ void ATPSCharacterQ::AimEnd()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600;
-	springArm->SetRelativeLocation(FVector(0, 0, 0));
-	tpsCamera->SetRelativeRotation(FRotator(0,0,0));
+	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
+	Camera->SetRelativeRotation(FRotator(0,0,0));
 	AimEndBlueprintInterface();
 }
 
-void ATPSCharacterQ::FireStart()
-{
-
-
-	if (bAiming)
-	{
-		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
-		{
-			if (snowCount <= 0)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Frost Cannon empty! Aim and Press F to collect snow"));
-				return;
-			}
-		}
-		snowCount -= 0.5;
-
-		PlayAnimMontage(fireAnima);
-		UGameplayStatics::PlaySoundAtLocation(this, fireSound, GetActorLocation());
-
-		FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
-		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
-		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;  //backup
-
-
-
-
-
-
-		int32 ScreenX;
-		int32 ScreenY;
-		GetWorld()->GetFirstPlayerController()->GetViewportSize(ScreenX, ScreenY);
-
-		//UE_LOG(LogTemp, Warning, TEXT("Screen size %d, %d"), ScreenX, ScreenY);
-
-		FVector WorldLocation;
-		FVector WorldDirection;
-		GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
-		//FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
-
-
-		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
-		FVector fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-		//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
-
-
-
-
-		//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
-		FVector SweepStart = tpsGun->GetSocketLocation("Muzzle");
-		//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
-		FVector SweepEnd = fireEndPoint;
-
-		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
-
-		FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, (WeaponRange-2*CapsuleRadius)/2);
-		FVector eyeLocation;
-		FRotator eyeRotation;
-		GetActorEyesViewPoint(eyeLocation, eyeRotation);
-		//manual offset
-		/*eyeRotation.Pitch += 115;
-		eyeRotation.Yaw += 3;*/
-		FRotationConversionCache WorldRotationCache;
-		FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(eyeRotation);
-		//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
-		
-		DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(),ShapeQuat, FColor::Red, false, 1.f);
-
-
-		FCollisionQueryParams cqp;
-		FHitResult hr;
-		TArray<FHitResult> hrShape;
-		//DrawDebugBox(GetWorld(), tpsCamera->GetForwardVector() * 250 + fireStartPoint, FVector(100, 20, 50), FColor::Purple, true);
-		//GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECC_GameTraceChannel7, cqp);
-		bool isHit= GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
-		snowCount--;
-		
-		if (isHit) 
-		{
-			UE_LOG(LogTemp, Warning, TEXT("hitted actors: %d"), hrShape.Num());
-			for (int i = 0; i < hrShape.Num();i++) 
-			{
-				hr = hrShape[i];
-				if (hr.GetActor() && hr.GetActor() != this) 
-				{
-					//UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-					//UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-					//UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-					//hr.GetActor()->Destroy();
-					//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
-
-					if (Cast<AEnemyBase>(hr.GetActor()) != nullptr) 
-					{
-						AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
-						target->SlowDown();
-						UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
-					}
-				}
-			}
-		}
-	}
-}
+//void ATPSCharacterQ::FireStart()
+//{
+//
+//
+//	if (bAiming)
+//	{
+//		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
+//		{
+//			if (SnowCount <= 0)
+//			{
+//				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Frost Cannon empty! Aim and Press F to collect snow"));
+//				return;
+//			}
+//		}
+//		SnowCount -= 0.5;
+//
+//		PlayAnimMontage(FireAnima);
+//		
+//
+//
+//		//FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
+//
+//		if(AWeaponBase* Weapon = Cast<AWeaponBase>( WeaponSlot->GetChildActor()))
+//		{
+//			FVector fireStartPoint = Weapon->FirePoint->GetComponentLocation();
+//
+//
+//
+//			int32 ScreenX;
+//			int32 ScreenY;
+//			GetWorld()->GetFirstPlayerController()->GetViewportSize(ScreenX, ScreenY);
+//
+//			//UE_LOG(LogTemp, Warning, TEXT("Screen size %d, %d"), ScreenX, ScreenY);
+//
+//			FVector WorldLocation;
+//			FVector WorldDirection;
+//			GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
+//			//FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
+//
+//
+//			//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
+//			FVector fireEndPoint = Camera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
+//			//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
+//
+//
+//
+//
+//			//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
+//			FVector SweepStart = fireStartPoint;
+//			//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
+//			FVector SweepEnd = fireEndPoint;
+//
+//			//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
+//
+//			FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, (WeaponRange - 2 * CapsuleRadius) / 2);
+//			FVector eyeLocation;
+//			FRotator eyeRotation;
+//			GetActorEyesViewPoint(eyeLocation, eyeRotation);
+//			//manual offset
+//			/*eyeRotation.Pitch += 115;
+//			eyeRotation.Yaw += 3;*/
+//			FRotationConversionCache WorldRotationCache;
+//			FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(eyeRotation);
+//			//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
+//
+//			DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Red, false, 1.f);
+//
+//
+//			FCollisionQueryParams cqp;
+//			FHitResult hr;
+//			TArray<FHitResult> hrShape;
+//			//DrawDebugBox(GetWorld(), tpsCamera->GetForwardVector() * 250 + fireStartPoint, FVector(100, 20, 50), FColor::Purple, true);
+//			//GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECC_GameTraceChannel7, cqp);
+//			bool isHit = GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
+//			SnowCount--;
+//
+//			if (isHit)
+//			{
+//				UE_LOG(LogTemp, Warning, TEXT("hitted actors: %d"), hrShape.Num());
+//				for (int i = 0; i < hrShape.Num(); i++)
+//				{
+//					hr = hrShape[i];
+//					if (hr.GetActor() && hr.GetActor() != this)
+//					{
+//						//UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
+//						//UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
+//						//UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+//						//hr.GetActor()->Destroy();
+//						//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
+//
+//						if (Cast<AEnemyBase>(hr.GetActor()) != nullptr)
+//						{
+//							AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
+//							target->SlowDown();
+//							UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//
+//
+//
+//	}
+//}
 
 void ATPSCharacterQ::FireDown()
 {
@@ -279,8 +284,11 @@ void ATPSCharacterQ::FireDown()
 	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
 	if (WeaponDummy)
 	{
+		if (bAiming)
+		{
+			WeaponDummy->FireStart();
+		}
 		//UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
-		WeaponDummy->FireStart();
 	}
 
 }
@@ -317,37 +325,37 @@ void ATPSCharacterQ::onOverlap(AActor* OtherActor, class UPrimitiveComponent* Ot
 
 void ATPSCharacterQ::throwSeed()
 {
-	FVector seedStartPoint = tpsGun->GetSocketLocation("Muzzle");
-	if (bAiming) {
-		if (SeedClass)
-		{
-			// Get the camera transform.
-			FVector CameraLocation;
-			FRotator CameraRotation;
-			GetActorEyesViewPoint(CameraLocation, CameraRotation);
+	//FVector seedStartPoint = tpsGun->GetSocketLocation("Muzzle");
+	//if (bAiming) {
+	//	if (SeedClass)
+	//	{
+	//		// Get the camera transform.
+	//		FVector CameraLocation;
+	//		FRotator CameraRotation;
+	//		GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-			// Transform MuzzleOffset from camera space to world space.
-			FVector MuzzleLocation = seedStartPoint;// CameraLocation + FTransform(CameraRotation).TransformVector(seedStartPoint);
-			FRotator MuzzleRotation = CameraRotation;
-			// Skew the aim to be slightly upwards.
-			MuzzleRotation.Pitch += 10.0f;
-			UWorld* World = GetWorld();
-			if (World)
-			{
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = this;
-				SpawnParams.Instigator = Instigator;
-				// Spawn the projectile at the muzzle.
-				ATowerSeed* seed = World->SpawnActor<ATowerSeed>(SeedClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-				if (seed)
-				{
-					// Set the projectile's initial trajectory.
-					FVector LaunchDirection = MuzzleRotation.Vector();
-					seed->FireInDirection(LaunchDirection);
-				}
-			}
-		}
-	}
+	//		// Transform MuzzleOffset from camera space to world space.
+	//		FVector MuzzleLocation = seedStartPoint;// CameraLocation + FTransform(CameraRotation).TransformVector(seedStartPoint);
+	//		FRotator MuzzleRotation = CameraRotation;
+	//		// Skew the aim to be slightly upwards.
+	//		MuzzleRotation.Pitch += 10.0f;
+	//		UWorld* World = GetWorld();
+	//		if (World)
+	//		{
+	//			FActorSpawnParameters SpawnParams;
+	//			SpawnParams.Owner = this;
+	//			SpawnParams.Instigator = Instigator;
+	//			// Spawn the projectile at the muzzle.
+	//			ATowerSeed* seed = World->SpawnActor<ATowerSeed>(SeedClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+	//			if (seed)
+	//			{
+	//				// Set the projectile's initial trajectory.
+	//				FVector LaunchDirection = MuzzleRotation.Vector();
+	//				seed->FireInDirection(LaunchDirection);
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void ATPSCharacterQ::collectSnow()
@@ -358,11 +366,11 @@ void ATPSCharacterQ::collectSnow()
 		UGameplayStatics::PlaySoundAtLocation(this, fireSound, GetActorLocation());*/
 
 		//FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
-		FVector fireStartPoint = tpsCamera->GetComponentLocation();
+		FVector fireStartPoint = Camera->GetComponentLocation();
 
 		//FVector fireStartPoint =  Scene->GetLocation
 		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
-		FVector fireEndPoint = tpsCamera->GetForwardVector() * 1000 + tpsCamera->GetComponentLocation();
+		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
 
 
 
@@ -387,11 +395,11 @@ void ATPSCharacterQ::collectSnow()
 				bAiming_collecting = true;
 				OnCollectSnow(hr.Location);
 				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
-				if (snowCount <= 99) {
-					snowCount++;
+				if (SnowCount <= 99) {
+					SnowCount++;
 				}
 				else {
-					snowCount = 100;
+					SnowCount = 100;
 				}
 				//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(snowCount));
 

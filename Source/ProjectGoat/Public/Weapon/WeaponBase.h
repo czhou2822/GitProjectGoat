@@ -23,11 +23,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* WeaponBaseMesh;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float FireInvetval = 0.2;
 	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* FirePoint;
 
 
 

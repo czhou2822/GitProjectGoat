@@ -82,8 +82,10 @@ public:
 		int32 MiniBossID;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 GoldDropRate;
+		FString RouteNumber;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		int32 GoldDropRate;
 
 public:
 	FWaveStructData();

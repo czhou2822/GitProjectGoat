@@ -2,6 +2,7 @@
 
 
 #include "Weapon/WeaponBase.h"
+#include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
 
 // Sets default values
@@ -11,6 +12,9 @@ AWeaponBase::AWeaponBase()
 	PrimaryActorTick.bCanEverTick = true;
 	WeaponBaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMeshXXBase");
 	RootComponent = WeaponBaseMesh;
+
+	FirePoint = CreateDefaultSubobject<USceneComponent>("FirePoint");
+	FirePoint->SetupAttachment(RootComponent);
 
 	//WeaponCollisionRange = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponCollision"));
 

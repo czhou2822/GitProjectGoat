@@ -32,13 +32,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USpringArmComponent * springArm;
+		class USpringArmComponent * SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCameraComponent * tpsCamera;
+		class UCameraComponent * Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USkeletalMeshComponent* tpsGun;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//	class USkeletalMeshComponent* tpsGun;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UInventoryComponent* InventoryComp;
@@ -48,19 +48,25 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 		bool bAiming_collecting = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class UAnimMontage* fireAnima;
+		class UAnimMontage* FireAnima;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-		float snowCount;
+		float SnowCount;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleHalfHeight = 500.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float CapsuleRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FRotator AimOffsetRotator = FRotator(15, 0, 0);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector AimOffsetTranslation = FVector(130, 70, 50);
 
@@ -74,8 +80,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class USoundBase* fireSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadwrite)
 		bool bAllowSnowNegative;  //allow snow to go nagetive
+
 	UPROPERTY(EditAnywhere, Category = seed)
 		TSubclassOf<class ATowerSeed> SeedClass;
 
@@ -94,7 +102,7 @@ public:
 	void AimEnd();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void AimEndBlueprintInterface();
-	void FireStart();
+	//void FireStart();
 	void FireDown();
 	void FireUp();
 	void FireEnd();
