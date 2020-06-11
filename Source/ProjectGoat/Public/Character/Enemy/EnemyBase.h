@@ -42,9 +42,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	UFUNCTION(BlueprintCallable)
 		void SlowDown();
 	UFUNCTION(BlueprintCallable)
@@ -55,13 +52,14 @@ public:
 	UFUNCTION()
 		void HandleSlowDown();
 
-	FTimerHandle slowListener;
+	FTimerHandle SlowListener;
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnSlowStart();
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnSlowEnd();
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnFrozenStart();
+
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

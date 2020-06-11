@@ -14,7 +14,7 @@ AEnemyBase::AEnemyBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 
 	//GetCapsuleComponent()->OnComponentBeginOverlap->AddDynamic(this, &AEnemyBase::onOverlap);
 
@@ -37,12 +37,8 @@ void AEnemyBase::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
+
 
 void AEnemyBase::SlowDown()
 {
@@ -75,13 +71,13 @@ void AEnemyBase::SlowDown()
 
 void AEnemyBase::StartSlow()
 {
-	GetWorld()->GetTimerManager().SetTimer(slowListener, this, &AEnemyBase::SlowDown, 0.2f, true, 0.f);
+	GetWorld()->GetTimerManager().SetTimer(SlowListener, this, &AEnemyBase::SlowDown, 0.2f, true, 0.f);
 
 }
 
 void AEnemyBase::EndSlow()
 {
-	GetWorld()->GetTimerManager().ClearTimer(slowListener);
+	GetWorld()->GetTimerManager().ClearTimer(SlowListener);
 
 }
 
