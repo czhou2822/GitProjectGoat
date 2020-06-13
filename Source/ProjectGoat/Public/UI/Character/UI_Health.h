@@ -15,10 +15,10 @@ class PROJECTGOAT_API UUI_Health : public UUI_BulkheadUIBase
 	GENERATED_BODY()
 
 
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Title;
-
-	UPROPERTY(meta = (BindWidget))
+	//UPROPERTY(meta = (BindWidget))
+	//class UTextBlock* Title;
+public:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* Health;
 
 

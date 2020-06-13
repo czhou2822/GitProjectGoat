@@ -55,10 +55,13 @@ protected:
 public:
 	ABulkheadGameState();
 
+	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	const FCharacterData& AddCharacterData(const FGuid& ID, const FCharacterData& Data);
 
+	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	bool RemoveCharacterData(const FGuid& ID);
 
+	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	FCharacterData& GetCharacterData(const FGuid& ID);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)

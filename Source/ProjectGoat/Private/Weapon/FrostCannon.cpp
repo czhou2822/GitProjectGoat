@@ -16,14 +16,14 @@ AFrostCannon::AFrostCannon()
 
 	FrostHitCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("FrostHitCapsule"));
 	FrostHitCapsule->SetHiddenInGame(false);
-	FrostHitCapsule->bVisible = true;
+	FrostHitCapsule->SetVisibility(true);
 
 	FrostHitCapsule->SetupAttachment(RootComponent);
 
-	AimBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AimBox"));
-	AimBox->SetupAttachment(RootComponent);
-	AimBox->SetHiddenInGame(false);
-	AimBox->bVisible = false;
+	AirStrikeAimBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AimBox"));
+	AirStrikeAimBox->SetupAttachment(RootComponent);
+	AirStrikeAimBox->SetHiddenInGame(false);
+	AirStrikeAimBox->SetVisibility(false);
 
 }
 

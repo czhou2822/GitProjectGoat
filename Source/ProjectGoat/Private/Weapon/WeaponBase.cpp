@@ -7,6 +7,7 @@
 
 // Sets default values
 AWeaponBase::AWeaponBase()
+	:bIsFiring(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -41,6 +42,7 @@ void AWeaponBase::FireStart()
 {
 	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
 	bShowDebugCollision = true;
+	bIsFiring = true;
 	
 }
 
@@ -48,6 +50,7 @@ void AWeaponBase::FireEnd()
 {
 	GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 	bShowDebugCollision = false;
+	bIsFiring = false;
 	
 }
 

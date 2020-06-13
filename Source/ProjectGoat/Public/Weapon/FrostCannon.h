@@ -21,7 +21,7 @@ protected:
 		class UCapsuleComponent* FrostHitCapsule;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* AimBox;
+		class UBoxComponent* AirStrikeAimBox;
 
 
 
@@ -38,8 +38,8 @@ public:
 		void OnFireEnd();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnAimUp();
+		void OnAirStrikeAimUp();
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnAimDown();
+		void OnAirStrikeAimDown();
 
 };

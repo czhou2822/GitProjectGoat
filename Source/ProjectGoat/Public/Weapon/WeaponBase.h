@@ -29,6 +29,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* FirePoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsFiring;
 
 
 

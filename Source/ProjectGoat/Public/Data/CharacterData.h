@@ -38,7 +38,7 @@ public:
 	UPROPERTY()
 		float Health;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
 		float Attack;
 
 

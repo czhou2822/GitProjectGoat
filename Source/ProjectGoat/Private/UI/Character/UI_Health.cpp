@@ -14,7 +14,7 @@ void UUI_Health::NativeConstruct()
 
 void UUI_Health::SetTitle(const FString& Msg)
 {
-	Title->SetText(FText::FromString(Msg));
+	/*Title->SetText(FText::FromString(Msg));*/
 }
 
 void UUI_Health::SetHealth(float HeatlhValue)

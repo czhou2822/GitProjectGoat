@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/Core/BulkheadCharacterBase.h"
+#include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
 #include "Components/WidgetComponent.h"
@@ -17,6 +18,9 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
 
 	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	HomingPoint = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPoint"));
+	HomingPoint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 }
 
