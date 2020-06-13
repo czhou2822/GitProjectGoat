@@ -99,5 +99,5 @@ void AEnemyBase::HandleSlowDown()
 		UE_LOG(LogTemp, Log, TEXT("slow down tick"));
 		TickCount--;
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
 }

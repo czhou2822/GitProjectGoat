@@ -47,7 +47,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 
 	GetCharacterData().Health -= Damage;
 
-	UE_LOG(LogTemp, Warning, TEXT("%s taking damage %d, remaing health %d / %d"), *GetName(), Damage, GetCharacterData().Health, GetCharacterData().MaxHealth);
+	UE_LOG(LogTemp, Warning, TEXT("%s taking damage %d, remaing health %d / %d"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
 
 	if (!IsActive())
 	{

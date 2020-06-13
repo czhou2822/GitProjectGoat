@@ -8,6 +8,8 @@
 #include "Data/CharacterData.h"
 #include "BulkheadCharacterBase.generated.h"
 
+
+
 UCLASS()
 class PROJECTGOAT_API ABulkheadCharacterBase : public ACharacter
 {
