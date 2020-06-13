@@ -71,10 +71,12 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 			{
 				FActorSpawnParameters SpawnParam;
 				SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-				if (ABulkheadCharacterBase* RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam))
+				ABulkheadCharacterBase* RuleOfTheCharacter = nullptr;
+				RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
+				if (RuleOfTheCharacter)
 				{
 					NewCharacterData->UpdateHealth();
-					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
+					AddCharacterData(RuleOfTheCharacter->GGGUID, *NewCharacterData);
 					return RuleOfTheCharacter;
 				}
 			}

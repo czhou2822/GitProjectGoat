@@ -26,7 +26,7 @@ public:
 	FOnBulkheadCharacterDead OnBulkheadCharacterDead;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)
-	FGuid GUID;
+	FGuid GGGUID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	class USceneComponent* HomingPoint;

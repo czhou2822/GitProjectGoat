@@ -7,12 +7,17 @@
 #include "Components/WidgetComponent.h"
 #include "UI/Character/UI_Health.h"
 
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif
+
 // Sets default values
 ABulkheadCharacterBase::ABulkheadCharacterBase()
+	
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GUID = FGuid::NewGuid();
+	GGGUID = FGuid::NewGuid();
 
 	
 
@@ -42,7 +47,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 
 	GetCharacterData().Health -= Damage;
 
-	UE_LOG(LogTemp, Warning, TEXT("%d"), GetCharacterData().Health)
+	UE_LOG(LogTemp, Warning, TEXT("%s taking damage %d, remaing health %d / %d"), *GetName(), Damage, GetCharacterData().Health, GetCharacterData().MaxHealth);
 
 	if (!IsActive())
 	{
@@ -81,9 +86,9 @@ void ABulkheadCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 FCharacterData& ABulkheadCharacterBase::GetCharacterData()
 {
-	if (GetGameState())
+    if (GetGameState())
 	{
-		return GetGameState()->GetCharacterData(GUID);
+		return GetGameState()->GetCharacterData(GGGUID);
 	}
 	return CharacterDataNULL;
 }
@@ -105,7 +110,7 @@ float ABulkheadCharacterBase::GetMaxHealth()
 
 void ABulkheadCharacterBase::Dying()
 {
-	GetGameState()->RemoveCharacterData(GUID);
+	GetGameState()->RemoveCharacterData(GGGUID);
 	OnBulkheadCharacterDead.Broadcast();
 	Dead();
 }
@@ -117,10 +122,10 @@ void ABulkheadCharacterBase::Dead()
 
 void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, AActor* Target, float DamageValue)
 {
-	float RealDamageValue = GetCharacterData().Attack;
+	//float RealDamageValue = GetCharacterData().Attack;
 	UGameplayStatics::ApplyDamage(
 		Target,
-		RealDamageValue,
+		DamageValue,
 		DamageCauser->GetController(),
 		DamageCauser,
 		UDamageType::StaticClass());
@@ -138,3 +143,9 @@ void ABulkheadCharacterBase::UpdateUI()
 	}
 
 }
+
+
+
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
