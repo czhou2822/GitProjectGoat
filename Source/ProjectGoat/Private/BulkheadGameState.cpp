@@ -63,7 +63,7 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 			return nullptr;
 		};
 
-		if (FCharacterData* NewCharacterData = GetCharacterData(CharacterID))
+            		if (FCharacterData* NewCharacterData = GetCharacterData(CharacterID))
 		{
 			UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
 

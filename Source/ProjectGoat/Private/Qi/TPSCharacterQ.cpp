@@ -36,6 +36,8 @@ ATPSCharacterQ::ATPSCharacterQ()
 	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
 	SpringArm->bEnableCameraLag = true;
 
+	SpringArm->SetupAttachment(RootComponent);
+
 	Camera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
 	Camera->SetupAttachment(SpringArm);
 
