@@ -17,7 +17,6 @@
 #include "GameFramework/Actor.h"
 #include "Qi/AICharacter.h"
 #include "Character/Enemy/EnemyBase.h"
-#include "TowerSeed.h"
 #include "CollisionShape.h"
 #include "Engine/EngineTypes.h"
 #include "Math/Quat.h"

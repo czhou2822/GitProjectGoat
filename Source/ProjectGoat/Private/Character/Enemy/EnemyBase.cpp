@@ -18,6 +18,7 @@ AEnemyBase::AEnemyBase()
 
 	//GetCapsuleComponent()->OnComponentBeginOverlap->AddDynamic(this, &AEnemyBase::onOverlap);
 
+	//NavPoints.Init();
 }
 
 // Called when the game starts or when spawned
@@ -80,6 +81,13 @@ void AEnemyBase::EndSlow()
 	GetWorld()->GetTimerManager().ClearTimer(SlowListener);
 
 }
+
+//void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
+//{
+//	NavPoints = InPoints;
+//	NavPoints.Num();
+//
+//}
 
 void AEnemyBase::HandleSlowDown()
 {

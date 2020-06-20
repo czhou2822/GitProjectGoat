@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TowerSeed.h"
+#include "Character/Misc/TowerSeed.h"
 #include "CollisionShape.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacterQ.generated.h"

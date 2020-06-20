@@ -13,6 +13,9 @@ class AProjectGoatGameMode : public AGameMode
 
 public:
 	AProjectGoatGameMode();
+
+
+
 };
 
 

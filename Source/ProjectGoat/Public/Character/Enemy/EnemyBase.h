@@ -37,6 +37,11 @@ protected:
 	int32 TickCount = 0;
 
 public:
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//TArray<FVector> NavPoints;
+
+public:
 	// Sets default values for this character's properties
 	AEnemyBase();
 	// Called every frame
@@ -48,6 +53,9 @@ public:
 		void StartSlow();
 	UFUNCTION(BlueprintCallable)
 		void EndSlow();
+
+	//UFUNCTION(BlueprintCallable, Category = "EnemyBase")
+	//	void SetNavPoints(TArray<FVector> InPoints);
 
 	UFUNCTION()
 		void HandleSlowDown();
