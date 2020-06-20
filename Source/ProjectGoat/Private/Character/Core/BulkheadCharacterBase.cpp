@@ -17,7 +17,7 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GGGUID = FGuid::NewGuid();
+    GGGUID = FGuid::NewGuid();
 
 	
 
@@ -45,9 +45,14 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	FCharacterData DataTemp = GetCharacterData();
 	GetCharacterData().Health -= Damage;
 
-	UE_LOG(LogTemp, Warning, TEXT("%s taking damage %d, remaing health %d / %d"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
 
 	if (!IsActive())
 	{
