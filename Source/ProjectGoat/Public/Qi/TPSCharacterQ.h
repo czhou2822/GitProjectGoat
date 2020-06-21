@@ -106,6 +106,7 @@ public:
 	void FireDown();
 	void FireUp();
 	void FireEnd();
+	UFUNCTION(BlueprintCallable)
 	void  coinCollect();
 	void static coinConsume();
 	void onOverlap (AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

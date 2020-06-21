@@ -16,10 +16,14 @@ ACoin::ACoin()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SceneRoot"));
+	RootComponent = SceneComponent;
+
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mesh"));
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("RootCollision"));
 	//sphere->SetHiddenInGame(false);
-	RootComponent = VisualMesh;
+	VisualMesh->SetupAttachment(RootComponent);
 	SphereComp->SetupAttachment(RootComponent);
 	//VisualMesh->SetupAttachment(RootComponent);
 	//tried to set the type of collision 
@@ -44,12 +48,12 @@ void ACoin::BeginPlay()
 void ACoin::HandleOnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("!!!!!!"));
-	ATPSCharacterQ* PlayerCharacter = Cast<ATPSCharacterQ>(OtherActor);
-	if (PlayerCharacter)
-	{
-		PlayerCharacter->coinCollect();
-		Destroy();
-	}
+	//ATPSCharacterQ* PlayerCharacter = Cast<ATPSCharacterQ>(OtherActor);
+	//if (PlayerCharacter)
+	//{
+	//	PlayerCharacter->coinCollect();
+	//	Destroy();
+	//}
 }
 void ACoin::collect(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

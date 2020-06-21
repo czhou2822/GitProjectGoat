@@ -19,6 +19,10 @@ public:
 		UStaticMeshComponent* VisualMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USphereComponent* SphereComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class USceneComponent* SceneComponent;
+
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USphereComponent* CollisionSphere;*/
 		//UFUNCTION()
