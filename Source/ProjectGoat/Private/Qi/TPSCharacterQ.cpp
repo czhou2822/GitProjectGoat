@@ -122,12 +122,21 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ATPSCharacterQ::MoveForward(float v)
 {
+	
+	//FVector Direction = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraRotation().RotateVector(GetActorForwardVector());
 
-	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);
+	//AddMovementInput(Direction, v);
+
+
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);	
 }
 
 void ATPSCharacterQ::MoveRight(float v)
 {
+	//FVector Direction = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraRotation().RotateVector(GetActorRightVector());
+
+	//AddMovementInput(Direction, v);
+
 	AddMovementInput(UKismetMathLibrary::GetRightVector(GetControlRotation()), v);
 }
 
