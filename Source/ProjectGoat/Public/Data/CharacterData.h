@@ -41,6 +41,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
 		float Attack;
 
+	//attack interval. e.g. 0.5 means attacks every 0.5 seconds. 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
+		float AttackRate;
+
 
 
 public:
