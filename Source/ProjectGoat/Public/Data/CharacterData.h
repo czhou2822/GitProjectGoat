@@ -45,7 +45,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
 		float AttackRate;
 
+	//set to true once frozen, takes more damage from tower
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Attribute")
+	bool bIsBrittle;
 
+
+	bool bCanBeBrittle;
 
 public:
 	FCharacterData();
@@ -90,6 +95,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		int32 GoldDropRate;
+
 
 public:
 	FWaveStructData();

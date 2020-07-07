@@ -9,8 +9,8 @@ FCharacterData::FCharacterData()
 	ID(INDEX_NONE),
 	Lv(1),
 	MaxHealth(100),
-	Health(MaxHealth)
-
+	Health(MaxHealth), 
+	bIsBrittle(false)
 {
 
 }
