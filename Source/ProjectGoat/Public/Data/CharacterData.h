@@ -54,6 +54,8 @@ public:
 
 	bool bCanBeBrittle;
 
+	//false -> enemy, true -> tower
+	bool bTeam;
 
 
 public:

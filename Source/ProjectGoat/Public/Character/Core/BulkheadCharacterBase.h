@@ -71,7 +71,7 @@ public:
 	bool IsActive() { return !IsDead(); }
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Attack(ABulkheadCharacterBase* DamageCauser, AActor* Target, float DamageValue);
+	virtual void Attack(ABulkheadCharacterBase* DamageCauser, ABulkheadCharacterBase* Target, float DamageValue);
 
 	FORCEINLINE ABulkheadGameState* GetGameState() { return GetWorld() ? GetWorld()->GetGameState<ABulkheadGameState>() : NULL; }
 

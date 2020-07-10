@@ -6,6 +6,7 @@
 #include "GameFramework/DamageType.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Character/UI_Health.h"
+#include "EngineUtils.h"
 
 #if PLATFORM_WINDOWS
 #pragma optimize("", off)
@@ -43,34 +44,40 @@ void ABulkheadCharacterBase::BeginPlay()
 
 float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-
 	FCharacterData DataTemp = GetCharacterData();
-	GetCharacterData().Health -= Damage;
+	
+	//ABulkheadCharacterBase *Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
 
-	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
-
-	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
-
-	if (!IsActive())
-	{
-		GetCharacterData().Health = 0.0f;
-		Dying();
-	}
-
-	//if (DrawTextClass)
+	//if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
 	//{
-	//	if (ADrawText* MyValueText = GetWorld()->SpawnActor<ADrawText>(DrawTextClass, GetActorLocation(), FRotator::ZeroRotator))
-	//	{
-	//		FString DamageText = FString::Printf(TEXT("-%0.f"), DamageValue);
-	//		MyValueText->SetTextBlock(DamageText, FLinearColor::Red, DamageValue / GetCharacterData().MaxHealth);
+		Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	//	}
+		GetCharacterData().Health -= Damage;
+
+		//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+		//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+		if (!IsActive())
+		{
+			GetCharacterData().Health = 0.0f;
+			Dying();
+		}
+
+		//if (DrawTextClass)
+		//{
+		//	if (ADrawText* MyValueText = GetWorld()->SpawnActor<ADrawText>(DrawTextClass, GetActorLocation(), FRotator::ZeroRotator))
+		//	{
+		//		FString DamageText = FString::Printf(TEXT("-%0.f"), DamageValue);
+		//		MyValueText->SetTextBlock(DamageText, FLinearColor::Red, DamageValue / GetCharacterData().MaxHealth);
+
+		//	}
+		//}
+
+		UpdateUI();
 	//}
-
-	UpdateUI();
 
 	return Damage;
 }
@@ -125,9 +132,25 @@ void ABulkheadCharacterBase::Dead()
 	Destroy();
 }
 
-void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, AActor* Target, float DamageValue)
+void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, ABulkheadCharacterBase* Target, float DamageValue)
 {
 	//float RealDamageValue = GetCharacterData().Attack;
+
+	//TArray<AActor*> IgnoredActors;
+	//for (TActorIterator<ABulkheadCharacterBase>it(GetWorld(), ABulkheadCharacterBase::StaticClass()); it; ++it)
+	//{
+	//	if (ABulkheadCharacterBase* TheCharacter = *it)
+	//	{
+	//		if (TheCharacter->GetCharacterData().bTeam != )
+	//		{
+	//			IgnoredActors.Add(TheCharacter);
+	//		}
+	//	
+	//		
+	//	}
+	//}
+
+
 	UGameplayStatics::ApplyDamage(
 		Target,
 		DamageValue,
