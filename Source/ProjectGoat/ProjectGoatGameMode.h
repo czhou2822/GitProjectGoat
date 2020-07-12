@@ -14,7 +14,8 @@ class AProjectGoatGameMode : public AGameMode
 public:
 	AProjectGoatGameMode();
 
-
+	void SetCanBeBrittle(FGuid InID);
+	
 
 };
 

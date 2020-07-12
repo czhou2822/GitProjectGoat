@@ -20,3 +20,8 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 	//UE_LOG(LogTemp, Warning, TEXT("Project goat game mode"));
 
 }
+
+void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID)
+{
+	GetGameState();
+}
