@@ -11,6 +11,7 @@ ATowerBase::ATowerBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterData().bTeam = true;
 
+
 }
 
 // Called when the game starts or when spawned

@@ -75,8 +75,9 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 				RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
 				if (RuleOfTheCharacter)
 				{
-					NewCharacterData->UpdateHealth();
-					AddCharacterData(RuleOfTheCharacter->GGGUID, *NewCharacterData);
+					NewCharacterData->UpdateStats();
+					RuleOfTheCharacter->ResetGUID();
+					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
 					return RuleOfTheCharacter;
 				}
 			}

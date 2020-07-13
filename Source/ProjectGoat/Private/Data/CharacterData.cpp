@@ -16,7 +16,7 @@ FCharacterData::FCharacterData()
 {
 
 }
-void FCharacterData::UpdateHealth()
+void FCharacterData::UpdateStats()
 {
 	Health = MaxHealth;
 }

@@ -16,6 +16,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float GoldDropRate = 1.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float BrittleDamageRate = 2.f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

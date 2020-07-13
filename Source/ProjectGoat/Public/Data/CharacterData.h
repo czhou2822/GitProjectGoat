@@ -63,7 +63,7 @@ public:
 
 	bool IsValid() const;
 
-	void UpdateHealth();
+	void UpdateStats();
 
 
 };

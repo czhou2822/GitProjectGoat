@@ -28,7 +28,7 @@ public:
 	FOnBulkheadCharacterDead OnBulkheadCharacterDead;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)
-	FGuid GGGUID;
+	FGuid GUID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	class USceneComponent* HomingPoint;
@@ -66,6 +66,8 @@ public:
 	virtual void Dead();
 
 	virtual void UpdateUI();
+
+	void ResetGUID();
 
 	UFUNCTION(Blueprintable, BlueprintPure, Category = "Towers|Attribute")
 	bool IsActive() { return !IsDead(); }

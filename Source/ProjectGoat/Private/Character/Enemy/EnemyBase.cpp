@@ -26,6 +26,8 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
+
 }
 /*void AEnemyBase::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -117,10 +119,12 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	//ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GetGameState());
 	FCharacterData DataTemp = GetCharacterData();
-	if (DataTemp.bIsBrittle == true) {
-		GetCharacterData().Health -= Damage * 1.5;
+	if (DataTemp.bIsBrittle == true) 
+	{
+		GetCharacterData().Health -= Damage * BrittleDamageRate;
 	}
-	else {
+	else 
+	{
 		GetCharacterData().Health -= Damage;
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
