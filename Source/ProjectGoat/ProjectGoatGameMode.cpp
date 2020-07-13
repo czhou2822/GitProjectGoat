@@ -21,7 +21,8 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 
 }
 
-void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID)
+/*void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID)
 {
 	GetGameState();
 }
+*/
