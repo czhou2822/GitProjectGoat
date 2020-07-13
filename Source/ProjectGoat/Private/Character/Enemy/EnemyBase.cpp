@@ -26,7 +26,6 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
 
 }
 /*void AEnemyBase::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -37,6 +36,13 @@ void AEnemyBase::BeginPlay()
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AEnemyBase::BulkheadInit()
+{
+	Super::BulkheadInit();
+	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
 
 }
 

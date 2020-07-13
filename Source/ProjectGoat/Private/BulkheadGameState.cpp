@@ -78,6 +78,7 @@ ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
 					NewCharacterData->UpdateStats();
 					RuleOfTheCharacter->ResetGUID();
 					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
+					RuleOfTheCharacter->BulkheadInit();
 					return RuleOfTheCharacter;
 				}
 			}

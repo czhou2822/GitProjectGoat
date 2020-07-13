@@ -4,6 +4,7 @@
 #include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Character/UI_Health.h"
 #include "EngineUtils.h"
@@ -103,6 +104,10 @@ FCharacterData& ABulkheadCharacterBase::GetCharacterData()
 		return GetGameState()->GetCharacterData(GUID);
 	}
 	return CharacterDataNULL;
+}
+
+void ABulkheadCharacterBase::BulkheadInit()
+{
 }
 
 bool ABulkheadCharacterBase::IsDead()
