@@ -99,12 +99,12 @@ void AEnemyBase::HandleSlowDown()
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
 
 		GetWorldTimerManager().ClearTimer(SlowTimer);
-		UE_LOG(LogTemp, Log, TEXT("Back Normal"));
+		//UE_LOG(LogTemp, Log, TEXT("Back Normal"));
 		OnSlowEnd();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Log, TEXT("slow down tick"));
+		//UE_LOG(LogTemp, Log, TEXT("slow down tick"));
 		TickCount--;
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
