@@ -11,6 +11,7 @@ FCharacterData::FCharacterData()
 	MaxHealth(100),
 	Health(MaxHealth), 
 	bIsBrittle(false),
+	bCanBeBrittle(true),
 	bTeam(false)
 {
 
