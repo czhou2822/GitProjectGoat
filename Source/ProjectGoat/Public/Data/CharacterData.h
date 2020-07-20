@@ -57,6 +57,8 @@ public:
 	//false -> enemy, true -> tower
 	bool bTeam;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
+	int32 Gold;  //cost or drop scrap value
 
 public:
 	FCharacterData();
