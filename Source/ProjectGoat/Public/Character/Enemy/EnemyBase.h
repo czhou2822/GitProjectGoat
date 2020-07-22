@@ -16,6 +16,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float GoldDropRate = 1.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float BrittleDamageRate = 2.f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,10 +50,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void BulkheadInit() override;
+
 	UFUNCTION(BlueprintCallable)
 		void SlowDown();
+
 	UFUNCTION(BlueprintCallable)
 		void StartSlow();
+
 	UFUNCTION(BlueprintCallable)
 		void EndSlow();
 
@@ -58,15 +65,21 @@ public:
 	//	void SetNavPoints(TArray<FVector> InPoints);
 
 	UFUNCTION()
-		void HandleSlowDown();
+	void HandleSlowDown();
+
+	UFUNCTION(BlueprintCallable)
+	float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
 	FTimerHandle SlowListener;
+
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSlowStart();
+	void OnSlowStart();
+
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSlowEnd();
+	void OnSlowEnd();
+
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnFrozenStart();
+	void OnFrozenStart();
 
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

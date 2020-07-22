@@ -114,8 +114,8 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATPSCharacterQ::AimEnd);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireDown);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::collectDown);
-	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::collectUp);
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectDown);
+	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectUp);
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::FireEnd);
 
 }
@@ -321,19 +321,19 @@ void ATPSCharacterQ::FireEnd()
 	ATPSCharacterQ::coinCount++;
 }*/
 
-void ATPSCharacterQ::coinCollect()
+void ATPSCharacterQ::CoinCollect(int32 InGold)
 {
 
-	InventoryComp->Gold++;
+	InventoryComp->Gold+= InGold;
 
 }
 
-void ATPSCharacterQ::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ATPSCharacterQ::OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
 }
 
-void ATPSCharacterQ::throwSeed()
+void ATPSCharacterQ::ThrowSeed()
 {
 	//FVector seedStartPoint = tpsGun->GetSocketLocation("Muzzle");
 	//if (bAiming) {
@@ -368,7 +368,7 @@ void ATPSCharacterQ::throwSeed()
 	//}
 }
 
-void ATPSCharacterQ::collectSnow()
+void ATPSCharacterQ::CollectSnow()
 {
 	if (bAiming)
 	{
@@ -419,15 +419,15 @@ void ATPSCharacterQ::collectSnow()
 	}
 }
 
-void ATPSCharacterQ::collectUp()
+void ATPSCharacterQ::CollectUp()
 {
-	GetWorld()->GetTimerManager().ClearTimer(snowTimer);
+	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
 	bAiming_collecting = false;
 
 }
 
-void ATPSCharacterQ::collectDown()
+void ATPSCharacterQ::CollectDown()
 {
-	GetWorld()->GetTimerManager().SetTimer(snowTimer, this, &ATPSCharacterQ::collectSnow, 0.1f, true, 0.f);
+	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
 }
 

@@ -26,6 +26,7 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 }
 /*void AEnemyBase::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -35,6 +36,13 @@ void AEnemyBase::BeginPlay()
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AEnemyBase::BulkheadInit()
+{
+	Super::BulkheadInit();
+	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
 
 }
 
@@ -108,4 +116,46 @@ void AEnemyBase::HandleSlowDown()
 		TickCount--;
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
+}
+
+
+
+float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	//ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GetGameState());
+	FCharacterData DataTemp = GetCharacterData();
+	if (DataTemp.bIsBrittle == true) 
+	{
+		GetCharacterData().Health -= Damage * BrittleDamageRate;
+	}
+	else 
+	{
+		GetCharacterData().Health -= Damage;
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+	if (!IsActive())
+	{
+		GetCharacterData().Health = 0.0f;
+		Dying();
+	}
+
+	//if (DrawTextClass)
+	//{
+	//	if (ADrawText* MyValueText = GetWorld()->SpawnActor<ADrawText>(DrawTextClass, GetActorLocation(), FRotator::ZeroRotator))
+	//	{
+	//		FString DamageText = FString::Printf(TEXT("-%0.f"), DamageValue);
+	//		MyValueText->SetTextBlock(DamageText, FLinearColor::Red, DamageValue / GetCharacterData().MaxHealth);
+
+	//	}
+	//}
+
+	UpdateUI();
+
+	return Damage;
 }

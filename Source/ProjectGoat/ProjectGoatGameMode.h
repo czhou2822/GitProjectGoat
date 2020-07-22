@@ -13,10 +13,12 @@ class AProjectGoatGameMode : public AGameMode
 
 public:
 	AProjectGoatGameMode();
-
-	void SetCanBeBrittle(FGuid InID);
 	
+	UFUNCTION(BlueprintCallable)
+	void SetCanBeBrittle(FGuid InID, bool result);
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsBrittle(FGuid InID, bool result);
 };
 
 

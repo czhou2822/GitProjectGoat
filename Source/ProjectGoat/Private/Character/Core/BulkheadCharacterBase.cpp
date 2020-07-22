@@ -4,6 +4,7 @@
 #include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Character/UI_Health.h"
 #include "EngineUtils.h"
@@ -18,10 +19,7 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-    GGGUID = FGuid::NewGuid();
-
 	
-
 	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
@@ -100,9 +98,13 @@ FCharacterData& ABulkheadCharacterBase::GetCharacterData()
 {
     if (GetGameState())
 	{
-		return GetGameState()->GetCharacterData(GGGUID);
+		return GetGameState()->GetCharacterData(GUID);
 	}
 	return CharacterDataNULL;
+}
+
+void ABulkheadCharacterBase::BulkheadInit()
+{
 }
 
 bool ABulkheadCharacterBase::IsDead()
@@ -122,7 +124,7 @@ float ABulkheadCharacterBase::GetMaxHealth()
 
 void ABulkheadCharacterBase::Dying()
 {
-	GetGameState()->RemoveCharacterData(GGGUID);
+	GetGameState()->RemoveCharacterData(GUID);
 	OnBulkheadCharacterDead.Broadcast();
 	Dead();
 }
@@ -170,6 +172,11 @@ void ABulkheadCharacterBase::UpdateUI()
 		}
 	}
 
+}
+
+void ABulkheadCharacterBase::ResetGUID()
+{
+	GUID = FGuid::NewGuid();
 }
 
 

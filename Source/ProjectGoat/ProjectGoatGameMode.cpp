@@ -21,8 +21,22 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 
 }
 
-/*void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID)
+void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID, bool result)
 {
-	
+	if (ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GameState))
+	{
+		InGameState->GetCharacterData(InID).bCanBeBrittle = result;
+	}
+
 }
-*/
+
+void AProjectGoatGameMode::SetIsBrittle(FGuid InID, bool result)
+{
+	if (ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GameState))
+	{
+		if (InGameState->GetCharacterData(InID).bCanBeBrittle == true) {
+			InGameState->GetCharacterData(InID).bIsBrittle = result;
+		}
+	}
+
+}

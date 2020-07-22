@@ -11,11 +11,12 @@ FCharacterData::FCharacterData()
 	MaxHealth(100),
 	Health(MaxHealth), 
 	bIsBrittle(false),
+	bCanBeBrittle(true),
 	bTeam(false)
 {
 
 }
-void FCharacterData::UpdateHealth()
+void FCharacterData::UpdateStats()
 {
 	Health = MaxHealth;
 }

@@ -92,30 +92,48 @@ public:
 	
 
 	void MoveForward(float v);
+
 	void MoveRight(float v);
+
 	void CrouchDown();
+
 	void CrouchUp();
+
 	void JumpFunction();
+
 	void AimStart();
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void AimStartBlueprintInterface();
+
 	void AimEnd();
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void AimEndBlueprintInterface();
+
 	//void FireStart();
 	void FireDown();
-	void FireUp();
-	void FireEnd();
-	UFUNCTION(BlueprintCallable)
-	void  coinCollect();
-	void static coinConsume();
-	void onOverlap (AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION(BlueprintCallable)
-	void throwSeed();
-	void collectSnow();
-	void collectUp();
-	void collectDown();
 
-	FTimerHandle fireTimer;
-	FTimerHandle snowTimer;
+	void FireUp();
+
+	void FireEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void  CoinCollect(int32 InGold);
+
+	void static CoinConsume();
+
+	void OnOverlap (AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void ThrowSeed();
+
+	void CollectSnow();
+
+	void CollectUp();
+
+	void CollectDown();
+
+	FTimerHandle FireTimer;
+	FTimerHandle SnowTimer;
 };

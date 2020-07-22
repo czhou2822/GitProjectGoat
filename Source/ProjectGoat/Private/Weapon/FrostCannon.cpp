@@ -37,6 +37,6 @@ void AFrostCannon::FireEnd()
 {
 	Super::FireEnd();
 	OnFireEnd();
-	UE_LOG(LogTemp, Log, TEXT("Frost Weapon Fire"));
+	//UE_LOG(LogTemp, Log, TEXT("Frost Weapon Fire"));
 }
 
