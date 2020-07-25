@@ -17,7 +17,6 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 
 	GameStateClass = ABulkheadGameState::StaticClass();
 
-	//UE_LOG(LogTemp, Warning, TEXT("Project goat game mode"));
 
 }
 
