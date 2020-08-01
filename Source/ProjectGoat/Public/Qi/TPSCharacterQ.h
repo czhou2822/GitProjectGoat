@@ -17,6 +17,8 @@ class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 	GENERATED_BODY()
 
 public:
+
+
 	// Sets default values for this character's properties
 	ATPSCharacterQ();
 
@@ -25,6 +27,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
+
+	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
+	FOnTowerPlaced OnTowerPlaced;
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
