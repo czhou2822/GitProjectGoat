@@ -14,8 +14,6 @@ class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	ATowerBase();
 
 	
 
@@ -24,9 +22,14 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	// Sets default values for this actor's properties
+	ATowerBase();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void HandleOnTowerPlaced();
 
 
 };

@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Engine/World.h"
 #include "Character/Tower/TowerBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "Qi/TPSCharacterQ.h"
+
 
 // Sets default values
 ATowerBase::ATowerBase()
@@ -11,14 +14,17 @@ ATowerBase::ATowerBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterData().bTeam = true;
 
-
+	ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+	if (TPSCharacter)
+	{
+		TPSCharacter->OnTowerPlaced.AddDynamic(this, &ATowerBase::HandleOnTowerPlaced);
+	}
 }
 
 // Called when the game starts or when spawned
 void ATowerBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -26,5 +32,10 @@ void ATowerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ATowerBase::HandleOnTowerPlaced()
+{
+	UE_LOG(LogTemp, Warning, TEXT("TowerPlaced"));
 }
 
