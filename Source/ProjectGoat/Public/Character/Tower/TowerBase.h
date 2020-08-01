@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Character/Core/BulkheadCharacterBase.h"
+#include <stdbool.h>
 #include "TowerBase.generated.h"
+
 
 UCLASS()
 class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
@@ -14,6 +16,8 @@ class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
 public:	
 	// Sets default values for this actor's properties
 	ATowerBase();
+
+	
 
 protected:
 	// Called when the game starts or when spawned
