@@ -30,8 +30,14 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterStartPlacing);
+
+
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnTowerPlaced OnTowerPlaced;
+
+	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
+	FOnCharacterStartPlacing OnCharacterStartPlacing;
 
 
 	// Called every frame
