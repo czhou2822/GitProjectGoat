@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
 #include "Data/CharacterData.h"
+#include "ProjectGoat/ProjectGoatType.h"
 #include "BulkheadGameState.generated.h"
 
 class UDataTable;
@@ -24,14 +25,12 @@ class PROJECTGOAT_API ABulkheadGameState : public AGameState
 	GENERATED_BODY()
 
 private:
-	UPROPERTY()
-	UDataTable* GruntDataTable;
 
-	UPROPERTY()
-	UDataTable* TeslaTowerDataTable;
 
 	UPROPERTY()
 	UDataTable* WaveStructDataTable;
+
+
 
 public:
 	UPROPERTY(SaveGame)
@@ -40,17 +39,21 @@ public:
 	UPROPERTY(EditAnywhere)
 	ABulkheadCharacterBase* SpawningPoint;
 
+	UPROPERTY()
+	UDataTable* MonsterDataTable;
+
+	UPROPERTY()
+	UDataTable* TowerDataTable;
+
+	TMap<int32, FCharacterData*> CacheTowerData;
+
+	TMap<int32, FCharacterData*> CacheMonsterData;
+
 	TArray<FWaveStructData*> WaveData;
 	
 protected:
 
-	ABulkheadCharacterBase* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, UDataTable* InCharacterData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
-	template<class T>
-	T* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, UDataTable* InCharacterData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator)
-	{
-		return Cast<T>(SpawnCharacter(CharacterID, CharacterLevel, InCharacterData, Location, Rotator));
-	}
 
 public:
 	ABulkheadGameState();
@@ -65,15 +68,11 @@ public:
 	FCharacterData& GetCharacterData(const FGuid& ID);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	AEnemyBase* SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
-
-	UFUNCTION(BlueprintCallable, Category = Spawn)
-	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
-
-	UFUNCTION(BlueprintCallable, Category = Spawn)
 	void GetAllWaveStats();
 
+	TMap<int32, FCharacterData*> ReadDataFromTable(UDataTable* InUDataTable);
 
+	FCharacterData* GetCharacterDataByID(const int32& ID, const ECharacterType& Type = ECharacterType::TOWER);
 
 
 
