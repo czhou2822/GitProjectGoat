@@ -106,6 +106,61 @@ FCharacterData* ABulkheadGameState::GetCharacterDataByID(const int32& ID, const 
 	return nullptr;
 }
 
+void ABulkheadGameState::AddActiveEnemy(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		ActiveEnemies.Add(InEnemy);
+	}
+}
+
+void ABulkheadGameState::CheckActiveEnemy(AEnemyBase* InEnemy)
+{
+	if (!InEnemy)
+	{
+		DeleteActiveEnemy(InEnemy);
+	}
+}
+
+void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
+{
+	ActiveEnemies.Remove(InEnemy);
+}
+
+bool ABulkheadGameState::CheckAllActiveEnemy()
+{
+	for (AEnemyBase* Tmp : ActiveEnemies)
+	{
+		if (Tmp)
+		{
+			return false;
+		}
+		ActiveEnemies.Remove(Tmp);
+	}
+	return true;
+}
+
+void ABulkheadGameState::ClearActiveEnemyList()
+{
+	ActiveEnemies.Empty();
+}
+
+void ABulkheadGameState::AddToPrioritizedList(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		PrioritizedEnemyList.Add(InEnemy);
+	}
+}
+
+void ABulkheadGameState::DeleteFromPrioritizedList(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		PrioritizedEnemyList.Remove(InEnemy);
+	}
+}
+
 
 
 #if PLATFORM_WINDOWS
