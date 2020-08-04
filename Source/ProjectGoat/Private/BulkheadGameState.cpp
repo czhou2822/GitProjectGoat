@@ -3,9 +3,9 @@
 
 #include "BulkheadGameState.h"
 #include "Character/Core/BulkheadCharacterBase.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Character/Enemy/EnemyBase.h"
 #include "Character/Tower/TowerBase.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
 #if PLATFORM_WINDOWS
 #pragma optimize("", off)
@@ -17,15 +17,20 @@ FCharacterData CharacterDataNULL;
 
 ABulkheadGameState::ABulkheadGameState()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> GruntTable(TEXT("/Game/DataTable/DataTable_Grunt"));
-	GruntDataTable = GruntTable.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> GruntTable(TEXT("/Game/DataTable/DataTable_Monster"));
+	MonsterDataTable = GruntTable.Object;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> TeslaTowerTable(TEXT("/Game/DataTable/DataTable_TeslaTower"));
-	TeslaTowerDataTable = TeslaTowerTable.Object;
+	static ConstructorHelpers::FObjectFinder<UDataTable> TeslaTowerTable(TEXT("/Game/DataTable/DataTable_Tower"));
+	TowerDataTable = TeslaTowerTable.Object;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> WaveStructTable(TEXT("/Game/DataTable/DataTable_WaveStruct"));
 	WaveStructDataTable = WaveStructTable.Object;
 
+	CacheTowerData = ReadDataFromTable(TowerDataTable);
+
+	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
+
+	CacheMonsterData;
 }
 
 void ABulkheadGameState::GetAllWaveStats()
@@ -35,72 +40,7 @@ void ABulkheadGameState::GetAllWaveStats()
 	{
 		WaveStructDataTable->GetAllRows(TEXT("Character Data"), WaveData);
 	}
-
-
-
 }
-
-ABulkheadCharacterBase* ABulkheadGameState::SpawnCharacter(
-	int32 CharacterID,
-	int32 CharacterLevel,
-	UDataTable* InCharacterData,
-	const FVector& Location,
-	const FRotator& Rotator)
-{
-	if (InCharacterData)
-	{
-		TArray<FCharacterData*> Data;
-		InCharacterData->GetAllRows(TEXT("Character Data"), Data);
-		auto GetCharacterData = [&](int32 ID) -> FCharacterData*
-		{
-			for (auto& Tmp : Data)
-			{
-				if (Tmp->ID == ID)
-				{
-					return Tmp;
-				}
-			}
-			return nullptr;
-		};
-
-        if (FCharacterData* NewCharacterData = GetCharacterData(CharacterID))
-		{
-			UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
-
-			if (GetWorld() && NewClass)
-			{
-				FActorSpawnParameters SpawnParam;
-				SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-				ABulkheadCharacterBase* RuleOfTheCharacter = nullptr;
-				RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
-				if (RuleOfTheCharacter)
-				{
-					NewCharacterData->UpdateStats();
-					RuleOfTheCharacter->ResetGUID();
-					AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
-					RuleOfTheCharacter->BulkheadInit();
-					return RuleOfTheCharacter;
-				}
-			}
-		}
-
-	}
-
-	return nullptr;
-}
-
-
-AEnemyBase* ABulkheadGameState::SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
-{
-	return SpawnCharacter<AEnemyBase>(CharacterID, CharacterLevel, GruntDataTable, Location, Rotator);
-}
-
-ATowerBase* ABulkheadGameState::SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
-{
-	return SpawnCharacter<ATowerBase>(CharacterID, CharacterLevel, TeslaTowerDataTable, Location, Rotator);
-}
-
-
 
 
 const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, const FCharacterData& Data)
@@ -115,13 +55,112 @@ bool ABulkheadGameState::RemoveCharacterData(const FGuid& ID)
 
 FCharacterData& ABulkheadGameState::GetCharacterData(const FGuid& ID)
 {
-
 	if (InGameEnemyData.Contains(ID))
 	{
 		return InGameEnemyData[ID];
 	}
 	return CharacterDataNULL;
 }
+
+TMap<int32, FCharacterData*> ABulkheadGameState::ReadDataFromTable(UDataTable* InUDataTable)
+{
+	TArray<FCharacterData*> TempArray;
+	
+	TMap<int32, FCharacterData*> OutTMap;
+
+	TempArray.Empty();
+
+	OutTMap.Empty();
+
+	InUDataTable->GetAllRows(TEXT("Character Data"), TempArray);
+	
+	for (FCharacterData* Tmp : TempArray)
+	{
+		OutTMap.Add(Tmp->ID, Tmp);
+	}
+
+	return OutTMap;
+}
+
+
+
+FCharacterData* ABulkheadGameState::GetCharacterDataByID(const int32& ID, const ECharacterType& Type)
+{
+	switch (Type)
+	{
+	case ECharacterType::TOWER:
+	{
+		if (CacheTowerData.Contains(ID))
+		{
+			return CacheTowerData[ID];
+		}
+	}
+	case ECharacterType::MONSTER:
+	{
+		if (CacheMonsterData.Contains(ID))
+		{
+			return CacheMonsterData[ID];
+		}
+	}
+	}
+	return nullptr;
+}
+
+void ABulkheadGameState::AddActiveEnemy(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		ActiveEnemies.Add(InEnemy);
+	}
+}
+
+void ABulkheadGameState::CheckActiveEnemy(AEnemyBase* InEnemy)
+{
+	if (!InEnemy)
+	{
+		DeleteActiveEnemy(InEnemy);
+	}
+}
+
+void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
+{
+	ActiveEnemies.Remove(InEnemy);
+}
+
+bool ABulkheadGameState::CheckAllActiveEnemy()
+{
+	for (AEnemyBase* Tmp : ActiveEnemies)
+	{
+		if (Tmp)
+		{
+			return false;
+		}
+		ActiveEnemies.Remove(Tmp);
+	}
+	return true;
+}
+
+void ABulkheadGameState::ClearActiveEnemyList()
+{
+	ActiveEnemies.Empty();
+}
+
+void ABulkheadGameState::AddToPrioritizedList(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		PrioritizedEnemyList.Add(InEnemy);
+	}
+}
+
+void ABulkheadGameState::DeleteFromPrioritizedList(AEnemyBase* InEnemy)
+{
+	if (InEnemy)
+	{
+		PrioritizedEnemyList.Remove(InEnemy);
+	}
+}
+
 
 
 #if PLATFORM_WINDOWS

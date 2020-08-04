@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
 #include "Data/CharacterData.h"
+#include "ProjectGoat/ProjectGoatType.h"
 #include "BulkheadGameState.generated.h"
 
 class UDataTable;
@@ -24,14 +25,18 @@ class PROJECTGOAT_API ABulkheadGameState : public AGameState
 	GENERATED_BODY()
 
 private:
-	UPROPERTY()
-	UDataTable* GruntDataTable;
 
-	UPROPERTY()
-	UDataTable* TeslaTowerDataTable;
 
 	UPROPERTY()
 	UDataTable* WaveStructDataTable;
+
+	//used to store every live enemy in the scene
+	TSet<AEnemyBase*> ActiveEnemies;
+
+
+	//used to store prioritized enemy. e.g. the tower should attack whichever target thats slowed by player. 
+	//Only when these objects are out of range, can the tower attack the closest target within ITS range.
+	TSet<AEnemyBase*> PrioritizedEnemyList;
 
 public:
 	UPROPERTY(SaveGame)
@@ -40,17 +45,28 @@ public:
 	UPROPERTY(EditAnywhere)
 	ABulkheadCharacterBase* SpawningPoint;
 
+	//used to store intermidiated data between .uasset data and CacheMonsterData
+	UPROPERTY()
+	UDataTable* MonsterDataTable;
+
+	//used to store intermidiated data between .uasset data and CacheTowerData
+	UPROPERTY()
+	UDataTable* TowerDataTable;
+	
+	//used to Tower store data read from UTable
+	TMap<int32, FCharacterData*> CacheTowerData;
+
+	//used to monster store data read from UTable
+	TMap<int32, FCharacterData*> CacheMonsterData;
+
 	TArray<FWaveStructData*> WaveData;
+
+
+
 	
 protected:
 
-	ABulkheadCharacterBase* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, UDataTable* InCharacterData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
-	template<class T>
-	T* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, UDataTable* InCharacterData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator)
-	{
-		return Cast<T>(SpawnCharacter(CharacterID, CharacterLevel, InCharacterData, Location, Rotator));
-	}
 
 public:
 	ABulkheadGameState();
@@ -65,16 +81,35 @@ public:
 	FCharacterData& GetCharacterData(const FGuid& ID);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	AEnemyBase* SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
-
-	UFUNCTION(BlueprintCallable, Category = Spawn)
-	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
-
-	UFUNCTION(BlueprintCallable, Category = Spawn)
 	void GetAllWaveStats();
 
+	TMap<int32, FCharacterData*> ReadDataFromTable(UDataTable* InUDataTable);
 
+	FCharacterData* GetCharacterDataByID(const int32& ID, const ECharacterType& Type = ECharacterType::TOWER);
 
+	//used to add enemy into active list, should be called whenever an enemy is called. 
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	void AddActiveEnemy(AEnemyBase* InEnemy);
 
+	//check if such enemy is invalie. e.g. pending death or already dead.
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	void CheckActiveEnemy(AEnemyBase* InEnemy);
 
+	//delete such enemy from ActiveEnemyList. 
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	void DeleteActiveEnemy(AEnemyBase* InEnemy);
+
+	//check active enemy list. if all invalid (e.g. all dead), return true -> all enemy are cleared. 
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	bool CheckAllActiveEnemy();
+
+	//hard reset on ActiveEnemyList 
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	void ClearActiveEnemyList();
+	
+	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
+	void AddToPrioritizedList(AEnemyBase* InEnemy);
+
+	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
+	void DeleteFromPrioritizedList(AEnemyBase* InEnemy);
 };

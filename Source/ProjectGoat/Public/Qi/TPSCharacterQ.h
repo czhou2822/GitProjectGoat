@@ -30,7 +30,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterStartPlacing);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
