@@ -25,6 +25,7 @@ ATowerBase::ATowerBase():ABulkheadCharacterBase()
 	GetCharacterData().bTeam = true;
 	Decal = CreateDefaultSubobject<UDecalComponent>(TEXT("Decal"));
 	Mesher = CreateDefaultSubobject<UMeshComponent>(TEXT("Mesher"));
+	TowerPadding = CreateDefaultSubobject<UBoxComponent>(TEXT("TowerPadding"));
 }
 
 
@@ -100,7 +101,7 @@ void ATowerBase::HandleOnConstructionComplete()
 	this->OnConstructionComplete.AddDynamic(this, &ATowerBase::OnConstructionCompleteEvent);
 	this->OnConstructionComplete.Broadcast();
 	
-	FVector FirePoint = Mesher->GetSocketLocation("FirePoint");
+	FirePoint = Mesher->GetSocketLocation(FirePointName);
 }
 void ATowerBase::TowerInit()
 {
@@ -122,15 +123,15 @@ void ATowerBase::FireTimer(float B)
 {
 	float GameTime;
 	GameTime = GetGameTimeSinceCreation();
-	AEnemyBase* TargetActor = Cast<AEnemyBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	//AEnemyBase* TargetActor = Cast<AEnemyBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	
 	if ( GameTime > B)
 	{
-		if(IsValid(TargetActor))
-		{
+		//if(IsValid(TargetActor))
+		//{
 			this->TowerFire.Broadcast();
 			NextFire = GameTime + FireInterval;
-		}
+		//}
 	}
 }
 void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -154,11 +155,11 @@ void ATowerBase::SetRedOutLine(bool IsOutline)
 	float ParameterValue;
 	if (IsOutline == true)
 	{
-		ParameterValue == 1;
+		ParameterValue = 1;
 	}
 	else
 	{
-		ParameterValue == 0;
+		ParameterValue = 0;
 	}
 	//this->SetScalarParameterValue("isOutLine", ParameterValue);
 }

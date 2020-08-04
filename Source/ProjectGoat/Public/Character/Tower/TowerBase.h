@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "Delegates/Delegate.h"
+#include "Components/BoxComponent.h"
 #include "TowerBase.generated.h"
 
 
@@ -29,12 +30,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UMeshComponent* Mesher;
 	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
-		class UTowerPadding* TowerPadding;
-	
+		class UBoxComponent* TowerPadding;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class AEnemyBase* TargetActor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		FVector FirePoint;
 
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "FirePoint")
-		FName FirePoint;
+		FName FirePointName;
 	UPROPERTY(Category = "OverlappedSet", EditAnywhere)
 		TSet<ATowerBase*> OverlappedTower;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
