@@ -58,7 +58,8 @@ public:
 
 	FTimerHandle PhaseTimerHandle;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	AActor* Base;
 
 
 public:
@@ -69,19 +70,19 @@ public:
 	void Init();
 	
 	/*Spawning*/
-	ABulkheadCharacterBase* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+	ABulkheadCharacterBase* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 	template<class T>
-	T* SpawnCharacter(int32 CharacterID, int32 CharacterLevel, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator)
+	T* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator)
 	{
-		return Cast<T>(SpawnCharacter(CharacterID, CharacterLevel, Type, Location, Rotator));
+		return Cast<T>(SpawnCharacter(CharacterID, Type, Location, Rotator));
 	}
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	AEnemyBase* SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+	AEnemyBase* SpawnMonster(const int32& CharacterID, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+	ATowerBase* SpawnTower(const int32& CharacterID, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 	/*GM*/
 	void ReadDataFromGM();
@@ -93,6 +94,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsBrittle(FGuid InID, bool result);
 
+	void StartGame();
 
 	/*Gold*/
 	UFUNCTION(BlueprintCallable)
@@ -105,8 +107,9 @@ public:
 	void SetGamePhase(const EGamePhase& InGamePhase);
 
 	/*GamePhase*/
+	UFUNCTION()
 	void HandleOnPhaseChanged(EGamePhase InPhase);
-
+	UFUNCTION()
 	void HandleOnWaveComplete();
 
 	/*GamePhaseTimer*/

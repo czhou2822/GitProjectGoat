@@ -17,6 +17,8 @@ public:
 
 	TArray<class USplineMeshComponent*> SplineMeshes;
 
+	TArray<FVector> NavPoints;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,6 +28,8 @@ public:
 	AEnemyRoute();
 
 	void CreateSplineMesh();
+
+	void RouteSplineToArray();
 
 
 };

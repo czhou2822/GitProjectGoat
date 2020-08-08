@@ -19,6 +19,24 @@ AEnemyRoute::AEnemyRoute()
 
 }
 
+void AEnemyRoute::RouteSplineToArray()
+{
+	NavPoints.Empty();
+	for (int32 i = 0; i < NavSplinePoints->GetNumberOfSplinePoints(); i++)
+	{
+		NavPoints.Add(NavSplinePoints->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World));
+	}
+}
+
+// Called when the game starts or when spawned
+void AEnemyRoute::BeginPlay()
+{
+	Super::BeginPlay();
+	//CreateSplineMesh();
+	RouteSplineToArray();
+}
+
+
 void AEnemyRoute::CreateSplineMesh()
 {
 
@@ -39,13 +57,6 @@ void AEnemyRoute::CreateSplineMesh()
 	}
 }
 
-// Called when the game starts or when spawned
-void AEnemyRoute::BeginPlay()
-{
-	Super::BeginPlay();
-	//CreateSplineMesh();
-	
-}
 
 
 

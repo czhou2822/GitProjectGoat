@@ -39,12 +39,11 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 
+	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
+	FOnTowerPlaced OnTowerPlaced;
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
-		FOnTowerPlaced OnTowerPlaced;
-
-	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
-		FOnCharacterStartPlacing OnCharacterStartPlacing;
+	FOnCharacterStartPlacing OnCharacterStartPlacing;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -53,47 +52,49 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USpringArmComponent* SpringArm;
+	class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//	class USkeletalMeshComponent* tpsGun;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UInventoryComponent* InventoryComp;
+	UInventoryComponent* InventoryComp;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UMaterialInstanceDynamic* HitSnowMaterial;
+	UMaterialInstanceDynamic* HitSnowMaterial;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UChildActorComponent* WeaponSlot;
+	UChildActorComponent* WeaponSlot;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-		bool bAiming = false;
+	bool bAiming = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-		bool bAiming_collecting = false;
+	bool bAiming_collecting = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class UAnimMontage* FireAnima;
+	class UAnimMontage* FireAnima;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float SnowCount;
+	float SnowCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float CapsuleHalfHeight = 500.f;
+	float CapsuleHalfHeight = 500.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float CapsuleRadius = 100.f;
+	float CapsuleRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FRotator AimOffsetRotator = FRotator(15, 0, 0);
+	FRotator AimOffsetRotator = FRotator(15, 0, 0);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector AimOffsetTranslation = FVector(130, 70, 50);
+	FVector AimOffsetTranslation = FVector(130, 70, 50);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float WeaponRange = 700.f;
+	float WeaponRange = 700.f;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 
 
@@ -101,14 +102,16 @@ public:
 		int coinCount;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class USoundBase* fireSound;
+	class USoundBase* fireSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class USoundBase* OnSnowCollectSound;
+	class USoundBase* OnSnowCollectSound;
+
 	UPROPERTY(EditAnywhere, BlueprintReadwrite)
-		bool bAllowSnowNegative;  //allow snow to go nagetive
+	bool bAllowSnowNegative;  //allow snow to go nagetive
 
 	UPROPERTY(EditAnywhere, Category = seed)
-		TSubclassOf<class ATowerSeed> SeedClass;
+	TSubclassOf<class ATowerSeed> SeedClass;
 
 	//UFUNCTION(EditAnywhere)
 	void OnCollectSnow(FVector location);
@@ -127,12 +130,12 @@ public:
 	void AimStart();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void AimStartBlueprintInterface();
+	void AimStartBlueprintInterface();
 
 	void AimEnd();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void AimEndBlueprintInterface();
+	void AimEndBlueprintInterface();
 
 	//void FireStart();
 	void FireDown();
@@ -142,14 +145,14 @@ public:
 	void FireEnd();
 
 	UFUNCTION(BlueprintCallable)
-		void  CoinCollect(int32 InGold);
+	void CoinCollect(int32 InGold);
 
 	void static CoinConsume();
 
 	void OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintCallable)
-		void ThrowSeed();
+	void ThrowSeed();
 
 	void CollectSnow();
 
@@ -158,11 +161,13 @@ public:
 	void CollectDown();
 
 	FTimerHandle FireTimer;
+
 	FTimerHandle SnowTimer;
+
 	FTimerHandle TowerAdjustTimer;
 
 	UFUNCTION(BlueprintCallable)
-		void SetupVariables();
+	void SetupVariables();
 
 	enum class TowerType : uint8 {
 		Gatling, Mortar, Tesla
@@ -174,23 +179,42 @@ public:
 	float DefaultCameraArmLength;
 
 	void SelectTower();
+
 	void SelectTowerEnd();
+
 	void InputActionBuild();
+
 	void InputActionCancel();
+
 	bool IsSelecting;
+
 	bool IsInShop;
+
 	bool IsCharacterPlacingTower;
+
 	bool BuildCounter = true;
+
 	bool IsTDown;
+
 	void PulloutBuildingCamera();
+
 	void WhichTower();
+
+	UFUNCTION()
 	void AdjustTowerLocation();
+
 	void ResetBuildingCamera();
+
 	void OpenMenu();
+
 	void FastForward();
+
 	void FastForwardEnd();
+
 	FHitResult GetScreentoWorldLocation();
+
 	ATowerBase* SpawnedTower;
+
 	int SpawnTowerID;
 	//bool CheckValid();
 	//void onCharacterStartPlacing();

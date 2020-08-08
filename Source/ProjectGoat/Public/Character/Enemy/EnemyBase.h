@@ -19,6 +19,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float BrittleDamageRate = 2.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector BaseLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FVector> NavPoints;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

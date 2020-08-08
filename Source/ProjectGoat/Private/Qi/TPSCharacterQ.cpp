@@ -541,7 +541,7 @@ void ATPSCharacterQ::WhichTower()
 	case TowerType::Gatling:
 		SpawnTowerID = 2;
 	}
-	SpawnedTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, 0, transform.GetLocation(), transform.Rotator());
+	SpawnedTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
 
 }
 

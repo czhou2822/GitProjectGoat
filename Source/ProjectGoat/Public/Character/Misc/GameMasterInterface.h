@@ -17,32 +17,38 @@ UCLASS()
 class PROJECTGOAT_API AGameMasterInterface : public AActor
 {
 	GENERATED_BODY()
+
+private:
+
+
 public:
 
 	/*BuildingPhase*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building Phase")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingPhaseWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building Phase")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingPhaseTickInterval;
 
 	/*BuildingToCombat*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BuildingToCombat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingToCombatWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BuildingToCombat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingToCombatTickInterval;
 
 	/*PostCombat*/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PostCombat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PostCombat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatTickInterval;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 WaveNumber;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	AActor* Base;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -52,6 +58,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AEnemySpawn*> SpawnPointsArrayInterface;
+
 
 
 };

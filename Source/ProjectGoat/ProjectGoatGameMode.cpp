@@ -35,6 +35,8 @@ void AProjectGoatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	Init();
+	StartGame();
+
 }
 
 void AProjectGoatGameMode::Init()
@@ -64,10 +66,15 @@ void AProjectGoatGameMode::Init()
 	{
 		for (AEnemySpawn* Tmp : GM->SpawnPointsArrayInterface)
 		{
-			Tmp->OnWaveComplete.AddDynamic(this, &AProjectGoatGameMode::HandleOnWaveComplete);
-			SpawnPointsArray.Add(Tmp);
+			if (Tmp)
+			{
+				Tmp->OnWaveComplete.AddDynamic(this, &AProjectGoatGameMode::HandleOnWaveComplete);
+				SpawnPointsArray.Add(Tmp);
+			}
 		}
 	}
+
+
 }
 
 void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID, bool result)
@@ -88,6 +95,11 @@ void AProjectGoatGameMode::SetIsBrittle(FGuid InID, bool result)
 		}
 	}
 
+}
+
+void AProjectGoatGameMode::StartGame()
+{
+	StartBuildingPhase();
 }
 
 bool AProjectGoatGameMode::CollectGold(int InGold)
@@ -137,8 +149,10 @@ void AProjectGoatGameMode::HandleOnPhaseChanged(EGamePhase InPhase)
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0);
 		break;
 	case EGamePhase::COMBAT:
+		StartCombatPhase();
 		break;
 	case EGamePhase::POSTCOMBAT:
+		StartPostCombatPhase();
 		break;
 	case EGamePhase::UNDEFINE:
 		break;
@@ -163,7 +177,7 @@ void AProjectGoatGameMode::HandleOnWaveComplete()
 
 bool AProjectGoatGameMode::SetPhaseTimer(const float& TickInterval, const float& TimerDuration)
 {
-	if (PhaseTickCount >= 0) //meaning timer is going
+	if (PhaseTickCount > 0) //meaning timer is going
 	{
 		return false;
 	}
@@ -256,8 +270,7 @@ void AProjectGoatGameMode::ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& 
 
 
 ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
-	int32 CharacterID,
-	int32 CharacterLevel,
+	const int32& CharacterID,
 	const ECharacterType& Type,
 	const FVector& Location,
 	const FRotator& Rotator)
@@ -293,14 +306,14 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 }
 
 
-AEnemyBase* AProjectGoatGameMode::SpawnMonster(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
+AEnemyBase* AProjectGoatGameMode::SpawnMonster(const int32& CharacterID, const FVector& Location, const FRotator& Rotator)
 {
-	return SpawnCharacter<AEnemyBase>(CharacterID, CharacterLevel, ECharacterType::MONSTER, Location, Rotator);
+	return SpawnCharacter<AEnemyBase>(CharacterID, ECharacterType::MONSTER, Location, Rotator);
 }
 
-ATowerBase* AProjectGoatGameMode::SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator)
+ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, const FVector& Location, const FRotator& Rotator)
 {
-	return SpawnCharacter<ATowerBase>(CharacterID, CharacterLevel, ECharacterType::TOWER, Location, Rotator);
+	return SpawnCharacter<ATowerBase>(CharacterID, ECharacterType::TOWER, Location, Rotator);
 }
 
 void AProjectGoatGameMode::ReadDataFromGM()
@@ -308,6 +321,7 @@ void AProjectGoatGameMode::ReadDataFromGM()
 	if (GM)
 	{
 		WaveNumber = GM->WaveNumber;
+		Base = GM->Base;
 	}
 }
 
