@@ -24,7 +24,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulkheadCharacterDead);
 
-	UPROPERTY(BlueprintAssignable, Category = "Test")
+	UPROPERTY(BlueprintAssignable, Category = "Character")
 	FOnBulkheadCharacterDead OnBulkheadCharacterDead;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)

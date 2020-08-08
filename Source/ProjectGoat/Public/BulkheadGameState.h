@@ -59,12 +59,10 @@ public:
 	//used to monster store data read from UTable
 	TMap<int32, FCharacterData*> CacheMonsterData;
 
-	TArray<FWaveStructData*> WaveData;
+	TMap<int32, FSpawnWaveDetail*> CacheSpawnWaveData;
 
 
 
-	
-protected:
 
 
 

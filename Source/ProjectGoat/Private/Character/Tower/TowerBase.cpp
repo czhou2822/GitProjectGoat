@@ -26,6 +26,8 @@ ATowerBase::ATowerBase():ABulkheadCharacterBase()
 	Decal = CreateDefaultSubobject<UDecalComponent>(TEXT("Decal"));
 	Mesher = CreateDefaultSubobject<UMeshComponent>(TEXT("Mesher"));
 	TowerPadding = CreateDefaultSubobject<UBoxComponent>(TEXT("TowerPadding"));
+
+	
 }
 
 

@@ -1,15 +1,25 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "UObject/ConstructorHelpers.h"
 
 #include "CoreMinimal.h"
 #include "Character/Misc/TowerSeed.h"
 #include "CollisionShape.h"
 #include "GameFramework/Character.h"
+#include "Chaos/Transform.h"
+#include "Delegates/DelegateCombinations.h"
+#include "Character/Tower/TowerBase.h"
+#include "Components/TimelineComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "TPSCharacterQ.generated.h"
+
+//#include "WidgetBlueprint'/Game/CC/widget/widget/UMG_Pause.UMG_Pause'"
 
 
 class UInventoryComponent;
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterPlacingDelegate);
+
 
 UCLASS()
 class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
@@ -17,8 +27,6 @@ class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 	GENERATED_BODY()
 
 public:
-
-
 	// Sets default values for this character's properties
 	ATPSCharacterQ();
 
@@ -27,18 +35,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
-	FOnTowerPlaced OnTowerPlaced;
+		FOnTowerPlaced OnTowerPlaced;
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
-	FOnCharacterStartPlacing OnCharacterStartPlacing;
-
+		FOnCharacterStartPlacing OnCharacterStartPlacing;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -47,17 +53,18 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USpringArmComponent * SpringArm;
+		class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCameraComponent * Camera;
+		class UCameraComponent* Camera;
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	//	class USkeletalMeshComponent* tpsGun;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UInventoryComponent* InventoryComp;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UMaterialInstanceDynamic* HitSnowMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UChildActorComponent* WeaponSlot;
 
@@ -70,7 +77,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class UAnimMontage* FireAnima;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SnowCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -88,23 +95,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float WeaponRange = 700.f;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		
-		
+
+
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int coinCount;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		class USoundBase* fireSound;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		class USoundBase* OnSnowCollectSound;
 	UPROPERTY(EditAnywhere, BlueprintReadwrite)
 		bool bAllowSnowNegative;  //allow snow to go nagetive
 
 	UPROPERTY(EditAnywhere, Category = seed)
 		TSubclassOf<class ATowerSeed> SeedClass;
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void OnCollectSnow(FVector location);
-	
+	//UFUNCTION(EditAnywhere)
+	void OnCollectSnow(FVector location);
+
 
 	void MoveForward(float v);
 
@@ -119,12 +127,12 @@ public:
 	void AimStart();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void AimStartBlueprintInterface();
+		void AimStartBlueprintInterface();
 
 	void AimEnd();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void AimEndBlueprintInterface();
+		void AimEndBlueprintInterface();
 
 	//void FireStart();
 	void FireDown();
@@ -134,14 +142,14 @@ public:
 	void FireEnd();
 
 	UFUNCTION(BlueprintCallable)
-	void  CoinCollect(int32 InGold);
+		void  CoinCollect(int32 InGold);
 
 	void static CoinConsume();
 
-	void OnOverlap (AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintCallable)
-	void ThrowSeed();
+		void ThrowSeed();
 
 	void CollectSnow();
 
@@ -151,4 +159,48 @@ public:
 
 	FTimerHandle FireTimer;
 	FTimerHandle SnowTimer;
+	FTimerHandle TowerAdjustTimer;
+
+	UFUNCTION(BlueprintCallable)
+		void SetupVariables();
+
+	enum class TowerType : uint8 {
+		Gatling, Mortar, Tesla
+	};
+
+	TowerType Tower;
+	float DefaultFOV;
+	FTransform DefaultCameraTransform;
+	float DefaultCameraArmLength;
+
+	void SelectTower();
+	void SelectTowerEnd();
+	void InputActionBuild();
+	void InputActionCancel();
+	bool IsSelecting;
+	bool IsInShop;
+	bool IsCharacterPlacingTower;
+	bool BuildCounter = true;
+	bool IsTDown;
+	void PulloutBuildingCamera();
+	void WhichTower();
+	void AdjustTowerLocation();
+	void ResetBuildingCamera();
+	void OpenMenu();
+	void FastForward();
+	void FastForwardEnd();
+	FHitResult GetScreentoWorldLocation();
+	ATowerBase* SpawnedTower;
+	int SpawnTowerID;
+	//bool CheckValid();
+	//void onCharacterStartPlacing();
+	//FCharacterPlacingDelegate CharacterPlacingDelegate;
+	UClass* UPauseWidgetTemplate = LoadObject<UClass>(NULL, TEXT("/Game/CC/widget/widget/UMG_Pause.UMG_Pause_C"), NULL, LOAD_None, NULL);
+	/*ConstructorHelpers::FClassFinder<UUserWidget> PauseClassFinder(TEXT("/Game/CC/widget/widget/UMG_Pause.UMG_Pause_C"));
+	TSubclassOf<class UUserWidget> PauseClass = PauseClassFinder.Class;*/
+	UUserWidget* PauseWidget;
+	//UMGPauseWidget* PauseWidget;
+	//FTimeline CameraReset;
+	/*UPROPERTY()
+	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
 };

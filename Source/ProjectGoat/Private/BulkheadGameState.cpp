@@ -30,16 +30,30 @@ ABulkheadGameState::ABulkheadGameState()
 
 	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
 
-	CacheMonsterData;
+	GetAllWaveStats();
+
+	CacheSpawnWaveData;
 }
 
 void ABulkheadGameState::GetAllWaveStats()
 {
-	WaveData.Empty();
-	if (WaveStructDataTable)
+	//CacheSpawnWaveData
+
+	TArray<FSpawnWaveDetail*> TempArray;
+	TempArray.Empty();
+
+	CacheSpawnWaveData.Empty();
+
+	int32 index = 1;
+
+	WaveStructDataTable->GetAllRows(TEXT("Character Data"), TempArray);
+
+	for (FSpawnWaveDetail* Tmp : TempArray)
 	{
-		WaveStructDataTable->GetAllRows(TEXT("Character Data"), WaveData);
+		CacheSpawnWaveData.Add(index, Tmp);
+		index++;
 	}
+
 }
 
 

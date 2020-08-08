@@ -23,11 +23,11 @@ void FCharacterData::UpdateStats()
 
 
 
-FWaveStructData::FWaveStructData()
-	:WaveNumber(0),
-	 GruntNumber(0),
-	 ReaverNumber(0),
-     MiniBossNumber(0),
-	 GoldDropRate(0)
-{
-}
+//FWaveStructData::FWaveStructData()
+//	:WaveNumber(0),
+//	 GruntNumber(0),
+//	 ReaverNumber(0),
+//     MiniBossNumber(0),
+//	 GoldDropRate(0)
+//{
+//}

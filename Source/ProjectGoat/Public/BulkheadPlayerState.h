@@ -16,11 +16,13 @@ class PROJECTGOAT_API ABulkheadPlayerState : public APlayerState
 
 
 public:
-
-public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 Gold;
 
+
+public:
+
+	void AddCoinToPlayer(int32 InGold);
 	
 };

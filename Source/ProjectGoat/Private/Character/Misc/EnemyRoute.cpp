@@ -3,6 +3,7 @@
 
 #include "Character/Misc/EnemyRoute.h"
 #include "Components/SplineComponent.h"
+#include "Components/SplineMeshComponent.h"
 
 // Sets default values
 AEnemyRoute::AEnemyRoute()
@@ -18,10 +19,31 @@ AEnemyRoute::AEnemyRoute()
 
 }
 
+void AEnemyRoute::CreateSplineMesh()
+{
+
+	for (int32 i = 0; i <= NavSplinePoints->GetNumberOfSplinePoints() - 2; i++)
+	{
+		FVector ThisSplineLocation, ThisSplineTangent;
+		FVector NextSplineLocation, NextSplineTangent;
+
+		NavSplinePoints->GetLocationAndTangentAtSplinePoint(i, ThisSplineLocation, ThisSplineTangent,ESplineCoordinateSpace::World);
+		NavSplinePoints->GetLocationAndTangentAtSplinePoint(i+1, NextSplineLocation, NextSplineTangent, ESplineCoordinateSpace::World);
+
+		//FName CompName = 
+
+		USplineMeshComponent* NewSplineMeshComp = NewObject<USplineMeshComponent>(this);
+		SplineMeshes.Add(NewSplineMeshComp);
+		NewSplineMeshComp->SetStartAndEnd(ThisSplineLocation, ThisSplineTangent, NextSplineLocation, NextSplineTangent, true);
+
+	}
+}
+
 // Called when the game starts or when spawned
 void AEnemyRoute::BeginPlay()
 {
 	Super::BeginPlay();
+	//CreateSplineMesh();
 	
 }
 

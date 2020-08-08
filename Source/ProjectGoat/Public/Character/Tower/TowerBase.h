@@ -60,7 +60,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
 	void HandleOnTowerPlaced();
+
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 	void SetRangeVisibility(bool InVisibility);
 	void HandleOnConstructionComplete();

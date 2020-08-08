@@ -70,62 +70,46 @@ public:
 
 };
 
-USTRUCT(BlueprintType)
-struct FWaveStructData : public FTableRowBase
-{
-	GENERATED_BODY()
-
-public:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 WaveNumber;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 GruntNumber;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 GruntID;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 ReaverNumber;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 ReaverID;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 MiniBossNumber;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 MiniBossID;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		FString RouteNumber;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		int32 GoldDropRate;
 
 
-public:
-	FWaveStructData();
-
-};
 
 //USTRUCT(BlueprintType)
-//struct FEnemyData : public FCharacterData
+//struct FWaveStructData : public FTableRowBase
 //{
 //	GENERATED_BODY()
 //
 //public:
 //
-//	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
-//		float MaxHealth;
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 WaveNumber;
 //
-//	UPROPERTY()
-//		float Health;
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 GruntNumber;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 GruntID;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 ReaverNumber;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 ReaverID;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 MiniBossNumber;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 MiniBossID;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		FString RouteNumber;
+//
+//	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+//		int32 GoldDropRate;
 //
 //
 //public:
-//	FEnemyData();
+//	FWaveStructData();
 //
-//	void UpdateHealth();
 //};
+//

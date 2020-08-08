@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "BulkheadGameState.h"
 #include "BulkheadPlayerState.h"
+#include "ProjectGoatType.h"
 #include "ProjectGoatGameMode.generated.h"
 
 //class ABulkheadGameState BulkheadGameState;
@@ -19,12 +20,43 @@ class AProjectGoatGameMode : public AGameMode
 		
 public:
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPhaseChanged, EGamePhase, OutGamePhase);
+
+	UPROPERTY(BlueprintAssignable, Category = "GamePhase")
+	FOnPhaseChanged OnPhaseChanged;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartCombatWave);
+
+	UPROPERTY(BlueprintAssignable, Category = "GamePhase")
+	FOnStartCombatWave OnStartCombatWave;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ABulkheadGameState* BulkheadGameState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ABulkheadPlayerState* BulkheadPlayerState;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class AGameMasterInterface* GM;
+
+	/*Number of Spawn Points in scene*/
+	int32 SpawnPointNumbers;
+
+	EGamePhase GamePhase;
+
+	int32 WaveNumber;
+
+	FSpawnWaveDetail CurrentWaveDetail;
+
+	TArray<class AEnemySpawn*> SpawnPointsArray;
+
+	/*PhaseTimer*/
+	float PhaseTickInterval;
+
+	int32 PhaseTickCount;
+
+	FTimerHandle PhaseTimerHandle;
 
 
 
@@ -51,7 +83,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	ATowerBase* SpawnTower(int32 CharacterID, int32 CharacterLevel, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
-
+	/*GM*/
+	void ReadDataFromGM();
 
 	/*Gameplay*/
 	UFUNCTION(BlueprintCallable)
@@ -68,7 +101,36 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool ConsumeGold(int InGold);
 
+	UFUNCTION(BlueprintCallable)
+	void SetGamePhase(const EGamePhase& InGamePhase);
 
+	/*GamePhase*/
+	void HandleOnPhaseChanged(EGamePhase InPhase);
+
+	void HandleOnWaveComplete();
+
+	/*GamePhaseTimer*/
+	bool SetPhaseTimer(const float& TickInterval, const float& TimerDuration);
+
+	void PhaseTimerTick();
+
+
+	/*Start Phase*/
+	void StartBuildingPhase();
+
+	void StartBuildingToCombatPhase(const int32& InWaveNumber);
+
+	void StartCombatPhase();
+
+	void StartPostCombatPhase();
+
+
+	/*BuildingToCombatPhase*/
+	UFUNCTION(BlueprintCallable)
+	FSpawnWaveDetail& GetAndSetWaveStat(const int32& inWaveNumber) const;
+
+	UFUNCTION(BlueprintCallable)
+	void ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& InDetail);
 };
 
 

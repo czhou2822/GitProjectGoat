@@ -15,6 +15,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USplineComponent* NavSplinePoints;
 
+	TArray<class USplineMeshComponent*> SplineMeshes;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,6 +24,8 @@ protected:
 public:	
 	// Sets default values for this actor's properties
 	AEnemyRoute();
+
+	void CreateSplineMesh();
 
 
 };
