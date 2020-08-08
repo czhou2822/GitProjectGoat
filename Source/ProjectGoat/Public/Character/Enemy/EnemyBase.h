@@ -61,6 +61,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void EndSlow();
 
+	UFUNCTION(BlueprintCallable)
+		void StartBrittle();
+
+	UFUNCTION(BlueprintCallable)
+		void EndBrittle();
+
 	//UFUNCTION(BlueprintCallable, Category = "EnemyBase")
 	//	void SetNavPoints(TArray<FVector> InPoints);
 

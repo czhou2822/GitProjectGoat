@@ -7,6 +7,9 @@
 #include "TimerManager.h"
 #include "Math/UnrealMathUtility.h"
 #include "Engine/Engine.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "ProjectGoat/ProjectGoatGameMode.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -19,6 +22,9 @@ AEnemyBase::AEnemyBase()
 	//GetCapsuleComponent()->OnComponentBeginOverlap->AddDynamic(this, &AEnemyBase::onOverlap);
 
 	//NavPoints.Init();
+	USkeletalMeshComponent* mesh = GetMesh();
+	mesh->SetScalarParameterValueOnMaterials("SnowAmount", 0);
+	
 }
 
 // Called when the game starts or when spawned
@@ -90,6 +96,19 @@ void AEnemyBase::EndSlow()
 
 }
 
+void AEnemyBase::StartBrittle()
+{
+	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->SetIsBrittle(GUID, true);
+	UE_LOG(LogTemp, Log, TEXT("StartBrittle"));
+}
+
+void AEnemyBase::EndBrittle()
+{
+	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->SetIsBrittle(GUID, false);
+	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
+}
 //void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
 //{
 //	NavPoints = InPoints;
@@ -124,6 +143,7 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 {
 	APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	//ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GetGameState());
+
 	FCharacterData DataTemp = GetCharacterData();
 	if (DataTemp.bIsBrittle == true) 
 	{
