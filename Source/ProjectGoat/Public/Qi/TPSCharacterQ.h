@@ -227,4 +227,6 @@ public:
 	//FTimeline CameraReset;
 	/*UPROPERTY()
 	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
+
+	
 };

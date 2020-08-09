@@ -15,31 +15,37 @@ class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
 {
 	GENERATED_BODY()
 	
+private:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInternalTowerPlaced);  //only used for this class, pass OnTowerPlaced from tpscharacter
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FInternalTowerPlaced InternalTowerPlaced;
+
 public:	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerFire);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 
-	UPROPERTY(BlueprintAssignable, Category = "Fire")
+	UPROPERTY(BlueprintAssignable, Category = "C++")
 		FOnTowerFire TowerFire;
-	UPROPERTY(BlueprintAssignable, Category = "TowerConstruction")
+	UPROPERTY(BlueprintAssignable, Category = "C++")
 		FOnConstructionComplete OnConstructionComplete;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UDecalComponent* Decal;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class UMeshComponent* Mesher;
-	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	class USkeletalMeshComponent* Mesher;
+	UPROPERTY(EditAnywhere, Category = "BoxCollision")
 		class UBoxComponent* TowerPadding;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AEnemyBase* TargetActor;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;
 
 	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "FirePoint")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++")
 		FName FirePointName;
-	UPROPERTY(Category = "OverlappedSet", EditAnywhere)
+	UPROPERTY(Category = "C++", EditAnywhere)
 		TSet<ATowerBase*> OverlappedTower;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float NextFire=0;
@@ -47,6 +53,8 @@ public:
 		float FireInterval = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool IsPlaced = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float TowerDamage;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -60,12 +68,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	void HandleOnTowerPlaced();
 
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 	void SetRangeVisibility(bool InVisibility);
-	void HandleOnConstructionComplete();
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
+		void HandleOnConstructionComplete();
 	void TowerInit();
 	void FireEvent();
 	void OnConstructionCompleteEvent();
