@@ -3,3 +3,7 @@
 
 #include "BulkheadPlayerState.h"
 
+void ABulkheadPlayerState::AddCoinToPlayer(int32 InGold)
+{
+	InGold += InGold;
+}

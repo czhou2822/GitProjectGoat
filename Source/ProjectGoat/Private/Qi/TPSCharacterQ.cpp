@@ -22,6 +22,12 @@
 #include "Math/Quat.h"
 #include "Components/InventoryComponent.h"
 #include "Weapon/WeaponBase.h"
+#include "Kismet/KismetMaterialLibrary.h"
+#include "Blueprint/UserWidget.h"
+#include "Materials/MaterialInterface.h"
+#include "Character/Tower/TowerBase.h"
+#include "../ProjectGoatGameMode.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default values
@@ -69,7 +75,13 @@ ATPSCharacterQ::ATPSCharacterQ()
 void ATPSCharacterQ::BeginPlay()
 {
 	Super::BeginPlay();
+	UMaterialInterface* HitOnSnowInterface = LoadObject<UMaterialInterface>(NULL, TEXT("/Game/Material/Snow/SnowDeformation/HitOnSnow.HitOnSnow"), NULL, LOAD_None, NULL);
+	if (HitOnSnowInterface) {
+		HitSnowMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HitOnSnowInterface);
 
+	}
+
+	//SetupVariable
 }
 
 // Called every frame
@@ -117,18 +129,31 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectDown);
 	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectUp);
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::FireEnd);
+	PlayerInputComponent->BindAction("SelectTower", IE_Pressed, this, &ATPSCharacterQ::SelectTower);
+	PlayerInputComponent->BindAction("SelectTower", IE_Released, this, &ATPSCharacterQ::SelectTowerEnd);
+	PlayerInputComponent->BindAction("InputActionBuild", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
+	PlayerInputComponent->BindAction("InputActionCancel", IE_Pressed, this, &ATPSCharacterQ::InputActionCancel);
+	PlayerInputComponent->BindAction("OpenMenu", IE_Pressed, this, &ATPSCharacterQ::OpenMenu);
+	PlayerInputComponent->BindAction("FastForward", IE_Pressed, this, &ATPSCharacterQ::FastForward);
+	PlayerInputComponent->BindAction("FastForward", IE_Released, this, &ATPSCharacterQ::FastForwardEnd);
 
+}
+
+void ATPSCharacterQ::OnCollectSnow(FVector location)
+{
+	HitSnowMaterial->SetVectorParameterValue("HitLocationW", FLinearColor(location));
+	UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
 }
 
 void ATPSCharacterQ::MoveForward(float v)
 {
-	
+
 	//FVector Direction = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraRotation().RotateVector(GetActorForwardVector());
 
 	//AddMovementInput(Direction, v);
 
 
-	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);	
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);
 }
 
 void ATPSCharacterQ::MoveRight(float v)
@@ -176,7 +201,7 @@ void ATPSCharacterQ::AimEnd()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
-	Camera->SetRelativeRotation(FRotator(0,0,0));
+	Camera->SetRelativeRotation(FRotator(0, 0, 0));
 	AimEndBlueprintInterface();
 }
 
@@ -324,7 +349,7 @@ void ATPSCharacterQ::FireEnd()
 void ATPSCharacterQ::CoinCollect(int32 InGold)
 {
 
-	InventoryComp->Gold+= InGold;
+	InventoryComp->Gold += InGold;
 
 }
 
@@ -429,5 +454,187 @@ void ATPSCharacterQ::CollectUp()
 void ATPSCharacterQ::CollectDown()
 {
 	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
+}
+
+void ATPSCharacterQ::SetupVariables()
+{
+	Tower = TowerType::Mortar;
+	DefaultFOV = Camera->FieldOfView;
+	DefaultCameraTransform = Camera->GetRelativeTransform();
+	DefaultCameraArmLength = SpringArm->TargetArmLength;
+}
+
+void ATPSCharacterQ::SelectTower()
+{
+	IsSelecting = true;
+	switch (Tower) {
+	case TowerType::Tesla:
+		Tower = TowerType::Gatling;
+		break;
+	case TowerType::Mortar:
+		Tower = TowerType::Tesla;
+		break;
+	case TowerType::Gatling:
+		Tower = TowerType::Mortar;
+	}
+}
+
+void ATPSCharacterQ::SelectTowerEnd()
+{
+	IsSelecting = false;
+}
+
+void ATPSCharacterQ::InputActionBuild()
+{
+	if (BuildCounter == true) {
+		PulloutBuildingCamera();
+		this->WhichTower();
+		IsCharacterPlacingTower = true;
+		this->OnCharacterStartPlacing.Broadcast(true);
+		GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
+	}
+	else {
+		if (IsCharacterPlacingTower == true) {
+			IsCharacterPlacingTower = false;
+			this->OnTowerPlaced.Broadcast();
+			this->OnCharacterStartPlacing.Broadcast(false);
+			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+			ResetBuildingCamera();
+
+		}
+	}
+
+	BuildCounter = !BuildCounter;
+}
+
+void ATPSCharacterQ::InputActionCancel()
+{
+	if (IsValid(SpawnedTower)) {
+		SpawnedTower->Destroy();
+		if (IsCharacterPlacingTower == true) {
+			IsCharacterPlacingTower = false;
+			this->OnTowerPlaced.Broadcast();
+			this->OnCharacterStartPlacing.Broadcast(false);
+			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+			ResetBuildingCamera();
+		}
+	}
+}
+
+void ATPSCharacterQ::PulloutBuildingCamera()
+{
+
+}
+
+void ATPSCharacterQ::WhichTower()
+{
+	FHitResult result = this->GetScreentoWorldLocation();
+	FTransform transform = FTransform(result.Location);
+	//transform.GetLocation();
+	switch (Tower) {
+	case TowerType::Tesla:
+		SpawnTowerID = 0;
+		break;
+	case TowerType::Mortar:
+		SpawnTowerID = 1;
+		break;
+	case TowerType::Gatling:
+		SpawnTowerID = 2;
+	}
+	SpawnedTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
+
+}
+
+void ATPSCharacterQ::AdjustTowerLocation()
+{
+
+	if (IsValid(SpawnedTower)) {
+		float Radius = 0;
+		float HalfHeight = 0;
+		/*HalfHeight = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		Radius = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleRadius();*/
+		APlayerController* PlayerController;
+		PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		FVector2D result = FVector2D(1, 1);
+		GEngine->GameViewport->GetViewportSize(result);
+		FVector2D BuildingScreenPosition = FVector2D(0.5, 0.35);
+		FVector WorldPosition;
+		FVector WorldDirection;
+		PlayerController->DeprojectScreenPositionToWorld(result.X * BuildingScreenPosition.X, result.Y * BuildingScreenPosition.Y, WorldPosition, WorldDirection);
+		FVector StartPoint;
+		FVector EndPoint;
+		StartPoint = WorldPosition;
+		EndPoint = WorldDirection * 4000 + WorldPosition;
+		TArray<TEnumAsByte<EObjectTypeQuery>> CapsuleTraceObjectsArray;
+		CapsuleTraceObjectsArray.Add(EObjectTypeQuery::ObjectTypeQuery1);
+		CapsuleTraceObjectsArray.Add(EObjectTypeQuery::ObjectTypeQuery10);
+		TArray<AActor*, FDefaultAllocator> IgnoreActors;
+		FHitResult hr;
+		bool hit;
+		hit = UKismetSystemLibrary::CapsuleTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, Radius, HalfHeight, CapsuleTraceObjectsArray, false, IgnoreActors, EDrawDebugTrace::ForDuration, hr, true);
+		float DistanceFromActor = (hr.Location - WorldPosition).Size();
+		if (DistanceFromActor > 500 && hit == true) {
+			SpawnedTower->SetActorLocation(hr.Location, false, nullptr, ETeleportType::TeleportPhysics);
+		}
+	}
+}
+
+void ATPSCharacterQ::ResetBuildingCamera()
+{
+	/*CameraReset.ReverseFromEnd();
+	CameraReset.SetTimelinePostUpdateFunc();
+	CameraReset.SetTimelineFinishedFunc();
+	CameraReset.AddInterpFloat(ResetAlpha);*/
+}
+
+void ATPSCharacterQ::OpenMenu()
+{
+	//APlayerController* PlayerController;
+	//PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+	//PlayerController->SetPause(true);
+	//PauseWidget = CreateWidget<UUserWidget>(this, UPauseWidgetTemplate);
+	//PauseWidget->AddToViewport();
+
+	//FInputModeUIOnly InputModeData;
+	//InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	//PlayerController->SetInputMode(InputModeData);
+
+	//PlayerController->bShowMouseCursor = true;
+	////PlayerController->SetInputModeUI();
+	////PlayerController->Createwidget
+
+
+}
+
+void ATPSCharacterQ::FastForward()
+{
+	IsTDown = true;
+}
+
+void ATPSCharacterQ::FastForwardEnd()
+{
+	IsTDown = false;
+}
+
+FHitResult ATPSCharacterQ::GetScreentoWorldLocation()
+{
+	APlayerController* PlayerController;
+	PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+	FVector2D result = FVector2D(1, 1);
+	GEngine->GameViewport->GetViewportSize(result);
+	result /= 2;
+	FVector WorldPosition;
+	FVector WorldDirection;
+	PlayerController->DeprojectScreenPositionToWorld(result.X, result.Y, WorldPosition, WorldDirection);
+	FVector StartPoint = WorldPosition;
+	FVector EndPoint = WorldDirection * 5000 + WorldPosition;
+	FHitResult hr;
+	//TArray nothing[];
+	TArray<TEnumAsByte<EObjectTypeQuery>> TowerTraceObjectArray;
+	TowerTraceObjectArray.Add(EObjectTypeQuery::ObjectTypeQuery1);
+	TowerTraceObjectArray.Add(EObjectTypeQuery::ObjectTypeQuery10);
+	TArray<AActor*, FDefaultAllocator> IgnoreActors;
+	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, TowerTraceObjectArray, false, IgnoreActors, EDrawDebugTrace::ForDuration, hr, true);
+	return hr;
 }
 
