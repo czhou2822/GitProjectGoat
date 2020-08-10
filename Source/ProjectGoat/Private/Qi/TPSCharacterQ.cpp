@@ -529,12 +529,7 @@ void ATPSCharacterQ::InputActionCancel()
 		}
 	}
 }
-
-void ATPSCharacterQ::PulloutBuildingCamera()
-{
-
-}
-
+	
 void ATPSCharacterQ::WhichTower()
 {
 	FHitResult result = this->GetScreentoWorldLocation();
@@ -556,9 +551,10 @@ void ATPSCharacterQ::WhichTower()
 
 void ATPSCharacterQ::AdjustTowerLocation()
 {
-
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "Timer activated");
 	if (IsValid(SpawnedTower)) 
 	{
+		
 		float Radius = 0;
 		float HalfHeight = 0;
 		HalfHeight = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
@@ -598,13 +594,7 @@ void ATPSCharacterQ::AdjustTowerLocation()
 	}
 }
 
-void ATPSCharacterQ::ResetBuildingCamera()
-{
-	/*CameraReset.ReverseFromEnd();
-	CameraReset.SetTimelinePostUpdateFunc();
-	CameraReset.SetTimelineFinishedFunc();
-	CameraReset.AddInterpFloat(ResetAlpha);*/
-}
+
 
 void ATPSCharacterQ::OpenMenu()
 {

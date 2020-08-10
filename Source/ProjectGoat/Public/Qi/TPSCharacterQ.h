@@ -163,6 +163,7 @@ public:
 	FTimerHandle FireTimer;
 
 	FTimerHandle SnowTimer;
+	
 
 	FTimerHandle TowerAdjustTimer;
 
@@ -195,14 +196,14 @@ public:
 	bool BuildCounter = true;
 
 	bool IsTDown;
-
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void PulloutBuildingCamera();
 
 	void WhichTower();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void AdjustTowerLocation();
-
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ResetBuildingCamera();
 
 	void OpenMenu();
