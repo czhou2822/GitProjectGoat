@@ -11,11 +11,14 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
+
 #include "Containers/Set.h"
 #include "Containers/UnrealString.h"
 #include "components/SkeletalMeshComponent.h"
 
-
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
 
 // Sets default values
 ATowerBase::ATowerBase():ABulkheadCharacterBase()
@@ -24,9 +27,14 @@ ATowerBase::ATowerBase():ABulkheadCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterData().bTeam = true;
 	Decal = CreateDefaultSubobject<UDecalComponent>(TEXT("Decal"));
-	Mesher = CreateDefaultSubobject<UMeshComponent>(TEXT("Mesher"));
+	Decal->SetupAttachment(RootComponent);
+	//Mesher = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesher"));
+	//Mesher->SetupAttachment(RootComponent);
 	TowerPadding = CreateDefaultSubobject<UBoxComponent>(TEXT("TowerPadding"));
+	TowerPadding->SetupAttachment(RootComponent);
+	OverlappedTower.Empty();
 
+	Decal->SetVisibility(true);
 	
 }
 
@@ -59,14 +67,10 @@ void ATowerBase::HandleOnTowerPlaced()
 	if (TPSCharacter)
 	{
 		TPSCharacter->OnTowerPlaced.RemoveDynamic(this, &ATowerBase::HandleOnTowerPlaced);
-	}
-	this->SetRangeVisibility(false);
-	//ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (TPSCharacter)
-	{
 		TPSCharacter->OnCharacterStartPlacing.AddDynamic(this, &ATowerBase::HandleOnCharacterStartPlacing);
 	}
-	if (OverlappedTower.Num() != NULL)
+	this->SetRangeVisibility(false);
+	if (OverlappedTower.Num())   //overlapped tower exist, delete tower
 	{
 		this->Destroy();
 		for (auto It = OverlappedTower.CreateConstIterator(); It; ++It)
@@ -79,9 +83,10 @@ void ATowerBase::HandleOnTowerPlaced()
 			BMessage = UKismetSystemLibrary::GetDisplayName(Tower);
 			Message = AMessage.Append(BMessage);
 			UKismetSystemLibrary::PrintString(this->GetWorld(), Message, true, true, FLinearColor(1, 0, 0, 0.5), 2.0);
+			return;
 		}
-		
 	}
+	InternalTowerPlaced.Broadcast();
 }
 void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
@@ -100,14 +105,12 @@ void ATowerBase::HandleOnConstructionComplete()
 	
 	this->TowerFire.AddDynamic(this, &ATowerBase::FireEvent);
 	
-	this->OnConstructionComplete.AddDynamic(this, &ATowerBase::OnConstructionCompleteEvent);
-	this->OnConstructionComplete.Broadcast();
-	
-	FirePoint = Mesher->GetSocketLocation(FirePointName);
+	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 }
 void ATowerBase::TowerInit()
 {
-	
+	TowerDamage = GetCharacterData().Attack;
+	FireInterval = GetCharacterData().AttackRate;
 }
 void ATowerBase::FireEvent() 
 {
@@ -178,3 +181,8 @@ void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponen
 	Message = AMessage.Append(BMessage);
 	UKismetSystemLibrary::PrintString(this->GetWorld(), Message, true, true, FLinearColor(1, 0, 0, 0.5), 2.0);
 }
+
+
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif

@@ -29,6 +29,10 @@
 #include "../ProjectGoatGameMode.h"
 #include "Components/CapsuleComponent.h"
 
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
+
 
 // Sets default values
 ATPSCharacterQ::ATPSCharacterQ()
@@ -75,11 +79,10 @@ ATPSCharacterQ::ATPSCharacterQ()
 void ATPSCharacterQ::BeginPlay()
 {
 	Super::BeginPlay();
-	UMaterialInterface* HitOnSnowInterface = LoadObject<UMaterialInterface>(NULL, TEXT("/Game/Material/Snow/SnowDeformation/HitOnSnow.HitOnSnow"), NULL, LOAD_None, NULL);
-	if (HitOnSnowInterface) {
-		HitSnowMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HitOnSnowInterface);
-
-	}
+//	UMaterialInterface* HitOnSnowInterface = LoadObject<UMaterialInterface>(NULL, TEXT("/Game/Material/Snow/SnowDeformation/HitOnSnow.HitOnSnow"), NULL, LOAD_None, NULL);
+//	if (HitOnSnowInterface) {
+//		HitSnowMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HitOnSnowInterface);
+//	}
 
 	//SetupVariable
 }
@@ -128,7 +131,7 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
 	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectDown);
 	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectUp);
-	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::FireEnd);
+	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
 	PlayerInputComponent->BindAction("SelectTower", IE_Pressed, this, &ATPSCharacterQ::SelectTower);
 	PlayerInputComponent->BindAction("SelectTower", IE_Released, this, &ATPSCharacterQ::SelectTowerEnd);
 	PlayerInputComponent->BindAction("InputActionBuild", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
@@ -484,23 +487,27 @@ void ATPSCharacterQ::SelectTowerEnd()
 	IsSelecting = false;
 }
 
+
+
 void ATPSCharacterQ::InputActionBuild()
 {
-	if (BuildCounter == true) {
+	if (BuildCounter == true) 
+	{
 		PulloutBuildingCamera();
 		this->WhichTower();
 		IsCharacterPlacingTower = true;
 		this->OnCharacterStartPlacing.Broadcast(true);
 		GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
 	}
-	else {
-		if (IsCharacterPlacingTower == true) {
+	else 
+	{
+		if (IsCharacterPlacingTower == true) 
+		{
 			IsCharacterPlacingTower = false;
 			this->OnTowerPlaced.Broadcast();
 			this->OnCharacterStartPlacing.Broadcast(false);
 			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 			ResetBuildingCamera();
-
 		}
 	}
 
@@ -509,9 +516,11 @@ void ATPSCharacterQ::InputActionBuild()
 
 void ATPSCharacterQ::InputActionCancel()
 {
-	if (IsValid(SpawnedTower)) {
+	if (IsValid(SpawnedTower)) 
+	{
 		SpawnedTower->Destroy();
-		if (IsCharacterPlacingTower == true) {
+		if (IsCharacterPlacingTower == true) 
+		{
 			IsCharacterPlacingTower = false;
 			this->OnTowerPlaced.Broadcast();
 			this->OnCharacterStartPlacing.Broadcast(false);
@@ -548,32 +557,42 @@ void ATPSCharacterQ::WhichTower()
 void ATPSCharacterQ::AdjustTowerLocation()
 {
 
-	if (IsValid(SpawnedTower)) {
+	if (IsValid(SpawnedTower)) 
+	{
 		float Radius = 0;
 		float HalfHeight = 0;
-		/*HalfHeight = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-		Radius = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleRadius();*/
+		HalfHeight = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		Radius = SpawnedTower->GetCapsuleComponent()->GetScaledCapsuleRadius();
+
 		APlayerController* PlayerController;
 		PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+
 		FVector2D result = FVector2D(1, 1);
 		GEngine->GameViewport->GetViewportSize(result);
 		FVector2D BuildingScreenPosition = FVector2D(0.5, 0.35);
+
 		FVector WorldPosition;
 		FVector WorldDirection;
 		PlayerController->DeprojectScreenPositionToWorld(result.X * BuildingScreenPosition.X, result.Y * BuildingScreenPosition.Y, WorldPosition, WorldDirection);
+
 		FVector StartPoint;
 		FVector EndPoint;
 		StartPoint = WorldPosition;
 		EndPoint = WorldDirection * 4000 + WorldPosition;
+
 		TArray<TEnumAsByte<EObjectTypeQuery>> CapsuleTraceObjectsArray;
 		CapsuleTraceObjectsArray.Add(EObjectTypeQuery::ObjectTypeQuery1);
 		CapsuleTraceObjectsArray.Add(EObjectTypeQuery::ObjectTypeQuery10);
-		TArray<AActor*, FDefaultAllocator> IgnoreActors;
+
+		TArray<AActor*> IgnoreActors;
+		IgnoreActors.Add(PlayerController->GetPawn());
+
 		FHitResult hr;
 		bool hit;
 		hit = UKismetSystemLibrary::CapsuleTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, Radius, HalfHeight, CapsuleTraceObjectsArray, false, IgnoreActors, EDrawDebugTrace::ForDuration, hr, true);
 		float DistanceFromActor = (hr.Location - WorldPosition).Size();
-		if (DistanceFromActor > 500 && hit == true) {
+		if (DistanceFromActor > 500 && hit == true)
+		{
 			SpawnedTower->SetActorLocation(hr.Location, false, nullptr, ETeleportType::TeleportPhysics);
 		}
 	}
@@ -638,3 +657,6 @@ FHitResult ATPSCharacterQ::GetScreentoWorldLocation()
 	return hr;
 }
 
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif
