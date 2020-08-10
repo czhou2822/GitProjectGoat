@@ -551,7 +551,7 @@ void ATPSCharacterQ::WhichTower()
 
 void ATPSCharacterQ::AdjustTowerLocation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "Timer activated");
+	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "Timer activated");
 	if (IsValid(SpawnedTower)) 
 	{
 		
@@ -585,7 +585,7 @@ void ATPSCharacterQ::AdjustTowerLocation()
 
 		FHitResult hr;
 		bool hit;
-		hit = UKismetSystemLibrary::CapsuleTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, Radius, HalfHeight, CapsuleTraceObjectsArray, false, IgnoreActors, EDrawDebugTrace::ForDuration, hr, true);
+		hit = UKismetSystemLibrary::CapsuleTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, Radius, HalfHeight, CapsuleTraceObjectsArray, false, IgnoreActors, EDrawDebugTrace::None, hr, true);
 		float DistanceFromActor = (hr.Location - WorldPosition).Size();
 		if (DistanceFromActor > 500 && hit == true)
 		{

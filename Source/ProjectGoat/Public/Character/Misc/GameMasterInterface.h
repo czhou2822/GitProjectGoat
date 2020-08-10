@@ -23,6 +23,19 @@ private:
 
 public:
 
+	/*Debug Params*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
+	bool StartGame;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
+	bool IsDebug;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
+	UDataTable* WaveTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
+	UDataTable* DebugWaveTable;
+
 	/*BuildingPhase*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingPhaseWaitTime;

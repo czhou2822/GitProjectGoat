@@ -26,18 +26,17 @@ ABulkheadGameState::ABulkheadGameState()
 	static ConstructorHelpers::FObjectFinder<UDataTable> WaveStructTable(TEXT("/Game/DataTable/DataTable_WaveStruct"));
 	WaveStructDataTable = WaveStructTable.Object;
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> DebugWaveStructTable(TEXT("/Game/DataTable/DataTable_Debug"));
+	DebugWaveStructDataTable = DebugWaveStructTable.Object;
+
 	CacheTowerData = ReadDataFromTable(TowerDataTable);
 
 	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
 
-	GetAllWaveStats();
-
-	CacheSpawnWaveData;
 }
 
-void ABulkheadGameState::GetAllWaveStats()
+void ABulkheadGameState::GetAllWaveStats(UDataTable* Input)
 {
-	//CacheSpawnWaveData
 
 	TArray<FSpawnWaveDetail*> TempArray;
 	TempArray.Empty();
@@ -46,7 +45,7 @@ void ABulkheadGameState::GetAllWaveStats()
 
 	int32 index = 1;
 
-	WaveStructDataTable->GetAllRows(TEXT("Character Data"), TempArray);
+	Input->GetAllRows(TEXT("Character Data"), TempArray);
 
 	for (FSpawnWaveDetail* Tmp : TempArray)
 	{
@@ -172,6 +171,18 @@ void ABulkheadGameState::DeleteFromPrioritizedList(AEnemyBase* InEnemy)
 	if (InEnemy)
 	{
 		PrioritizedEnemyList.Remove(InEnemy);
+	}
+}
+
+void ABulkheadGameState::CheckIfInDebug(bool DebugMode)
+{
+	if (DebugMode)
+	{
+		GetAllWaveStats(DebugWaveStructDataTable);
+	}
+	else
+	{
+		GetAllWaveStats(WaveStructDataTable);
 	}
 }
 

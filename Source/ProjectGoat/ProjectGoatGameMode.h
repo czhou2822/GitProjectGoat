@@ -61,6 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	AActor* Base;
 
+	bool IsInitialized;
 
 public:
 	AProjectGoatGameMode();
@@ -134,6 +135,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& InDetail);
+
+	void CheckIfGameEnd();
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	void EndGame(const bool& Success);
 };
 
 

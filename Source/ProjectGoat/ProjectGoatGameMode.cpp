@@ -12,8 +12,13 @@
 #include "Character/Tower/TowerBase.h"
 #include "Character/Misc/EnemySpawn.h"
 #include "UObject/ConstructorHelpers.h"
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
+
 
 AProjectGoatGameMode::AProjectGoatGameMode()
+	:IsInitialized(false)
 {
 	// set default pawn class to our Blueprinted character
 	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
@@ -34,8 +39,14 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 void AProjectGoatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	Init();
-	StartGame();
+	if (!IsInitialized)
+	{
+		Init();
+		ReadDataFromGM();
+		StartGame();
+		IsInitialized = true;
+	}
+
 
 }
 
@@ -74,7 +85,7 @@ void AProjectGoatGameMode::Init()
 		}
 	}
 
-
+	GamePhase = EGamePhase::UNDEFINE;
 }
 
 void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID, bool result)
@@ -99,7 +110,7 @@ void AProjectGoatGameMode::SetIsBrittle(FGuid InID, bool result)
 
 void AProjectGoatGameMode::StartGame()
 {
-	StartBuildingPhase();
+	SetGamePhase(EGamePhase::BUILDINGPHASE);
 }
 
 bool AProjectGoatGameMode::CollectGold(int InGold)
@@ -141,18 +152,22 @@ void AProjectGoatGameMode::HandleOnPhaseChanged(EGamePhase InPhase)
 	switch (InPhase)
 	{
 	case EGamePhase::BUILDINGPHASE:
+		WaveNumber++;
 		StartBuildingPhase();
+		UE_LOG(LogTemp, Warning, TEXT("wave %i Building Phase"), WaveNumber);
 		break;
 	case EGamePhase::BUILDINGTOCOMBAT:
-		WaveNumber++;
 		StartBuildingToCombatPhase(WaveNumber);
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0);
+		UE_LOG(LogTemp, Warning, TEXT("Building To Combat Phase"));
 		break;
 	case EGamePhase::COMBAT:
 		StartCombatPhase();
+		UE_LOG(LogTemp, Warning, TEXT("Combat Phase"));
 		break;
 	case EGamePhase::POSTCOMBAT:
 		StartPostCombatPhase();
+		UE_LOG(LogTemp, Warning, TEXT("Post Combat Phase"));
 		break;
 	case EGamePhase::UNDEFINE:
 		break;
@@ -179,6 +194,12 @@ bool AProjectGoatGameMode::SetPhaseTimer(const float& TickInterval, const float&
 {
 	if (PhaseTickCount > 0) //meaning timer is going
 	{
+		return false;
+	}
+
+	if (TickInterval == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TickInterval 0, WaveNumber: %i, GamePhase: %i"), WaveNumber, GamePhase);
 		return false;
 	}
 
@@ -213,6 +234,7 @@ void AProjectGoatGameMode::PhaseTimerTick()
 			SetGamePhase(EGamePhase::BUILDINGPHASE);
 			break;
 		case EGamePhase::UNDEFINE:
+			SetGamePhase(EGamePhase::BUILDINGPHASE);
 			break;
 		}
 	}
@@ -220,8 +242,14 @@ void AProjectGoatGameMode::PhaseTimerTick()
 
 void AProjectGoatGameMode::StartBuildingPhase()
 {
+	if (!GM)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GM NULL. TickInterval 0, WaveNumber: %i, GamePhase: %i"), WaveNumber, GamePhase);
+		return;
+	}
+	CheckIfGameEnd();
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
-	BulkheadGameState->ClearActiveEnemyList();
+	//BulkheadGameState->ClearActiveEnemyList();
 }
 
 void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
@@ -255,7 +283,7 @@ void AProjectGoatGameMode::ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& 
 
 	if (InDetail.SpawnPoints.Num() > GM->SpawnPointsArrayInterface.Num())
 	{
-		//UE_LOG(Debug, Warning, TEXT("spawn points invalids"));
+		UE_LOG(LogTemp, Warning, TEXT("spawn points invalids. Spawn Points: %i, Points in scene: %i"), InDetail.SpawnPoints.Num(), GM->SpawnPointsArrayInterface.Num());
 		return;
 	}
 
@@ -266,6 +294,27 @@ void AProjectGoatGameMode::ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& 
 		SpawnPointsArray[Tmp.SpawnPointIndex]->SpawnInterval = Tmp.SpawnInterval;
 	}
 		
+}
+
+void AProjectGoatGameMode::CheckIfGameEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("check game end %i, CacheSpawnWaveData.Num() %i"), WaveNumber, BulkheadGameState->CacheSpawnWaveData.Num());
+	if (WaveNumber > BulkheadGameState->CacheSpawnWaveData.Num())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("game ended. "));
+		EndGame(true);
+	}
+}
+
+void AProjectGoatGameMode::EndGame(const bool& Success)
+{
+	UE_LOG(LogTemp, Warning, TEXT("end game function"));
+	if (Success) //if game ended success
+	{
+		UE_LOG(LogTemp, Warning, TEXT("game ended success "));
+		UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/EndGameLevel"), true);
+	}
+
 }
 
 
@@ -322,6 +371,10 @@ void AProjectGoatGameMode::ReadDataFromGM()
 	{
 		WaveNumber = GM->WaveNumber;
 		Base = GM->Base;
+		BulkheadGameState->CheckIfInDebug(GM->IsDebug);
 	}
 }
 
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif

@@ -30,6 +30,9 @@ private:
 	UPROPERTY()
 	UDataTable* WaveStructDataTable;
 
+	UPROPERTY()
+	UDataTable* DebugWaveStructDataTable;
+
 	//used to store every live enemy in the scene
 	TSet<AEnemyBase*> ActiveEnemies;
 
@@ -64,8 +67,6 @@ public:
 
 
 
-
-
 public:
 	ABulkheadGameState();
 
@@ -79,7 +80,7 @@ public:
 	FCharacterData& GetCharacterData(const FGuid& ID);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	void GetAllWaveStats();
+	void GetAllWaveStats(UDataTable* Input);
 
 	TMap<int32, FCharacterData*> ReadDataFromTable(UDataTable* InUDataTable);
 
@@ -110,4 +111,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
 	void DeleteFromPrioritizedList(AEnemyBase* InEnemy);
+
+	void CheckIfInDebug(bool DebugMode);
 };

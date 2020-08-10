@@ -43,6 +43,8 @@ void AEnemySpawn::HandleOnCombatWaveStart()
 {
 	CurrentMiniWaveIndex = 0;
 
+	UE_LOG(LogTemp, Warning, TEXT("%s starts a wave"), *GetName());
+
 	SpawnNextWave(CurrentWaveStat);
 }
 
@@ -139,6 +141,10 @@ void AEnemySpawn::WaitTimerTick()
 	else
 	{
 		GetWorld()->GetTimerManager().ClearTimer(WaitingTimer);
+		if (CurrentMiniWaveIndex != CurrentWaveStat.Num())
+		{
+			SpawnMiniWave(CurrentWaveStat[CurrentMiniWaveIndex]);
+		}
 	}
 }
 
