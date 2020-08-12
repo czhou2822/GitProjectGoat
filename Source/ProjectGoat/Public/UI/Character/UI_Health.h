@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Core/UI_BulkheadUIBase.h"
+#include "UI/UI_BulkheadUIBase.h"
 #include "UI_Health.generated.h"
 
 /**

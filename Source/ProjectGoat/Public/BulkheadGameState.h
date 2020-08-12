@@ -41,6 +41,9 @@ private:
 	//Only when these objects are out of range, can the tower attack the closest target within ITS range.
 	TSet<AEnemyBase*> PrioritizedEnemyList;
 
+	//check if such enemy is invalid. e.g. pending death or already dead.
+	void CheckActiveEnemy(AEnemyBase* InEnemy);
+
 public:
 	UPROPERTY(SaveGame)
 	TMap<FGuid, FCharacterData> InGameEnemyData;
@@ -90,10 +93,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
 	void AddActiveEnemy(AEnemyBase* InEnemy);
 
-	//check if such enemy is invalie. e.g. pending death or already dead.
-	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
-	void CheckActiveEnemy(AEnemyBase* InEnemy);
-
 	//delete such enemy from ActiveEnemyList. 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
 	void DeleteActiveEnemy(AEnemyBase* InEnemy);
@@ -113,4 +112,7 @@ public:
 	void DeleteFromPrioritizedList(AEnemyBase* InEnemy);
 
 	void CheckIfInDebug(bool DebugMode);
+
+	/*this function clears all active enemy. use is as the last resort. called when postcombat ends*/
+	void DestoryAllEnemy();
 };

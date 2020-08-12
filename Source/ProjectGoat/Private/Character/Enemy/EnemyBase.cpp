@@ -100,14 +100,14 @@ void AEnemyBase::StartBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, true);
-	UE_LOG(LogTemp, Log, TEXT("StartBrittle"));
+//	UE_LOG(LogTemp, Log, TEXT("StartBrittle"));
 }
 
 void AEnemyBase::EndBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, false);
-	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
+//	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
 }
 //void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
 //{

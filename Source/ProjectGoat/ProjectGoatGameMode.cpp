@@ -39,13 +39,17 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 void AProjectGoatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!IsInitialized)
+
+	Init();
+	ReadDataFromGM();
+	if (GM)
 	{
-		Init();
-		ReadDataFromGM();
-		StartGame();
-		IsInitialized = true;
+		if (GM->StartGame)
+		{
+			StartGame();
+		}
 	}
+
 
 
 }
@@ -113,26 +117,20 @@ void AProjectGoatGameMode::StartGame()
 	SetGamePhase(EGamePhase::BUILDINGPHASE);
 }
 
-bool AProjectGoatGameMode::CollectGold(int InGold)
+void AProjectGoatGameMode::CollectGold(int InGold)
 {
 	if (BulkheadPlayerState)
 	{
-		BulkheadPlayerState->Gold += InGold;
-		return true;
+		BulkheadPlayerState->AddCoinToPlayer(InGold);
 	}
-	return false;
+
 }
 
 bool AProjectGoatGameMode::ConsumeGold(int InGold)
 {
 	if (BulkheadPlayerState)
 	{
-		if (BulkheadPlayerState->Gold < InGold)
-		{
-			return false;
-		}
-		BulkheadPlayerState->Gold -= InGold;
-		return true;
+		return BulkheadPlayerState->ConsumeCoin(InGold);
 	}
 	return false;
 }
@@ -156,19 +154,23 @@ void AProjectGoatGameMode::HandleOnPhaseChanged(EGamePhase InPhase)
 		StartBuildingPhase();
 		UE_LOG(LogTemp, Warning, TEXT("wave %i Building Phase"), WaveNumber);
 		break;
+
 	case EGamePhase::BUILDINGTOCOMBAT:
 		StartBuildingToCombatPhase(WaveNumber);
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0);
 		UE_LOG(LogTemp, Warning, TEXT("Building To Combat Phase"));
 		break;
+
 	case EGamePhase::COMBAT:
 		StartCombatPhase();
 		UE_LOG(LogTemp, Warning, TEXT("Combat Phase"));
 		break;
+
 	case EGamePhase::POSTCOMBAT:
 		StartPostCombatPhase();
 		UE_LOG(LogTemp, Warning, TEXT("Post Combat Phase"));
 		break;
+
 	case EGamePhase::UNDEFINE:
 		break;
 	}
@@ -214,6 +216,10 @@ void AProjectGoatGameMode::PhaseTimerTick()
 {
 	if (PhaseTickCount)   //timer still ticking
 	{
+		if (GamePhase == EGamePhase::POSTCOMBAT)
+		{
+			PostCombatCheck();
+		}
 		PhaseTickCount--;
 	}
 	else
@@ -249,7 +255,7 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	}
 	CheckIfGameEnd();
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
-	//BulkheadGameState->ClearActiveEnemyList();
+//	BulkheadGameState->ClearActiveEnemyList();   //has bug,read memory vialation
 }
 
 void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
@@ -317,6 +323,18 @@ void AProjectGoatGameMode::EndGame(const bool& Success)
 
 }
 
+void AProjectGoatGameMode::PostCombatCheck()
+{
+	if (BulkheadGameState)
+	{
+		if (BulkheadGameState->CheckAllActiveEnemy())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(PhaseTimerHandle);   //if timer done, move on to next phase.
+			SetGamePhase(EGamePhase::BUILDINGPHASE);
+		}
+	}
+}
+
 
 ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 	const int32& CharacterID,
@@ -324,9 +342,15 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 	const FVector& Location,
 	const FRotator& Rotator)
 {
-
 	if (FCharacterData* NewCharacterData = BulkheadGameState->GetCharacterDataByID(CharacterID, Type))
 	{
+		if (Type == ECharacterType::TOWER)
+		{
+			if (!BulkheadPlayerState->ConsumeCoin(NewCharacterData->Gold))  //not enough money
+			{
+				return nullptr;
+			}
+		}
 		UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
 
 		if (GetWorld() && NewClass)
@@ -372,6 +396,8 @@ void AProjectGoatGameMode::ReadDataFromGM()
 		WaveNumber = GM->WaveNumber;
 		Base = GM->Base;
 		BulkheadGameState->CheckIfInDebug(GM->IsDebug);
+		BulkheadPlayerState->AddCoinToPlayer(GM->InitGold);
+		UE_LOG(LogTemp, Warning, TEXT("Added Coins %i"), GM->InitGold);
 	}
 }
 

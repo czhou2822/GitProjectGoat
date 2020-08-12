@@ -99,7 +99,7 @@ public:
 
 	/*Gold*/
 	UFUNCTION(BlueprintCallable)
-	bool CollectGold(int InGold);
+	void CollectGold(int InGold);
 
 	UFUNCTION(BlueprintCallable)
 	bool ConsumeGold(int InGold);
@@ -140,6 +140,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	void EndGame(const bool& Success);
+
+	/*
+	called when its postcombat. postcombat will be terminate early if all enemy were killed
+	*/
+	void PostCombatCheck();
 };
 
 

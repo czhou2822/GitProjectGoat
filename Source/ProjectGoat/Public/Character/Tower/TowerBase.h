@@ -28,6 +28,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 		FOnTowerFire TowerFire;
+
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 		FOnConstructionComplete OnConstructionComplete;
 
@@ -37,8 +38,10 @@ public:
 	//	class USkeletalMeshComponent* Mesher;
 	UPROPERTY(EditAnywhere, Category = "BoxCollision")
 		class UBoxComponent* TowerPadding;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class AEnemyBase* TargetActor;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	class AEnemyBase* TargetActor;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;
 
@@ -72,12 +75,17 @@ public:
 	void HandleOnTowerPlaced();
 
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
+
 	void SetRangeVisibility(bool InVisibility);
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
-		void HandleOnConstructionComplete();
+	void HandleOnConstructionComplete();
+
 	void TowerInit();
-	void FireEvent();
+
+	UFUNCTION()
+	virtual void HandleFireEvent();
+
 	void OnConstructionCompleteEvent();
 	void SetTargetActor();
 	void FireTimer(float B);

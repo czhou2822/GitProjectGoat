@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProjectGoat/ProjectGoatType.h"
 #include "GameFramework/PlayerState.h"
 #include "BulkheadPlayerState.generated.h"
 
@@ -15,14 +16,51 @@ class PROJECTGOAT_API ABulkheadPlayerState : public APlayerState
 	GENERATED_BODY()
 
 
-public:
+private:
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 Gold;
 
+	void SetGold(int32 InGold);
 
 public:
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectedTowerChanged, ETowerType, NewTower);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnSelectedTowerChanged OnSelectedTowerChanged;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChanged, int32, InGold);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnGoldChanged OnGoldChanged;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGoldConsumeFailed);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnGoldConsumeFailed OnGoldConsumeFailed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ETowerType SelectedTower;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float FrostMeter;
+
+
+public:
+
+	ABulkheadPlayerState();
+
+	virtual void BeginPlay();
+
+	UFUNCTION(BlueprintCallable)
 	void AddCoinToPlayer(int32 InGold);
+
+	bool ConsumeCoin(int32 InGold);
+
+	UFUNCTION(BlueprintCallable)
+	int32& GetGold();
+
+	void SetTowerType(const ETowerType& InTowerType);
 	
+	void NextTower();
 };

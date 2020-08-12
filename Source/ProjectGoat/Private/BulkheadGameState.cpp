@@ -140,21 +140,28 @@ void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
 	ActiveEnemies.Remove(InEnemy);
 }
 
+//if return true->all enemy are cleared. 
 bool ABulkheadGameState::CheckAllActiveEnemy()
 {
+	bool IsAllDead = false;
 	for (AEnemyBase* Tmp : ActiveEnemies)
 	{
 		if (Tmp)
 		{
-			return false;
+			IsAllDead = true;
 		}
-		ActiveEnemies.Remove(Tmp);
+		else
+		{
+			ActiveEnemies.Remove(Tmp);
+		}
 	}
-	return true;
+	return !IsAllDead;    //if IsAllDead is true, meaning at least one EnemyBase is alive, return false (enemy are not cleared)
+						  //only if all condition falls to else path, can IsAllDead stays false->return true(enemy are all cleared)
 }
 
 void ABulkheadGameState::ClearActiveEnemyList()
 {
+	DestoryAllEnemy();
 	ActiveEnemies.Empty();
 }
 
@@ -183,6 +190,17 @@ void ABulkheadGameState::CheckIfInDebug(bool DebugMode)
 	else
 	{
 		GetAllWaveStats(WaveStructDataTable);
+	}
+}
+
+void ABulkheadGameState::DestoryAllEnemy()
+{
+	for (AEnemyBase* Tmp : ActiveEnemies)
+	{
+		if (Tmp && !Tmp->IsPendingKill())
+		{
+			Tmp->Destroy();
+		}
 	}
 }
 

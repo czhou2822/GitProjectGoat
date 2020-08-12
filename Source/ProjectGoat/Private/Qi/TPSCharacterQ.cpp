@@ -28,6 +28,7 @@
 #include "Character/Tower/TowerBase.h"
 #include "../ProjectGoatGameMode.h"
 #include "Components/CapsuleComponent.h"
+#include "projectgoat/Public/BulkheadGameState.h"
 
 #if PLATFORM_WINDOWS
 #pragma optimize("", on)
@@ -85,6 +86,11 @@ void ATPSCharacterQ::BeginPlay()
 //	}
 
 	//SetupVariable
+
+	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetAuthGameMode()->GameState);
+
+	BulkheadPlayerState = Cast<ABulkheadPlayerState>(BulkheadGameState->PlayerArray[0]);
+
 }
 
 // Called every frame
@@ -93,27 +99,6 @@ void ATPSCharacterQ::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-// Called to bind functionality to input
-/*void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("MoveForward", this, &ATPSCharacterQ::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ATPSCharacterQ::MoveRight);
-	PlayerInputComponent->BindAxis("Turn", this, &ATPSCharacterQ::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &ATPSCharacterQ::AddControllerPitchInput);
-	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ATPSCharacterQ::CrouchDown);
-	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ATPSCharacterQ::CrouchUp);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATPSCharacterQ::JumpFunction);
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATPSCharacterQ::AimStart);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATPSCharacterQ::AimEnd);
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireDown);
-	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, & ATPSCharacterQ::collectDown);
-	PlayerInputComponent->BindAction("Collect", IE_Released, this, & ATPSCharacterQ::collectUp);
-	PlayerInputComponent->BindAction("Build", IE_Pressed, this, & ATPSCharacterQ::throwSeed);
-
-}*/
 
 void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -134,8 +119,7 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
 	PlayerInputComponent->BindAction("SelectTower", IE_Pressed, this, &ATPSCharacterQ::SelectTower);
 	PlayerInputComponent->BindAction("SelectTower", IE_Released, this, &ATPSCharacterQ::SelectTowerEnd);
-	PlayerInputComponent->BindAction("InputActionBuild", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
-	PlayerInputComponent->BindAction("InputActionCancel", IE_Pressed, this, &ATPSCharacterQ::InputActionCancel);
+	PlayerInputComponent->BindAction("Cancel", IE_Pressed, this, &ATPSCharacterQ::InputActionCancel);
 	PlayerInputComponent->BindAction("OpenMenu", IE_Pressed, this, &ATPSCharacterQ::OpenMenu);
 	PlayerInputComponent->BindAction("FastForward", IE_Pressed, this, &ATPSCharacterQ::FastForward);
 	PlayerInputComponent->BindAction("FastForward", IE_Released, this, &ATPSCharacterQ::FastForwardEnd);
@@ -208,112 +192,6 @@ void ATPSCharacterQ::AimEnd()
 	AimEndBlueprintInterface();
 }
 
-//void ATPSCharacterQ::FireStart()
-//{
-//
-//
-//	if (bAiming)
-//	{
-//		if (!bAllowSnowNegative)   //not allow snow to go under 0, play mode
-//		{
-//			if (SnowCount <= 0)
-//			{
-//				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, TEXT("Frost Cannon empty! Aim and Press F to collect snow"));
-//				return;
-//			}
-//		}
-//		SnowCount -= 0.5;
-//
-//		PlayAnimMontage(FireAnima);
-//		
-//
-//
-//		//FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
-//
-//		if(AWeaponBase* Weapon = Cast<AWeaponBase>( WeaponSlot->GetChildActor()))
-//		{
-//			FVector fireStartPoint = Weapon->FirePoint->GetComponentLocation();
-//
-//
-//
-//			int32 ScreenX;
-//			int32 ScreenY;
-//			GetWorld()->GetFirstPlayerController()->GetViewportSize(ScreenX, ScreenY);
-//
-//			//UE_LOG(LogTemp, Warning, TEXT("Screen size %d, %d"), ScreenX, ScreenY);
-//
-//			FVector WorldLocation;
-//			FVector WorldDirection;
-//			GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2, WorldLocation, WorldDirection);
-//			//FVector fireEndPoint = WorldDirection * WeaponRange + WorldLocation;
-//
-//
-//			//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + fireStartPoint;
-//			FVector fireEndPoint = Camera->GetForwardVector() * WeaponRange + GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation();
-//			//fireEndPoint = tpsCamera->GetForwardVector() * WeaponRange + tpsCamera->GetComponentLocation();
-//
-//
-//
-//
-//			//FVector fireEndPoint = tpsCamera->GetForwardVector() * 5000 + fireStartPoint;
-//			FVector SweepStart = fireStartPoint;
-//			//FVector SweepEnd = tpsCamera->GetForwardVector() * 600 + SweepStart;  //backup
-//			FVector SweepEnd = fireEndPoint;
-//
-//			//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Red, false, 2.f, 0, 5.f);
-//
-//			FCollisionShape MyColShape = FCollisionShape::MakeCapsule(CapsuleRadius, (WeaponRange - 2 * CapsuleRadius) / 2);
-//			FVector eyeLocation;
-//			FRotator eyeRotation;
-//			GetActorEyesViewPoint(eyeLocation, eyeRotation);
-//			//manual offset
-//			/*eyeRotation.Pitch += 115;
-//			eyeRotation.Yaw += 3;*/
-//			FRotationConversionCache WorldRotationCache;
-//			FQuat ShapeQuat = WorldRotationCache.RotatorToQuat(eyeRotation);
-//			//DrawDebugCapsule(GetWorld(), tpsCamera->GetForwardVector() * (MyColShape.GetCapsuleHalfHeight()-150 )+ fireStartPoint, MyColShape.GetCapsuleHalfHeight()-150, MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::White, false, 0.5f);
-//
-//			DrawDebugCapsule(GetWorld(), (fireStartPoint + fireEndPoint) / 2, MyColShape.GetCapsuleHalfHeight(), MyColShape.GetCapsuleRadius(), ShapeQuat, FColor::Red, false, 1.f);
-//
-//
-//			FCollisionQueryParams cqp;
-//			FHitResult hr;
-//			TArray<FHitResult> hrShape;
-//			//DrawDebugBox(GetWorld(), tpsCamera->GetForwardVector() * 250 + fireStartPoint, FVector(100, 20, 50), FColor::Purple, true);
-//			//GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECC_GameTraceChannel7, cqp);
-//			bool isHit = GetWorld()->SweepMultiByChannel(hrShape, SweepStart, SweepEnd, ShapeQuat, ECC_GameTraceChannel7, MyColShape);
-//			SnowCount--;
-//
-//			if (isHit)
-//			{
-//				UE_LOG(LogTemp, Warning, TEXT("hitted actors: %d"), hrShape.Num());
-//				for (int i = 0; i < hrShape.Num(); i++)
-//				{
-//					hr = hrShape[i];
-//					if (hr.GetActor() && hr.GetActor() != this)
-//					{
-//						//UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-//						//UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-//						//UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-//						//hr.GetActor()->Destroy();
-//						//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Red, false, 2.f, 0, 5.f);
-//
-//						if (Cast<AEnemyBase>(hr.GetActor()) != nullptr)
-//						{
-//							AEnemyBase* target = Cast<AEnemyBase>(hr.GetActor());
-//							target->SlowDown();
-//							UE_LOG(LogTemp, Warning, TEXT("An enemy is hit"), *hr.GetActor()->GetName());
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//
-//
-//
-//	}
-//}
 
 void ATPSCharacterQ::FireDown()
 {
@@ -461,7 +339,7 @@ void ATPSCharacterQ::CollectDown()
 
 void ATPSCharacterQ::SetupVariables()
 {
-	Tower = TowerType::Mortar;
+	BulkheadPlayerState->SetTowerType(ETowerType::MORTAR);
 	DefaultFOV = Camera->FieldOfView;
 	DefaultCameraTransform = Camera->GetRelativeTransform();
 	DefaultCameraArmLength = SpringArm->TargetArmLength;
@@ -470,15 +348,9 @@ void ATPSCharacterQ::SetupVariables()
 void ATPSCharacterQ::SelectTower()
 {
 	IsSelecting = true;
-	switch (Tower) {
-	case TowerType::Tesla:
-		Tower = TowerType::Gatling;
-		break;
-	case TowerType::Mortar:
-		Tower = TowerType::Tesla;
-		break;
-	case TowerType::Gatling:
-		Tower = TowerType::Mortar;
+	if (BulkheadPlayerState)
+	{
+		BulkheadPlayerState->NextTower();
 	}
 }
 
@@ -487,37 +359,43 @@ void ATPSCharacterQ::SelectTowerEnd()
 	IsSelecting = false;
 }
 
-
-
 void ATPSCharacterQ::InputActionBuild()
 {
 	if (BuildCounter == true) 
 	{
-		PulloutBuildingCamera();
-		this->WhichTower();
-		IsCharacterPlacingTower = true;
-		this->OnCharacterStartPlacing.Broadcast(true);
-		GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
+		SpawnedTower = WhichTower();
+		if (SpawnedTower)
+		{
+			PulloutBuildingCamera();
+			IsCharacterPlacingTower = true;
+			this->OnCharacterStartPlacing.Broadcast(true);
+			GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
+			BuildCounter = !BuildCounter;
+
+		}
 	}
 	else 
 	{
 		if (IsCharacterPlacingTower == true) 
 		{
-			IsCharacterPlacingTower = false;
-			this->OnTowerPlaced.Broadcast();
-			this->OnCharacterStartPlacing.Broadcast(false);
-			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
-			ResetBuildingCamera();
+			if (SpawnedTower)
+			{
+				IsCharacterPlacingTower = false;
+				this->OnTowerPlaced.Broadcast();
+				this->OnCharacterStartPlacing.Broadcast(false);
+				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+				ResetBuildingCamera();
+				BuildCounter = !BuildCounter;
+			}
 		}
 	}
-
-	BuildCounter = !BuildCounter;
 }
 
 void ATPSCharacterQ::InputActionCancel()
 {
 	if (IsValid(SpawnedTower)) 
 	{
+		BulkheadPlayerState->AddCoinToPlayer(SpawnedTower->GetCharacterData().Gold);
 		SpawnedTower->Destroy();
 		if (IsCharacterPlacingTower == true) 
 		{
@@ -526,26 +404,33 @@ void ATPSCharacterQ::InputActionCancel()
 			this->OnCharacterStartPlacing.Broadcast(false);
 			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 			ResetBuildingCamera();
+			BuildCounter = true;
 		}
 	}
 }
 	
-void ATPSCharacterQ::WhichTower()
+ATowerBase* ATPSCharacterQ::WhichTower()
 {
 	FHitResult result = this->GetScreentoWorldLocation();
 	FTransform transform = FTransform(result.Location);
-	//transform.GetLocation();
-	switch (Tower) {
-	case TowerType::Tesla:
-		SpawnTowerID = 0;
-		break;
-	case TowerType::Mortar:
-		SpawnTowerID = 1;
-		break;
-	case TowerType::Gatling:
-		SpawnTowerID = 2;
+
+	int32 SpawnTowerID = 0;
+	if (BulkheadPlayerState)
+	{
+		switch (BulkheadPlayerState->SelectedTower)
+		{
+		case ETowerType::TESLA:
+			break;
+		case ETowerType::MORTAR:
+			SpawnTowerID = 1;
+			break;
+		case ETowerType::GATLING:
+			SpawnTowerID = 2;
+		}
+
 	}
-	SpawnedTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
+
+	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
 
 }
 
@@ -594,8 +479,6 @@ void ATPSCharacterQ::AdjustTowerLocation()
 	}
 }
 
-
-
 void ATPSCharacterQ::OpenMenu()
 {
 	//APlayerController* PlayerController;
@@ -643,7 +526,7 @@ FHitResult ATPSCharacterQ::GetScreentoWorldLocation()
 	TowerTraceObjectArray.Add(EObjectTypeQuery::ObjectTypeQuery1);
 	TowerTraceObjectArray.Add(EObjectTypeQuery::ObjectTypeQuery10);
 	TArray<AActor*, FDefaultAllocator> IgnoreActors;
-	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, TowerTraceObjectArray, false, IgnoreActors, EDrawDebugTrace::ForDuration, hr, true);
+	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, TowerTraceObjectArray, false, IgnoreActors, EDrawDebugTrace::None, hr, true);
 	return hr;
 }
 

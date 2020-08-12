@@ -56,7 +56,7 @@ void ATowerBase::BeginPlay()
 void ATowerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	this -> SetTargetActor();
+	//this -> SetTargetActor();
 	this->FireTimer(NextFire);
 }
 
@@ -103,7 +103,7 @@ void ATowerBase::HandleOnConstructionComplete()
 {
 	this->TowerInit();
 	
-	this->TowerFire.AddDynamic(this, &ATowerBase::FireEvent);
+	this->TowerFire.AddDynamic(this, &ATowerBase::HandleFireEvent);
 	
 	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 }
@@ -112,7 +112,7 @@ void ATowerBase::TowerInit()
 	TowerDamage = GetCharacterData().Attack;
 	FireInterval = GetCharacterData().AttackRate;
 }
-void ATowerBase::FireEvent() 
+void ATowerBase::HandleFireEvent() 
 {
 
 }
@@ -132,11 +132,9 @@ void ATowerBase::FireTimer(float B)
 	
 	if ( GameTime > B)
 	{
-		//if(IsValid(TargetActor))
-		//{
-			this->TowerFire.Broadcast();
-			NextFire = GameTime + FireInterval;
-		//}
+		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+		this->TowerFire.Broadcast();
+		NextFire = GameTime + FireInterval;
 	}
 }
 void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -57,11 +57,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatTickInterval;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Phase Param")
 	int32 WaveNumber;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	AActor* Base;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
+	int32 InitGold;
 	
 public:	
 	// Sets default values for this actor's properties

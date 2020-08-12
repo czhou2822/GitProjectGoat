@@ -2,7 +2,7 @@
 
 #pragma once
 #include "UObject/ConstructorHelpers.h"
-
+#include "ProjectGoat/ProjectGoatType.h"
 #include "CoreMinimal.h"
 #include "Character/Misc/TowerSeed.h"
 #include "CollisionShape.h"
@@ -27,14 +27,7 @@ class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	ATPSCharacterQ();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
@@ -45,73 +38,111 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class USpringArmComponent* SpringArm;
+		class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class UCameraComponent* Camera;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	//	class USkeletalMeshComponent* tpsGun;
+		class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UInventoryComponent* InventoryComp;
+		UInventoryComponent* InventoryComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInstanceDynamic* HitSnowMaterial;
+		UMaterialInstanceDynamic* HitSnowMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UChildActorComponent* WeaponSlot;
+		UChildActorComponent* WeaponSlot;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-	bool bAiming = false;
+		bool bAiming = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-	bool bAiming_collecting = false;
+		bool bAiming_collecting = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UAnimMontage* FireAnima;
+		class UAnimMontage* FireAnima;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SnowCount;
+		float SnowCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CapsuleHalfHeight = 500.f;
+		float CapsuleHalfHeight = 500.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CapsuleRadius = 100.f;
+		float CapsuleRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FRotator AimOffsetRotator = FRotator(15, 0, 0);
+		FRotator AimOffsetRotator = FRotator(15, 0, 0);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector AimOffsetTranslation = FVector(130, 70, 50);
+		FVector AimOffsetTranslation = FVector(130, 70, 50);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float WeaponRange = 700.f;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float WeaponRange = 700.f;
 
 
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int coinCount;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class USoundBase* fireSound;
+		class USoundBase* fireSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class USoundBase* OnSnowCollectSound;
+		class USoundBase* OnSnowCollectSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadwrite)
-	bool bAllowSnowNegative;  //allow snow to go nagetive
+		bool bAllowSnowNegative;  //allow snow to go nagetive
 
 	UPROPERTY(EditAnywhere, Category = seed)
-	TSubclassOf<class ATowerSeed> SeedClass;
+		TSubclassOf<class ATowerSeed> SeedClass;
+
+	FTimerHandle FireTimer;
+
+	FTimerHandle SnowTimer;
+
+	FTimerHandle TowerAdjustTimer;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	//	ETowerType Tower;
+
+	float DefaultFOV;
+
+	FTransform DefaultCameraTransform;
+
+	float DefaultCameraArmLength;
+
+	bool IsSelecting;
+
+	bool IsInShop;
+
+	bool IsCharacterPlacingTower;
+
+	bool BuildCounter = true;
+
+	bool IsTDown;
+
+	ATowerBase* SpawnedTower;
+
+	class ABulkheadPlayerState* BulkheadPlayerState;
+
+	class ABulkheadGameState* BulkheadGameState;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:
+
+	// Sets default values for this character's properties
+	ATPSCharacterQ();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 	//UFUNCTION(EditAnywhere)
 	void OnCollectSnow(FVector location);
@@ -160,24 +191,8 @@ public:
 
 	void CollectDown();
 
-	FTimerHandle FireTimer;
-
-	FTimerHandle SnowTimer;
-	
-
-	FTimerHandle TowerAdjustTimer;
-
 	UFUNCTION(BlueprintCallable)
 	void SetupVariables();
-
-	enum class TowerType : uint8 {
-		Gatling, Mortar, Tesla
-	};
-
-	TowerType Tower;
-	float DefaultFOV;
-	FTransform DefaultCameraTransform;
-	float DefaultCameraArmLength;
 
 	void SelectTower();
 
@@ -187,22 +202,15 @@ public:
 
 	void InputActionCancel();
 
-	bool IsSelecting;
 
-	bool IsInShop;
-
-	bool IsCharacterPlacingTower;
-
-	bool BuildCounter = true;
-
-	bool IsTDown;
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void PulloutBuildingCamera();
 
-	void WhichTower();
+	ATowerBase* WhichTower();
 
 	UFUNCTION(BlueprintCallable)
 	void AdjustTowerLocation();
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ResetBuildingCamera();
 
@@ -214,9 +222,7 @@ public:
 
 	FHitResult GetScreentoWorldLocation();
 
-	ATowerBase* SpawnedTower;
 
-	int SpawnTowerID;
 	//bool CheckValid();
 	//void onCharacterStartPlacing();
 	//FCharacterPlacingDelegate CharacterPlacingDelegate;

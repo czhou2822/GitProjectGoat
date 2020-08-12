@@ -8,7 +8,9 @@
 #include "TimerManager.h"
 #include "Character/Misc/EnemySpawn.h"
 #include "Character/Misc/EnemyRoute.h"
-
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
 
 // Sets default values
 AEnemySpawn::AEnemySpawn()
@@ -97,6 +99,8 @@ void AEnemySpawn::SpawnMiniWave(const FMiniWaveDetail& InMiniWave)
 
 	EnemyToBeSpawn = InMiniWave.BossNumber + InMiniWave.GruntsNumber + InMiniWave.ReaversNumber;
 
+	CurrentMiniWaveStat = InMiniWave;
+
 	GetWorld()->GetTimerManager().SetTimer(SpawningTimer, this, &AEnemySpawn::SpawnSingleEnemy, SpawnInterval, true, 0.f);
 }
 
@@ -183,6 +187,7 @@ void AEnemySpawn::ParseRouteNumber(const FString& InRouteString)
 
 int32 AEnemySpawn::GetNextMonsterID() const 
 {
+	//UE_LOG(LogTemp, Warning, TEXT("EnemyToBeSpawn: %i, ReaverNumber: %i, BossNumber: %i"), EnemyToBeSpawn, CurrentMiniWaveStat.ReaversNumber, CurrentMiniWaveStat.BossNumber)
 	if (CurrentMiniWaveStat.ReaversNumber || CurrentMiniWaveStat.BossNumber)
 	{
 		if (EnemyToBeSpawn <= CurrentMiniWaveStat.BossNumber)
@@ -208,3 +213,6 @@ int32 AEnemySpawn::GetNextMonsterID() const
 	return 0;
 }
 
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif
