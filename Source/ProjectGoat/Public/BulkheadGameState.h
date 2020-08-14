@@ -37,10 +37,6 @@ private:
 	TSet<AEnemyBase*> ActiveEnemies;
 
 
-	//used to store prioritized enemy. e.g. the tower should attack whichever target thats slowed by player. 
-	//Only when these objects are out of range, can the tower attack the closest target within ITS range.
-	TSet<AEnemyBase*> PrioritizedEnemyList;
-
 	//check if such enemy is invalid. e.g. pending death or already dead.
 	void CheckActiveEnemy(AEnemyBase* InEnemy);
 
@@ -67,7 +63,10 @@ public:
 
 	TMap<int32, FSpawnWaveDetail*> CacheSpawnWaveData;
 
-
+	//used to store prioritized enemy. e.g. the tower should attack whichever target thats slowed by player. 
+	//Only when these objects are out of range, can the tower attack the closest target within ITS range.
+	UPROPERTY(BlueprintReadWrite, Category = "C++")
+	TSet<AEnemyBase*> PrioritizedEnemyList;
 
 
 public:

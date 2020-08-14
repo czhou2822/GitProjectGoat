@@ -179,3 +179,10 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 
 	return Damage;
 }
+
+void AEnemyBase::Dying()
+{
+	Super::Dying();
+	GetGameState()->DeleteFromPrioritizedList(this);
+	GetGameState()->DeleteActiveEnemy(this);
+}

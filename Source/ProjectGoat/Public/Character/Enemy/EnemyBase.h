@@ -93,6 +93,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFrozenStart();
 
+	virtual void Dying();
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
