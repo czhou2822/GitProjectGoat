@@ -7,9 +7,9 @@
 #include "Character/Tower/TowerBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif
 
 
 FCharacterData CharacterDataNULL;
@@ -206,6 +206,6 @@ void ABulkheadGameState::DestoryAllEnemy()
 
 
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif

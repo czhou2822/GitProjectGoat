@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Character/Misc/EnemySpawn.h"
 #include "Engine/World.h"
 #include "ProjectGoat/ProjectGoatGameMode.h"
 #include "Character/Enemy/EnemyBase.h"
 #include "BulkheadGameState.h"
 #include "Components/ArrowComponent.h"
 #include "TimerManager.h"
-#include "Character/Misc/EnemySpawn.h"
 #include "Character/Misc/EnemyRoute.h"
 #if PLATFORM_WINDOWS
 #pragma optimize("", on)

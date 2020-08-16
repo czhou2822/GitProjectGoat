@@ -4,9 +4,9 @@
 #include "UI/Character/UI_PlayerInfo.h"
 #include "BulkheadPlayerState.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 UUI_PlayerInfo::UUI_PlayerInfo(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -80,7 +80,7 @@ void UUI_PlayerInfo::ResetButtonOpacity()
 	}
 }
 
-
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif

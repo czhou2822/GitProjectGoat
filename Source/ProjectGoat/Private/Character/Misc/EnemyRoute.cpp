@@ -15,7 +15,7 @@ AEnemyRoute::AEnemyRoute()
 
 	NavSplinePoints->SetupAttachment(RootComponent);
 	NavSplinePoints->bHiddenInGame = false;
-	NavSplinePoints->bVisible = true;
+	NavSplinePoints->SetVisibility(true);
 
 }
 

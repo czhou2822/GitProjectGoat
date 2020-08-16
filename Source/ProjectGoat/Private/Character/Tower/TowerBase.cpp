@@ -11,14 +11,13 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
-
 #include "Containers/Set.h"
 #include "Containers/UnrealString.h"
 #include "components/SkeletalMeshComponent.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 // Sets default values
 ATowerBase::ATowerBase():ABulkheadCharacterBase()
@@ -181,6 +180,6 @@ void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponen
 }
 
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif

@@ -12,9 +12,9 @@
 #include "Character/Tower/TowerBase.h"
 #include "Character/Misc/EnemySpawn.h"
 #include "UObject/ConstructorHelpers.h"
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 
 AProjectGoatGameMode::AProjectGoatGameMode()
@@ -403,6 +403,6 @@ void AProjectGoatGameMode::ReadDataFromGM()
 	}
 }
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif

@@ -30,9 +30,9 @@
 #include "Components/CapsuleComponent.h"
 #include "projectgoat/Public/BulkheadGameState.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 
 // Sets default values
@@ -530,6 +530,6 @@ FHitResult ATPSCharacterQ::GetScreentoWorldLocation()
 	return hr;
 }
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif

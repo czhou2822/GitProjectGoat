@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Character/Misc/GameMasterInterface.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "Components/AudioComponent.h"
 #include "ProjectGoat/ProjectGoatGameMode.h"
-#include "Character/Misc/GameMasterInterface.h"
 
 // Sets default values
 AGameMasterInterface::AGameMasterInterface()

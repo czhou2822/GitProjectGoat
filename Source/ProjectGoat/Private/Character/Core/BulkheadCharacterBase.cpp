@@ -9,9 +9,9 @@
 #include "UI/Character/UI_Health.h"
 #include "EngineUtils.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif
 
 // Sets default values
 ABulkheadCharacterBase::ABulkheadCharacterBase()
@@ -181,6 +181,6 @@ void ABulkheadCharacterBase::ResetGUID()
 
 
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
