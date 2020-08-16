@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Character/Misc/EnemySpawn.h"
+#include "Sound/SoundWave.h"
 #include "GameMasterInterface.generated.h"
 
 
@@ -65,6 +66,32 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	int32 InitGold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundWave* SWWaveStart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundWave* SWWaveFinish;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundWave* SWAmbientWind;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundWave* SWAmbientMusic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundWave* SMAmbientTreeRusstling;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	UAudioComponent* GMAudioComponent_Wind;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	UAudioComponent* GMAudioComponent_TreeRusstling;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	UAudioComponent* GMAudioComponent_Music;
+
+
 	
 public:	
 	// Sets default values for this actor's properties

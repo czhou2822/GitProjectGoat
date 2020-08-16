@@ -50,8 +50,6 @@ void AProjectGoatGameMode::BeginPlay()
 		}
 	}
 
-
-
 }
 
 void AProjectGoatGameMode::Init()
@@ -252,6 +250,10 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GM NULL. TickInterval 0, WaveNumber: %i, GamePhase: %i"), WaveNumber, GamePhase);
 		return;
+	}
+	if (GM->SWWaveStart)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), GM->SWWaveStart);
 	}
 	CheckIfGameEnd();
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
