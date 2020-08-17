@@ -12,6 +12,7 @@ AGameMasterInterface::AGameMasterInterface()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
 	GMAudioComponent_Wind = CreateDefaultSubobject<UAudioComponent>(TEXT("Wind"));
 
 	GMAudioComponent_TreeRusstling = CreateDefaultSubobject<UAudioComponent>(TEXT("TreeRusstling"));

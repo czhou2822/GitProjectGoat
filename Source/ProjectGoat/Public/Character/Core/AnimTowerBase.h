@@ -19,7 +19,7 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 	
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "C++")
-		FOnConstructionComplete OnConstructionComplete;
+	FOnConstructionComplete OnConstructionComplete;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
 	FRotator DoomRotation;
