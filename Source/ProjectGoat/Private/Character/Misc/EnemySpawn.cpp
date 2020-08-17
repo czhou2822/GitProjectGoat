@@ -8,9 +8,9 @@
 #include "Components/ArrowComponent.h"
 #include "TimerManager.h"
 #include "Character/Misc/EnemyRoute.h"
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 // Sets default values
 AEnemySpawn::AEnemySpawn()
@@ -212,7 +212,7 @@ int32 AEnemySpawn::GetNextMonsterID() const
 
 	return 0;
 }
-
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif
