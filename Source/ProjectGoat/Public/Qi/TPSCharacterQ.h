@@ -12,6 +12,8 @@
 #include "Character/Tower/TowerBase.h"
 #include "Components/TimelineComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundWave.h"
 #include "TPSCharacterQ.generated.h"
 
 //#include "WidgetBlueprint'/Game/CC/widget/widget/UMG_Pause.UMG_Pause'"
@@ -235,5 +237,26 @@ public:
 	/*UPROPERTY()
 	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_Suck;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_CharacterBreath;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWSuck;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWSuckUp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWSuckDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterFootStep;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterDeath;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterBreath;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterJump;
+
+	bool bMovingF;
+	bool bMovingR;
+	bool isMoving();
 };

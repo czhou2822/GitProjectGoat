@@ -4,6 +4,7 @@
 #include "Weapon/WeaponBase.h"
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -21,7 +22,7 @@ AWeaponBase::AWeaponBase()
 
 	//WeaponCollisionRange->bHiddenInGame = false;
 	//WeaponCollisionRange->bVisible = false;
-
+	GMAudioComponent_Fire = CreateDefaultSubobject<UAudioComponent>(TEXT("Fire"));
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +44,15 @@ void AWeaponBase::FireStart()
 	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
 	bShowDebugCollision = true;
 	bIsFiring = true;
-	
+	if (SWFireDown)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SWFireDown);
+	}
+	if (SWFire) 
+	{
+		GMAudioComponent_Fire->Sound = SWFire;
+		GMAudioComponent_Fire->Play(2.f);
+	}
 }
 
 void AWeaponBase::FireEnd()
@@ -51,7 +60,15 @@ void AWeaponBase::FireEnd()
 	GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 	bShowDebugCollision = false;
 	bIsFiring = false;
-	
+	if (SWFire)
+	{
+		//GMAudioComponent_Fire->Sound = SWFire;
+		GMAudioComponent_Fire->Stop();
+	}
+	if (SWFireUp)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SWFireUp);
+	}
 }
 
 void AWeaponBase::Fire()

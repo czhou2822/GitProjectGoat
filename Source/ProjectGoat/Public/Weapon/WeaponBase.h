@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundWave.h"
 #include "WeaponBase.generated.h"
 
 UCLASS()
@@ -47,5 +49,12 @@ public:
 	virtual void FireEnd();
 
 	virtual void Fire();
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_Fire;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWFire;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWFireUp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWFireDown;
 };

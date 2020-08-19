@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Character/Core/BulkheadCharacterBase.h"
+#include "Sound/SoundWave.h"
+#include "Components/AudioComponent.h"
 #include "EnemyBase.generated.h"
 
 UCLASS()
@@ -96,4 +98,21 @@ public:
 	virtual void Dying();
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_EnemyBreath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWEnemyBreath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWEnemyFootStep;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWEnemyAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWEnemyDeath;
+
+
 };

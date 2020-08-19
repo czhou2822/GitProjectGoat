@@ -25,6 +25,9 @@ AEnemyBase::AEnemyBase()
 	USkeletalMeshComponent* mesh = GetMesh();
 	mesh->SetScalarParameterValueOnMaterials("SnowAmount", 0);
 	
+	GMAudioComponent_EnemyBreath = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemyBreath"));
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -49,7 +52,12 @@ void AEnemyBase::BulkheadInit()
 {
 	Super::BulkheadInit();
 	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
-
+	if (SWEnemyBreath)
+	{
+		GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
+		GMAudioComponent_EnemyBreath->Play();
+	}
+	
 }
 
 
@@ -101,12 +109,22 @@ void AEnemyBase::StartBrittle()
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, true);
 //	UE_LOG(LogTemp, Log, TEXT("StartBrittle"));
+	if (SWEnemyBreath)
+	{
+		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
+		GMAudioComponent_EnemyBreath->Stop();
+	}
 }
 
 void AEnemyBase::EndBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, false);
+	if (SWEnemyBreath)
+	{
+		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
+		GMAudioComponent_EnemyBreath->Play();
+	}
 //	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
 }
 //void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
@@ -183,6 +201,10 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 void AEnemyBase::Dying()
 {
 	Super::Dying();
+	if (SWEnemyDeath)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SWEnemyDeath);
+	}
 	GetGameState()->DeleteFromPrioritizedList(this);
 	GetGameState()->DeleteActiveEnemy(this);
 }
