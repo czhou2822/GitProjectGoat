@@ -6,6 +6,7 @@
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "Delegates/Delegate.h"
 #include "Components/BoxComponent.h"
+#include "Sound/SoundWave.h"
 #include "TowerBase.generated.h"
 
 
@@ -45,7 +46,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;
 
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++")
 		FName FirePointName;
 	UPROPERTY(Category = "C++", EditAnywhere)
@@ -58,7 +58,35 @@ public:
 		bool IsPlaced = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float TowerDamage;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWTeslaTowerConstruction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWTeslaTowerAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWGatlingTowerConstruction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWGatlingTowerAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWMortarTowerConstruction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWMortarTowerAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWMortarTowerImpact;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWTowerDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWTowerDestruction;
+
+	class ABulkheadPlayerState* BulkheadPlayerState;
+	class ABulkheadGameState* BulkheadGameState;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -92,4 +120,5 @@ public:
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	void OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	void SetRedOutLine(bool IsOutline);
+	void PlayFireSound();
 };

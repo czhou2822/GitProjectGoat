@@ -13,7 +13,11 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Containers/Set.h"
 #include "Containers/UnrealString.h"
+#include "projectgoat/Public/BulkheadGameState.h"
+#include "projectgoat/Public/BulkheadPlayerState.h"
+//#include "Components/AudioComponent.h"
 #include "components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //#if PLATFORM_WINDOWS
 //#pragma optimize("", on)
@@ -49,6 +53,10 @@ void ATowerBase::BeginPlay()
 	{
 		TPSCharacter->OnTowerPlaced.AddDynamic(this, &ATowerBase::HandleOnTowerPlaced);
 	}
+	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetAuthGameMode()->GameState);
+	BulkheadPlayerState = Cast<ABulkheadPlayerState>(BulkheadGameState->PlayerArray[0]);
+	
+	
 }
 
 // Called every frame
@@ -57,6 +65,8 @@ void ATowerBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	//this -> SetTargetActor();
 	this->FireTimer(NextFire);
+	
+	
 }
 
 void ATowerBase::HandleOnTowerPlaced()
@@ -86,6 +96,23 @@ void ATowerBase::HandleOnTowerPlaced()
 		}
 	}
 	InternalTowerPlaced.Broadcast();
+	if (BulkheadPlayerState)
+	{
+		switch (BulkheadPlayerState->SelectedTower)
+		{
+		case ETowerType::TESLA:
+			UGameplayStatics::PlaySound2D(this, SWTeslaTowerConstruction);
+			break;
+		case ETowerType::MORTAR:
+			UGameplayStatics::PlaySound2D(this, SWMortarTowerConstruction);
+			break;
+		case ETowerType::GATLING:
+			UGameplayStatics::PlaySound2D(this, SWGatlingTowerConstruction);
+			break;
+		}
+
+	}
+	
 }
 void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
@@ -95,6 +122,7 @@ void ATowerBase::SetRangeVisibility(bool InVisibility)
 void ATowerBase::HandleOnCharacterStartPlacing(bool PlacingMode)
 {
 	this->SetRangeVisibility(PlacingMode);
+	
 }
 
 
@@ -105,6 +133,7 @@ void ATowerBase::HandleOnConstructionComplete()
 	this->TowerFire.AddDynamic(this, &ATowerBase::HandleFireEvent);
 	
 	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+
 }
 void ATowerBase::TowerInit()
 {
@@ -113,7 +142,30 @@ void ATowerBase::TowerInit()
 }
 void ATowerBase::HandleFireEvent() 
 {
+	//Attack
+	
+	
+}
+void ATowerBase::PlayFireSound()
+{
+	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+	if (BulkheadPlayerState)
+	{
+		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+		switch (BulkheadPlayerState->SelectedTower)
+		{
+		case ETowerType::TESLA:
+			UGameplayStatics::PlaySoundAtLocation(this, SWTeslaTowerAttack, FirePoint);
+			break;
+		case ETowerType::MORTAR:
+			UGameplayStatics::PlaySoundAtLocation(this, SWMortarTowerAttack, FirePoint);
+			break;
+		case ETowerType::GATLING:
+			UGameplayStatics::PlaySoundAtLocation(this, SWGatlingTowerAttack, FirePoint);
+			break;
+		}
 
+	}
 }
 void ATowerBase::OnConstructionCompleteEvent()
 {
@@ -177,6 +229,7 @@ void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponen
 	BMessage = "removed!";
 	Message = AMessage.Append(BMessage);
 	UKismetSystemLibrary::PrintString(this->GetWorld(), Message, true, true, FLinearColor(1, 0, 0, 0.5), 2.0);
+	UGameplayStatics::PlaySound2D(this, SWTowerDestruction);
 }
 
 
