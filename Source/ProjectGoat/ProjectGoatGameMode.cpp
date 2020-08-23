@@ -253,7 +253,7 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	}
 	if (GM->SWWaveStart)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), GM->SWWaveStart);
+		UGameplayStatics::PlaySound2D(GetWorld(), GM->SWWaveStart);    //shot 1 time off sound effect
 	}
 	CheckIfGameEnd();
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);

@@ -74,6 +74,8 @@ ATPSCharacterQ::ATPSCharacterQ()
 	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacterQ::onOverlap);
 	//UE_LOG(LogTemp, Warning, TEXT("start"));
 	//tpsCamera->
+	GMAudioComponent_Suck = CreateDefaultSubobject<UAudioComponent>(TEXT("CharacterSuck"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -97,6 +99,23 @@ void ATPSCharacterQ::BeginPlay()
 void ATPSCharacterQ::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	/*if (isMoving()) 
+	{
+		if (SWCharacterBreath && (!GMAudioComponent_CharacterBreath->IsPlaying()))
+		{
+			GMAudioComponent_CharacterBreath->Sound = SWCharacterBreath;
+			GMAudioComponent_CharacterBreath->Play();
+		}
+	}
+
+	if (!isMoving()) 
+	{
+		if (SWCharacterBreath) 
+		{
+			GMAudioComponent_CharacterBreath->Stop();
+		}
+		
+	}*/
 
 }
 
@@ -105,6 +124,7 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATPSCharacterQ::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATPSCharacterQ::MoveRight);
+	//PlayerInputComponent->BindAxis("MoveForward",)
 	PlayerInputComponent->BindAxis("Turn", this, &ATPSCharacterQ::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATPSCharacterQ::AddControllerPitchInput);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ATPSCharacterQ::CrouchDown);
@@ -141,6 +161,15 @@ void ATPSCharacterQ::MoveForward(float v)
 
 
 	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);
+	if (v != 0) {
+		bMovingF = true;
+		UGameplayStatics::PlaySound2D(GetWorld(),SWCharacterBreath);
+	}
+	else 
+	{
+		bMovingF = false;
+	}
+
 }
 
 void ATPSCharacterQ::MoveRight(float v)
@@ -150,6 +179,14 @@ void ATPSCharacterQ::MoveRight(float v)
 	//AddMovementInput(Direction, v);
 
 	AddMovementInput(UKismetMathLibrary::GetRightVector(GetControlRotation()), v);
+	if (v != 0) {
+		bMovingR = true;
+		UGameplayStatics::PlaySound2D(GetWorld(), SWCharacterBreath);
+	}
+	else
+	{
+		bMovingR = false;
+	}
 }
 
 void ATPSCharacterQ::CrouchDown()
@@ -168,6 +205,10 @@ void ATPSCharacterQ::JumpFunction()
 
 	//UE_LOG(LogTemp, Warning, TEXT("Jump"));
 	Jump();
+	if (SWCharacterJump) {
+		UGameplayStatics::PlaySound2D(GetWorld(), SWCharacterJump);
+	}
+
 }
 
 void ATPSCharacterQ::AimStart()
@@ -317,7 +358,7 @@ void ATPSCharacterQ::CollectSnow()
 				else {
 					SnowCount = 100;
 				}
-				//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(snowCount));
+				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(SnowCount));
 
 			}
 		}
@@ -329,12 +370,30 @@ void ATPSCharacterQ::CollectUp()
 {
 	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
 	bAiming_collecting = false;
-
+	if (SWSuckUp)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SWSuckUp);
+	}
+	if (SWSuck) 
+	{
+		GMAudioComponent_Suck->Stop();
+	}
 }
 
 void ATPSCharacterQ::CollectDown()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
 	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
+	if (SWSuckDown)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), SWSuckDown);
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "SuckDown Played");
+	}
+	if (SWSuck)
+	{
+		GMAudioComponent_Suck->Sound = SWSuck;
+		GMAudioComponent_Suck->Play();
+	}
 }
 
 void ATPSCharacterQ::SetupVariables()
@@ -528,6 +587,17 @@ FHitResult ATPSCharacterQ::GetScreentoWorldLocation()
 	TArray<AActor*, FDefaultAllocator> IgnoreActors;
 	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartPoint, EndPoint, TowerTraceObjectArray, false, IgnoreActors, EDrawDebugTrace::None, hr, true);
 	return hr;
+}
+
+bool ATPSCharacterQ::isMoving()
+{
+	if (bMovingF || bMovingR)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 //#if PLATFORM_WINDOWS
