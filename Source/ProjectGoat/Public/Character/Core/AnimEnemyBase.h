@@ -13,5 +13,18 @@ UCLASS()
 class PROJECTGOAT_API UAnimEnemyBase : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
+	float Speed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
+	class AEnemyBase* ControlledPawn;
+
+public:
+	UAnimEnemyBase();
+
+	virtual void NativeBeginPlay();
+
+	virtual void NativeUpdateAnimation(float DeltaSeconds);
 };

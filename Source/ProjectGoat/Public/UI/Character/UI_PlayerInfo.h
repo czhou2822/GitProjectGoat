@@ -22,8 +22,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UProgressBar* PGSnowMeter;
 
-	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* TBSnowText;
+	//UPROPERTY(meta = (BindWidget))
+	//	class UTextBlock* TBSnowText;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* TBMortar;
