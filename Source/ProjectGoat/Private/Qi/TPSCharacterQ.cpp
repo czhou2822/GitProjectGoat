@@ -370,30 +370,30 @@ void ATPSCharacterQ::CollectUp()
 {
 	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
 	bAiming_collecting = false;
-	if (SWSuckUp)
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWSuckUp);
-	}
-	if (SWSuck) 
-	{
-		GMAudioComponent_Suck->Stop();
-	}
+	//if (SWSuckUp)
+	//{
+	//	UGameplayStatics::PlaySound2D(GetWorld(), SWSuckUp);
+	//}
+	//if (SWSuck) 
+	//{
+	//	GMAudioComponent_Suck->Stop();
+	//}
 }
 
 void ATPSCharacterQ::CollectDown()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
 	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
-	if (SWSuckDown)
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWSuckDown);
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "SuckDown Played");
-	}
-	if (SWSuck)
-	{
-		GMAudioComponent_Suck->Sound = SWSuck;
-		GMAudioComponent_Suck->Play();
-	}
+	//if (SWSuckDown)
+	//{
+	//	UGameplayStatics::PlaySound2D(GetWorld(), SWSuckDown);
+	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "SuckDown Played");
+	//}
+	//if (SWSuck)
+	//{
+	//	GMAudioComponent_Suck->Sound = SWSuck;
+	//	GMAudioComponent_Suck->Play();
+	//}
 }
 
 void ATPSCharacterQ::SetupVariables()
@@ -595,7 +595,8 @@ bool ATPSCharacterQ::isMoving()
 	{
 		return true;
 	}
-	else {
+	else 
+	{
 		return false;
 	}
 }

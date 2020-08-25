@@ -40,64 +40,63 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class USpringArmComponent* SpringArm;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UInventoryComponent* InventoryComp;
+	UInventoryComponent* InventoryComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UMaterialInstanceDynamic* HitSnowMaterial;
+	UMaterialInstanceDynamic* HitSnowMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UChildActorComponent* WeaponSlot;
+	UChildActorComponent* WeaponSlot;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-		bool bAiming = false;
+	bool bAiming = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-		bool bAiming_collecting = false;
+	bool bAiming_collecting = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class UAnimMontage* FireAnima;
+	class UAnimMontage* FireAnima;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float SnowCount;
+	float SnowCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float CapsuleHalfHeight = 500.f;
+	float CapsuleHalfHeight = 500.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float CapsuleRadius = 100.f;
+	float CapsuleRadius = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FRotator AimOffsetRotator = FRotator(15, 0, 0);
+	FRotator AimOffsetRotator = FRotator(15, 0, 0);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector AimOffsetTranslation = FVector(130, 70, 50);
+	FVector AimOffsetTranslation = FVector(130, 70, 50);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float WeaponRange = 700.f;
+	float WeaponRange = 700.f;
 
 
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int coinCount;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class USoundBase* fireSound;
+	class USoundBase* fireSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		class USoundBase* OnSnowCollectSound;
+	class USoundBase* OnSnowCollectSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadwrite)
-		bool bAllowSnowNegative;  //allow snow to go nagetive
+	bool bAllowSnowNegative;  //allow snow to go nagetive
 
 	UPROPERTY(EditAnywhere, Category = seed)
-		TSubclassOf<class ATowerSeed> SeedClass;
+	TSubclassOf<class ATowerSeed> SeedClass;
 
 	FTimerHandle FireTimer;
 
@@ -130,6 +129,37 @@ public:
 
 	class ABulkheadGameState* BulkheadGameState;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_Suck;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+		UAudioComponent* GMAudioComponent_CharacterBreath;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWSuck;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWSuckUp;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWSuckDown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterFootStep;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterDeath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterBreath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+		USoundWave* SWCharacterJump;
+
+	bool bMovingF;
+
+	bool bMovingR;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -145,10 +175,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
 	//UFUNCTION(EditAnywhere)
 	void OnCollectSnow(FVector location);
-
 
 	void MoveForward(float v);
 
@@ -237,26 +265,5 @@ public:
 	/*UPROPERTY()
 	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_Suck;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_CharacterBreath;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWSuck;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWSuckUp;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWSuckDown;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterFootStep;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterDeath;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterBreath;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterJump;
-
-	bool bMovingF;
-	bool bMovingR;
 	bool isMoving();
 };
