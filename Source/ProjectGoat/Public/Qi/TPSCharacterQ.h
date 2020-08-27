@@ -266,4 +266,6 @@ public:
 	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
 
 	bool isMoving();
+
+	int32 GetTowerID(const ETowerType& InTowerType) const;
 };

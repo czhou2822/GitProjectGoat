@@ -346,13 +346,13 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 {
 	if (FCharacterData* NewCharacterData = BulkheadGameState->GetCharacterDataByID(CharacterID, Type))
 	{
-		if (Type == ECharacterType::TOWER)
-		{
-			if (!BulkheadPlayerState->ConsumeCoin(NewCharacterData->Gold))  //not enough money
-			{
-				return nullptr;
-			}
-		}
+		//if (Type == ECharacterType::TOWER)
+		//{
+		//	if (!BulkheadPlayerState->ConsumeCoin(NewCharacterData->Gold))  //not enough money
+		//	{
+		//		return nullptr;
+		//	}
+		//}
 		UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
 
 		if (GetWorld() && NewClass)

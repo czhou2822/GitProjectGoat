@@ -48,6 +48,7 @@ int32& ABulkheadPlayerState::GetGold()
 void ABulkheadPlayerState::SetTowerType(const ETowerType& InTowerType)
 {
 	SelectedTower = InTowerType;
+	OnSelectedTowerChanged.Broadcast(SelectedTower);
 }
 
 void ABulkheadPlayerState::NextTower()

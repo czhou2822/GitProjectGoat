@@ -127,20 +127,30 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//PlayerInputComponent->BindAxis("MoveForward",)
 	PlayerInputComponent->BindAxis("Turn", this, &ATPSCharacterQ::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATPSCharacterQ::AddControllerPitchInput);
+
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ATPSCharacterQ::CrouchDown);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ATPSCharacterQ::CrouchUp);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATPSCharacterQ::JumpFunction);
+
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATPSCharacterQ::AimStart);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATPSCharacterQ::AimEnd);
+
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireDown);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
+
 	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectDown);
 	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectUp);
+
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
+
 	PlayerInputComponent->BindAction("SelectTower", IE_Pressed, this, &ATPSCharacterQ::SelectTower);
 	PlayerInputComponent->BindAction("SelectTower", IE_Released, this, &ATPSCharacterQ::SelectTowerEnd);
+
 	PlayerInputComponent->BindAction("Cancel", IE_Pressed, this, &ATPSCharacterQ::InputActionCancel);
+
 	PlayerInputComponent->BindAction("OpenMenu", IE_Pressed, this, &ATPSCharacterQ::OpenMenu);
+
 	PlayerInputComponent->BindAction("FastForward", IE_Pressed, this, &ATPSCharacterQ::FastForward);
 	PlayerInputComponent->BindAction("FastForward", IE_Released, this, &ATPSCharacterQ::FastForwardEnd);
 
@@ -233,7 +243,6 @@ void ATPSCharacterQ::AimEnd()
 	AimEndBlueprintInterface();
 }
 
-
 void ATPSCharacterQ::FireDown()
 {
 	//GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
@@ -249,6 +258,7 @@ void ATPSCharacterQ::FireDown()
 	}
 
 }
+
 void ATPSCharacterQ::FireUp()
 {
 	//GetWorld()->GetTimerManager().ClearTimer(fireTimer);
@@ -259,6 +269,7 @@ void ATPSCharacterQ::FireUp()
 		WeaponDummy->FireEnd();
 	}
 }
+
 void ATPSCharacterQ::FireEnd()
 {
 }
@@ -416,6 +427,10 @@ void ATPSCharacterQ::SelectTower()
 void ATPSCharacterQ::SelectTowerEnd()
 {
 	IsSelecting = false;
+
+
+
+
 }
 
 void ATPSCharacterQ::InputActionBuild()
@@ -440,14 +455,37 @@ void ATPSCharacterQ::InputActionBuild()
 			if (SpawnedTower)
 			{
 				IsCharacterPlacingTower = false;
-				this->OnTowerPlaced.Broadcast();
-				this->OnCharacterStartPlacing.Broadcast(false);
+				if (BulkheadGameState && BulkheadPlayerState)
+				{
+					int32 Cost = 0;
+					int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
+					Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
+					if (BulkheadPlayerState->ConsumeCoin(Cost))  //consume success
+					{
+						Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
+						this->OnTowerPlaced.Broadcast();
+					}
+					SpawnedTower->Destroy();
+				}
 				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 				ResetBuildingCamera();
+				this->OnCharacterStartPlacing.Broadcast(false);
 				BuildCounter = !BuildCounter;
 			}
 		}
 	}
+}
+
+ATowerBase* ATPSCharacterQ::WhichTower()
+{
+	FHitResult result = this->GetScreentoWorldLocation();
+	FTransform transform = FTransform(result.Location);
+
+
+	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, transform.GetLocation(), transform.Rotator());  //3->preview tower
+
+	//return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
+
 }
 
 void ATPSCharacterQ::InputActionCancel()
@@ -468,30 +506,6 @@ void ATPSCharacterQ::InputActionCancel()
 	}
 }
 	
-ATowerBase* ATPSCharacterQ::WhichTower()
-{
-	FHitResult result = this->GetScreentoWorldLocation();
-	FTransform transform = FTransform(result.Location);
-
-	int32 SpawnTowerID = 0;
-	if (BulkheadPlayerState)
-	{
-		switch (BulkheadPlayerState->SelectedTower)
-		{
-		case ETowerType::TESLA:
-			break;
-		case ETowerType::MORTAR:
-			SpawnTowerID = 1;
-			break;
-		case ETowerType::GATLING:
-			SpawnTowerID = 2;
-		}
-
-	}
-
-	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
-
-}
 
 void ATPSCharacterQ::AdjustTowerLocation()
 {
@@ -599,6 +613,27 @@ bool ATPSCharacterQ::isMoving()
 	{
 		return false;
 	}
+}
+
+int32 ATPSCharacterQ::GetTowerID(const ETowerType& InTowerType) const
+{
+	int32 SpawnTowerID = 0;
+	if (BulkheadPlayerState)
+	{
+		switch (BulkheadPlayerState->SelectedTower)
+		{
+		case ETowerType::TESLA:
+			break;
+		case ETowerType::MORTAR:
+			SpawnTowerID = 1;
+			break;
+		case ETowerType::GATLING:
+			SpawnTowerID = 2;
+		}
+
+	}
+
+	return SpawnTowerID;
 }
 
 //#if PLATFORM_WINDOWS

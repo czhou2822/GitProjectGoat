@@ -28,10 +28,10 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
-		FOnTowerFire TowerFire;
+	FOnTowerFire TowerFire;
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
-		FOnConstructionComplete OnConstructionComplete;
+	FOnConstructionComplete OnConstructionComplete;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UDecalComponent* Decal;

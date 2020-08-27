@@ -114,17 +114,18 @@ void ATowerBase::HandleOnTowerPlaced()
 	}
 	
 }
+
 void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
 	//UDecalComponent* Decal;
 	Decal->SetVisibility(InVisibility, false);
 }
+
 void ATowerBase::HandleOnCharacterStartPlacing(bool PlacingMode)
 {
 	this->SetRangeVisibility(PlacingMode);
 	
 }
-
 
 void ATowerBase::HandleOnConstructionComplete()
 {
@@ -135,17 +136,20 @@ void ATowerBase::HandleOnConstructionComplete()
 	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 
 }
+
 void ATowerBase::TowerInit()
 {
 	TowerDamage = GetCharacterData().Attack;
 	FireInterval = GetCharacterData().AttackRate;
 }
+
 void ATowerBase::HandleFireEvent() 
 {
 	//Attack
 	
 	
 }
+
 void ATowerBase::PlayFireSound()
 {
 	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
@@ -167,14 +171,17 @@ void ATowerBase::PlayFireSound()
 
 	}
 }
+
 void ATowerBase::OnConstructionCompleteEvent()
 {
 
 }
+
 void ATowerBase::SetTargetActor()
 {
 	
 }
+
 void ATowerBase::FireTimer(float B)
 {
 	float GameTime;
@@ -188,6 +195,7 @@ void ATowerBase::FireTimer(float B)
 		NextFire = GameTime + FireInterval;
 	}
 }
+
 void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	FString AMessage;
@@ -204,6 +212,7 @@ void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveCompon
 		OverlappedTower.Add(TowerBase);
 	}
 }
+
 void ATowerBase::SetRedOutLine(bool IsOutline)
 {
 	float ParameterValue;
@@ -217,6 +226,7 @@ void ATowerBase::SetRedOutLine(bool IsOutline)
 	}
 	//this->SetScalarParameterValue("isOutLine", ParameterValue);
 }
+
 void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	FString AMessage;
