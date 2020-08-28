@@ -82,7 +82,7 @@ public:
 	void HandleSlowDown();
 
 	UFUNCTION(BlueprintCallable)
-	float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
 	FTimerHandle SlowListener;
 

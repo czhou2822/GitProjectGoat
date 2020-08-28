@@ -42,7 +42,7 @@ private:
 
 public:
 	UPROPERTY(SaveGame)
-	TMap<FGuid, FCharacterData> InGameEnemyData;
+	TMap<FGuid, FCharacterData> InGameCharacterData;
 
 	UPROPERTY(EditAnywhere)
 	ABulkheadCharacterBase* SpawningPoint;
@@ -87,6 +87,9 @@ public:
 	TMap<int32, FCharacterData*> ReadDataFromTable(UDataTable* InUDataTable);
 
 	FCharacterData* GetCharacterDataByID(const int32& ID, const ECharacterType& Type = ECharacterType::TOWER);
+
+	UFUNCTION(BlueprintCallable, Category = "CharacterData")
+	FCharacterData GetTowerDataByID(const int32& ID);
 
 	//used to add enemy into active list, should be called whenever an enemy is called. 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")

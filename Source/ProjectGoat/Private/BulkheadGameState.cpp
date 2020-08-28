@@ -58,19 +58,19 @@ void ABulkheadGameState::GetAllWaveStats(UDataTable* Input)
 
 const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, const FCharacterData& Data)
 {
-	return InGameEnemyData.Add(ID, Data);
+	return InGameCharacterData.Add(ID, Data);
 }
 
 bool ABulkheadGameState::RemoveCharacterData(const FGuid& ID)
 {
-	return (bool)InGameEnemyData.Remove(ID);
+	return (bool)InGameCharacterData.Remove(ID);
 }
 
 FCharacterData& ABulkheadGameState::GetCharacterData(const FGuid& ID)
 {
-	if (InGameEnemyData.Contains(ID))
+	if (InGameCharacterData.Contains(ID))
 	{
-		return InGameEnemyData[ID];
+		return InGameCharacterData[ID];
 	}
 	return CharacterDataNULL;
 }
@@ -117,6 +117,11 @@ FCharacterData* ABulkheadGameState::GetCharacterDataByID(const int32& ID, const 
 	}
 	}
 	return nullptr;
+}
+
+FCharacterData ABulkheadGameState::GetTowerDataByID(const int32& ID)
+{
+	return *GetCharacterDataByID(ID);
 }
 
 void ABulkheadGameState::AddActiveEnemy(AEnemyBase* InEnemy)

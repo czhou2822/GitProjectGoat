@@ -44,10 +44,10 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 {
 	FCharacterData DataTemp = GetCharacterData();
 	
-	//ABulkheadCharacterBase *Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
+	ABulkheadCharacterBase *Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
 
-	//if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
-	//{
+	if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
+	{
 		Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 		GetCharacterData().Health -= Damage;
@@ -75,7 +75,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 		//}
 
 		UpdateUI();
-	//}
+	}
 
 	return Damage;
 }

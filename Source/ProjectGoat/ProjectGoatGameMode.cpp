@@ -348,10 +348,11 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 	{
 		//if (Type == ECharacterType::TOWER)
 		//{
-		//	if (!BulkheadPlayerState->ConsumeCoin(NewCharacterData->Gold))  //not enough money
-		//	{
-		//		return nullptr;
-		//	}
+		//	NewCharacterData->bTeam = true;
+		//}
+		//else
+		//{
+		//	NewCharacterData->bTeam = false;
 		//}
 		UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
 

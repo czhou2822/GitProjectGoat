@@ -17,6 +17,9 @@ AEnemyBase::AEnemyBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCharacterData().bTeam = false;
+
 	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 
 	//GetCapsuleComponent()->OnComponentBeginOverlap->AddDynamic(this, &AEnemyBase::onOverlap);
@@ -26,6 +29,8 @@ AEnemyBase::AEnemyBase()
 	mesh->SetScalarParameterValueOnMaterials("SnowAmount", 0);
 	
 	GMAudioComponent_EnemyBreath = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemyBreath"));
+
+	
 	
 
 }
@@ -159,43 +164,27 @@ void AEnemyBase::HandleSlowDown()
 
 float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	//APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	//ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GetGameState());
 
 	FCharacterData DataTemp = GetCharacterData();
+
+	float NewDamage = Damage;
+
 	if (DataTemp.bIsBrittle == true) 
 	{
-		GetCharacterData().Health -= Damage * BrittleDamageRate;
+		NewDamage = NewDamage * BrittleDamageRate;
 	}
-	else 
-	{
-		GetCharacterData().Health -= Damage;
-	}
+
+	ABulkheadCharacterBase::TakeDamage(NewDamage, DamageEvent, EventInstigator, DamageCauser);
+
 	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
 
 
-	if (!IsActive())
-	{
-		GetCharacterData().Health = 0.0f;
-		Dying();
-	}
-
-	//if (DrawTextClass)
-	//{
-	//	if (ADrawText* MyValueText = GetWorld()->SpawnActor<ADrawText>(DrawTextClass, GetActorLocation(), FRotator::ZeroRotator))
-	//	{
-	//		FString DamageText = FString::Printf(TEXT("-%0.f"), DamageValue);
-	//		MyValueText->SetTextBlock(DamageText, FLinearColor::Red, DamageValue / GetCharacterData().MaxHealth);
-
-	//	}
-	//}
-
-	UpdateUI();
-
-	return Damage;
+	return NewDamage;
 }
 
 void AEnemyBase::Dying()

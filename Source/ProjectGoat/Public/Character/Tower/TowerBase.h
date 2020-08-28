@@ -33,31 +33,39 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnConstructionComplete OnConstructionComplete;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UDecalComponent* Decal;
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	class USkeletalMeshComponent* Mesher;
-	UPROPERTY(EditAnywhere, Category = "BoxCollision")
-		class UBoxComponent* TowerPadding;
+	//	class UDecalComponent* Decal;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	class AEnemyBase* TargetActor;
+	UPROPERTY(EditAnywhere, Category = "BoxCollision")
+		UBoxComponent* TowerPadding;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UStaticMeshComponent* RangeMeshC;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++")
 		FName FirePointName;
+
 	UPROPERTY(Category = "C++", EditAnywhere)
 		TSet<ATowerBase*> OverlappedTower;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float NextFire=0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float FireInterval = 1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool IsPlaced = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float TowerDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float TowerRange;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundWave* SWTeslaTowerConstruction;
 
@@ -85,7 +93,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundWave* SWTowerDestruction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++")
+		int32 SelfTowerID;
+
 	class ABulkheadPlayerState* BulkheadPlayerState;
+
 	class ABulkheadGameState* BulkheadGameState;
 protected:
 	// Called when the game starts or when spawned
@@ -114,11 +126,22 @@ public:
 	UFUNCTION()
 	virtual void HandleFireEvent();
 
+	virtual void BulkheadInit() override;
+
 	void OnConstructionCompleteEvent();
+
 	void SetTargetActor();
+
 	void FireTimer(float B);
+
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	void OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	void SetRedOutLine(bool IsOutline);
+
 	void PlayFireSound();
+
+	UFUNCTION(BlueprintCallable)
+	float& GetTowerRange();
 };

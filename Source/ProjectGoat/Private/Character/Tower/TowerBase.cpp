@@ -15,7 +15,7 @@
 #include "Containers/UnrealString.h"
 #include "projectgoat/Public/BulkheadGameState.h"
 #include "projectgoat/Public/BulkheadPlayerState.h"
-//#include "Components/AudioComponent.h"
+#include "Components/MeshComponent.h"
 #include "components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -29,15 +29,17 @@ ATowerBase::ATowerBase():ABulkheadCharacterBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterData().bTeam = true;
-	Decal = CreateDefaultSubobject<UDecalComponent>(TEXT("Decal"));
-	Decal->SetupAttachment(RootComponent);
-	//Mesher = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesher"));
-	//Mesher->SetupAttachment(RootComponent);
+
 	TowerPadding = CreateDefaultSubobject<UBoxComponent>(TEXT("TowerPadding"));
 	TowerPadding->SetupAttachment(RootComponent);
 	OverlappedTower.Empty();
 
-	Decal->SetVisibility(true);
+	RangeMeshC = CreateDefaultSubobject<UStaticMeshComponent >(TEXT("RangeMeshC"));
+	RangeMeshC->SetupAttachment(RootComponent);
+
+	RangeMeshC->SetVisibility(false);
+
+	//TowerInit();
 	
 }
 
@@ -117,19 +119,21 @@ void ATowerBase::HandleOnTowerPlaced()
 
 void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
-	//UDecalComponent* Decal;
-	Decal->SetVisibility(InVisibility, false);
+//	//UDecalComponent* Decal;
+	RangeMeshC->SetVisibility(InVisibility, false);
+	UE_LOG(LogTemp, Warning, TEXT("Visibility Set to %i"), InVisibility);
 }
 
 void ATowerBase::HandleOnCharacterStartPlacing(bool PlacingMode)
 {
 	this->SetRangeVisibility(PlacingMode);
-	
+	UE_LOG(LogTemp, Warning, TEXT("handle on character start placing by %s"), *GetName());
+
 }
 
 void ATowerBase::HandleOnConstructionComplete()
 {
-	this->TowerInit();
+	
 	
 	this->TowerFire.AddDynamic(this, &ATowerBase::HandleFireEvent);
 	
@@ -139,8 +143,11 @@ void ATowerBase::HandleOnConstructionComplete()
 
 void ATowerBase::TowerInit()
 {
-	TowerDamage = GetCharacterData().Attack;
-	FireInterval = GetCharacterData().AttackRate;
+	FCharacterData ThisData = GetCharacterData();
+	TowerDamage = ThisData.Attack;
+	FireInterval = ThisData.AttackRate;
+	SelfTowerID = ThisData.ID;
+	TowerRange = ThisData.Range;
 }
 
 void ATowerBase::HandleFireEvent() 
@@ -148,6 +155,15 @@ void ATowerBase::HandleFireEvent()
 	//Attack
 	
 	
+}
+
+void ATowerBase::BulkheadInit()
+{
+	FCharacterData ThisData = GetCharacterData();
+	TowerDamage = ThisData.Attack;
+	FireInterval = ThisData.AttackRate;
+	SelfTowerID = ThisData.ID;
+	TowerRange = ThisData.Range;
 }
 
 void ATowerBase::PlayFireSound()
@@ -170,6 +186,11 @@ void ATowerBase::PlayFireSound()
 		}
 
 	}
+}
+
+float& ATowerBase::GetTowerRange() 
+{
+	return GetCharacterData().Range;
 }
 
 void ATowerBase::OnConstructionCompleteEvent()

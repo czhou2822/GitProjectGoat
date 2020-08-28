@@ -80,4 +80,5 @@ public:
 
 	FORCEINLINE ABulkheadGameState* GetGameState() { return GetWorld() ? GetWorld()->GetGameState<ABulkheadGameState>() : NULL; }
 
+
 };
