@@ -19,9 +19,9 @@
 #include "components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-//#if PLATFORM_WINDOWS
-//#pragma optimize("", on)
-//#endif
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
 
 // Sets default values
 ATowerBase::ATowerBase():ABulkheadCharacterBase()
@@ -66,7 +66,7 @@ void ATowerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//this -> SetTargetActor();
-	this->FireTimer(NextFire);
+	//this->FireTimer(NextFire);
 	
 	
 }
@@ -98,22 +98,22 @@ void ATowerBase::HandleOnTowerPlaced()
 		}
 	}
 	InternalTowerPlaced.Broadcast();
-	if (BulkheadPlayerState)
-	{
-		switch (BulkheadPlayerState->SelectedTower)
-		{
-		case ETowerType::TESLA:
-			UGameplayStatics::PlaySound2D(this, SWTeslaTowerConstruction);
-			break;
-		case ETowerType::MORTAR:
-			UGameplayStatics::PlaySound2D(this, SWMortarTowerConstruction);
-			break;
-		case ETowerType::GATLING:
-			UGameplayStatics::PlaySound2D(this, SWGatlingTowerConstruction);
-			break;
-		}
+	//if (BulkheadPlayerState)
+	//{
+	//	switch (BulkheadPlayerState->SelectedTower)
+	//	{
+	//	case ETowerType::TESLA:
+	//		UGameplayStatics::PlaySound2D(this, SWTeslaTowerConstruction);
+	//		break;
+	//	case ETowerType::MORTAR:
+	//		UGameplayStatics::PlaySound2D(this, SWMortarTowerConstruction);
+	//		break;
+	//	case ETowerType::GATLING:
+	//		UGameplayStatics::PlaySound2D(this, SWGatlingTowerConstruction);
+	//		break;
+	//	}
 
-	}
+	//}
 	
 }
 
@@ -135,11 +135,9 @@ void ATowerBase::HandleOnConstructionComplete()
 {
 	
 	
-	this->TowerFire.AddDynamic(this, &ATowerBase::HandleFireEvent);
+	//this->TowerFire.AddDynamic(this, &ATowerBase::HandleFireEvent);
 	
-	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
-
-
+	TowerInit();
 
 }
 
@@ -150,13 +148,27 @@ void ATowerBase::TowerInit()
 	FireInterval = ThisData.AttackRate;
 	SelfTowerID = ThisData.ID;
 	TowerRange = ThisData.Range;
+
+	//GetWorld()->GetTimerManager().SetTimer(FireTimerHandler, this, &ATowerBase::FireTimerTick, FireInterval, true);
+	GetWorldTimerManager().SetTimer(FireTimerHandler, this, &ATowerBase::FireTimerTick, FireInterval, true, 0.0f);
+
 }
 
-void ATowerBase::HandleFireEvent() 
+void ATowerBase::FireTimerTick()
 {
-	//Attack
-	
+	if (TargetEnemy)
+	{
+		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+
+		TowerFire();  //broadcast blueprint fire event
+	}
 }
+
+//void ATowerBase::HandleFireEvent() 
+//{
+//	//Attack
+//	
+//}
 
 void ATowerBase::BulkheadInit()
 {
@@ -169,21 +181,11 @@ void ATowerBase::BulkheadInit()
 
 void ATowerBase::PlayFireSound()
 {
-	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 	if (BulkheadPlayerState)
 	{
-		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
-		switch (BulkheadPlayerState->SelectedTower)
+		if (SWTowerAttack)
 		{
-		case ETowerType::TESLA:
-			UGameplayStatics::PlaySoundAtLocation(this, SWTeslaTowerAttack, FirePoint);
-			break;
-		case ETowerType::MORTAR:
-			UGameplayStatics::PlaySoundAtLocation(this, SWMortarTowerAttack, FirePoint);
-			break;
-		case ETowerType::GATLING:
-			UGameplayStatics::PlaySoundAtLocation(this, SWGatlingTowerAttack, FirePoint);
-			break;
+			UGameplayStatics::PlaySoundAtLocation(this, SWTowerAttack, FirePoint);
 		}
 
 	}
@@ -193,6 +195,8 @@ float& ATowerBase::GetTowerRange()
 {
 	return GetCharacterData().Range;
 }
+
+
 
 void ATowerBase::OnConstructionCompleteEvent()
 {
@@ -204,21 +208,19 @@ void ATowerBase::SetTargetActor()
 	
 }
 
-void ATowerBase::FireTimer(float B)
-{
-	float GameTime;
-	GameTime = GetGameTimeSinceCreation();
-	//AEnemyBase* TargetActor = Cast<AEnemyBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	
-	if ( GameTime > B)
-	{
-		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
-		this->TowerFire.Broadcast();
-		NextFire = GameTime + FireInterval;
-		TowerFireTest();
-		
-	}
-}
+//void ATowerBase::FireTimer(float B)
+//{
+//	float GameTime;
+//	GameTime = GetGameTimeSinceCreation();
+//	//AEnemyBase* TargetActor = Cast<AEnemyBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+//	
+//	if ( GameTime > B)
+//	{
+//		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
+//		this->TowerFire.Broadcast();
+//		NextFire = GameTime + FireInterval;
+//	}
+//}
 
 void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -267,6 +269,6 @@ void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponen
 }
 
 
-//#if PLATFORM_WINDOWS
-//#pragma optimize("", off)
-//#endif
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif

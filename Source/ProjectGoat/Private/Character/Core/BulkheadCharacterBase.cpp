@@ -44,37 +44,31 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 {
 	FCharacterData DataTemp = GetCharacterData();
 	
-	ABulkheadCharacterBase *Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
+	ABulkheadCharacterBase* Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
 
-	if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
+	if (Attacker)
 	{
-		Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-
-		GetCharacterData().Health -= Damage;
-
-		//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
-
-		//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
-
-		if (!IsActive())
+		if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
 		{
-			GetCharacterData().Health = 0.0f;
-			Dying();
+			Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+			GetCharacterData().Health -= Damage;
+
+			//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+			//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
+
+
+			if (!IsActive())
+			{
+				GetCharacterData().Health = 0.0f;
+				Dying();
+			}
+
+			UpdateUI();
 		}
 
-		//if (DrawTextClass)
-		//{
-		//	if (ADrawText* MyValueText = GetWorld()->SpawnActor<ADrawText>(DrawTextClass, GetActorLocation(), FRotator::ZeroRotator))
-		//	{
-		//		FString DamageText = FString::Printf(TEXT("-%0.f"), DamageValue);
-		//		MyValueText->SetTextBlock(DamageText, FLinearColor::Red, DamageValue / GetCharacterData().MaxHealth);
-
-		//	}
-		//}
-
-		UpdateUI();
 	}
 
 	return Damage;

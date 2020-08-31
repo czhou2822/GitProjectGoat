@@ -23,12 +23,12 @@ private:
 	FInternalTowerPlaced InternalTowerPlaced;
 
 public:	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerFire);
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerFire);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 
-	UPROPERTY(BlueprintAssignable, Category = "C++")
-	FOnTowerFire TowerFire;
+	//UPROPERTY(BlueprintAssignable, Category = "C++")
+	//FOnTowerFire TowerFire;
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnConstructionComplete OnConstructionComplete;
@@ -36,7 +36,7 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//	class UDecalComponent* Decal;
 
-	UPROPERTY(EditAnywhere, Category = "BoxCollision")
+	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
 		UBoxComponent* TowerPadding;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -51,8 +51,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++")
 		TSet<ATowerBase*> OverlappedTower;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float NextFire=0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float FireInterval = 1;
@@ -66,26 +64,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float TowerRange;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTeslaTowerConstruction;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWTeslaTowerConstruction;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWTeslaTowerAttack;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWGatlingTowerConstruction;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWGatlingTowerAttack;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWMortarTowerConstruction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTeslaTowerAttack;
+		USoundWave* SWTowerAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWGatlingTowerConstruction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWGatlingTowerAttack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWMortarTowerConstruction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWMortarTowerAttack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWMortarTowerImpact;
+		USoundWave* SWTowerImpact;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundWave* SWTowerDamage;
@@ -103,7 +101,7 @@ public:
 	FTimerHandle FireTimerHandler;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
-		AEnemyBase* TargetEnemyC;
+		AEnemyBase* TargetEnemy;
 
 protected:
 	// Called when the game starts or when spawned
@@ -121,7 +119,7 @@ public:
 	void HandleOnTowerPlaced();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
-	void TowerFireTest();
+	void TowerFire();
 
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 
@@ -132,8 +130,8 @@ public:
 
 	void TowerInit();
 
-	UFUNCTION()
-	virtual void HandleFireEvent();
+//	UFUNCTION()
+//	virtual void HandleFireEvent();
 
 	virtual void BulkheadInit() override;
 
@@ -141,7 +139,7 @@ public:
 
 	void SetTargetActor();
 
-	void FireTimer(float B);
+//	void FireTimer(float B);
 
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -153,4 +151,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float& GetTowerRange();
+
+	UFUNCTION()
+	void FireTimerTick();
 };
