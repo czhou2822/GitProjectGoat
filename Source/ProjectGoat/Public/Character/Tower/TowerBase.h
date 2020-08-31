@@ -48,7 +48,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++")
 		FName FirePointName;
 
-	UPROPERTY(Category = "C++", EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++")
 		TSet<ATowerBase*> OverlappedTower;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -99,6 +99,12 @@ public:
 	class ABulkheadPlayerState* BulkheadPlayerState;
 
 	class ABulkheadGameState* BulkheadGameState;
+
+	FTimerHandle FireTimerHandler;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
+		AEnemyBase* TargetEnemyC;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -113,6 +119,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	void HandleOnTowerPlaced();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
+	void TowerFireTest();
 
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 

@@ -139,6 +139,8 @@ void ATowerBase::HandleOnConstructionComplete()
 	
 	FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 
+
+
 }
 
 void ATowerBase::TowerInit()
@@ -153,7 +155,6 @@ void ATowerBase::TowerInit()
 void ATowerBase::HandleFireEvent() 
 {
 	//Attack
-	
 	
 }
 
@@ -214,6 +215,8 @@ void ATowerBase::FireTimer(float B)
 		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 		this->TowerFire.Broadcast();
 		NextFire = GameTime + FireInterval;
+		TowerFireTest();
+		
 	}
 }
 
