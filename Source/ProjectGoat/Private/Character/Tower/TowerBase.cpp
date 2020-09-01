@@ -19,16 +19,15 @@
 #include "components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 // Sets default values
 ATowerBase::ATowerBase():ABulkheadCharacterBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GetCharacterData().bTeam = true;
 
 	TowerPadding = CreateDefaultSubobject<UBoxComponent>(TEXT("TowerPadding"));
 	TowerPadding->SetupAttachment(RootComponent);
@@ -73,7 +72,9 @@ void ATowerBase::Tick(float DeltaTime)
 
 void ATowerBase::HandleOnTowerPlaced()
 {
-	UE_LOG(LogTemp, Warning, TEXT("TowerPlaced"));
+	//UE_LOG(LogTemp, Warning, TEXT("TowerPlaced"));
+	GetCharacterData().bTeam = true;
+
 	ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (TPSCharacter)
 	{
@@ -148,6 +149,7 @@ void ATowerBase::TowerInit()
 	FireInterval = ThisData.AttackRate;
 	SelfTowerID = ThisData.ID;
 	TowerRange = ThisData.Range;
+
 
 	//GetWorld()->GetTimerManager().SetTimer(FireTimerHandler, this, &ATowerBase::FireTimerTick, FireInterval, true);
 	GetWorldTimerManager().SetTimer(FireTimerHandler, this, &ATowerBase::FireTimerTick, FireInterval, true, 0.0f);
@@ -269,6 +271,6 @@ void ATowerBase::OnOverlapEnd(class AActor* OtherActor, class UPrimitiveComponen
 }
 
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif

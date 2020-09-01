@@ -18,7 +18,6 @@ AEnemyBase::AEnemyBase()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCharacterData().bTeam = false;
 
 	//GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 
@@ -57,6 +56,8 @@ void AEnemyBase::BulkheadInit()
 {
 	Super::BulkheadInit();
 	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
+	GetCharacterData().bTeam = false;
+
 	if (SWEnemyBreath)
 	{
 		GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
