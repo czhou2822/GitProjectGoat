@@ -60,7 +60,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32& GetGold();
 
-	void SetTowerType(const ETowerType& InTowerType);
+	UFUNCTION(BlueprintCallable)
+	void SetTowerType(const ETowerType InTowerType);
 	
 	void NextTower();
 };
