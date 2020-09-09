@@ -31,9 +31,6 @@ AProjectGoatGameMode::AProjectGoatGameMode()
 	GameStateClass = ABulkheadGameState::StaticClass();
 	PlayerStateClass = ABulkheadPlayerState::StaticClass();
 
-	
-	
-
 }
 
 void AProjectGoatGameMode::BeginPlay()

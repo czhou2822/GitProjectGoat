@@ -6,18 +6,16 @@
 
 UAnimTowerBase::UAnimTowerBase()
 	:bIsPlaced(false)
-	,bIsConstructionComplete(false)
-	,PawnOwner(nullptr)
 	,DoomRotation(FRotator::ZeroRotator)
+	,PawnOwner(nullptr)
+	,bIsConstructionComplete(false)
 {
 	
 }
 
 void UAnimTowerBase::NativeBeginPlay()
 {
-//	bIsPlaced = false;
-//	bIsConstructionComplete = false;
 	PawnOwner = Cast<ATowerBase>(TryGetPawnOwner());
-//	bIsPlaced;
-//	bIsConstructionComplete;
+
+
 }

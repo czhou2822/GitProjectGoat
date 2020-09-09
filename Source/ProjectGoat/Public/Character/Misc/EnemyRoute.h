@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Character/Misc/EnemyRouteMarker.h"
 #include "EnemyRoute.generated.h"
 
 UCLASS()
@@ -15,9 +16,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USplineComponent* NavSplinePoints;
 
+	UPROPERTY(BlueprintReadWrite)
 	TArray<class USplineMeshComponent*> SplineMeshes;
 
+	USceneComponent* RootSceneComponent;
+
 	TArray<FVector> NavPoints;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	//TArray<AEnemyRouteMarker*> RouteMarkerArray;
+
+	//whether this route is shown
+	//e.g. it should only shown when this is an active path
+	//it should also shown when in editor
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsShown = false;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,5 +45,6 @@ public:
 
 	void RouteSplineToArray();
 
+	void SetSplineMeshesVisibility(const bool bIsHidden);
 
 };
