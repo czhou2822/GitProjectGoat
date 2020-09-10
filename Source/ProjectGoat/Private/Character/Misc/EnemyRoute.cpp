@@ -32,7 +32,7 @@ void AEnemyRoute::RouteSplineToArray()
 	}
 }
 
-void AEnemyRoute::SetSplineMeshesVisibility(const bool bIsHidden)
+void AEnemyRoute::SetSplineMeshesIsHidden(const bool bIsHidden)
 {
 	for (auto& Tmp : SplineMeshes)
 	{
@@ -50,7 +50,7 @@ void AEnemyRoute::BeginPlay()
 	Super::BeginPlay();
 	//CreateSplineMesh();
 	RouteSplineToArray();
-	SetSplineMeshesVisibility(true);
+	SetSplineMeshesIsHidden(true);
 }
 
 

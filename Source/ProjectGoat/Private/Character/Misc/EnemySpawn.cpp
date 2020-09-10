@@ -115,6 +115,10 @@ void AEnemySpawn::HandleOnMiniWaveComplete()
 	if (CurrentMiniWaveIndex >= CurrentWaveStat.Num())   //all mini wave spawned
 	{
 		OnWaveComplete.Broadcast();
+		for (auto& Tmp : Routes)
+		{
+			Tmp->SetSplineMeshesIsHidden(true);
+		}
 	}
 	else
 	{
@@ -152,7 +156,6 @@ void AEnemySpawn::WaitTimerTick()
 	}
 }
 
-
 void AEnemySpawn::DestroyWaveActor()
 {
 	for (AActor* Tmp : ActiveEnemy)
@@ -181,9 +184,8 @@ void AEnemySpawn::ParseRouteNumber(const FString& InRouteString)
 	{
 		CurrentRoutes.Add(FCString::Atoi(*Tmp));
 	}
+
 }
-
-
 
 int32 AEnemySpawn::GetNextMonsterID() const 
 {
@@ -211,6 +213,31 @@ int32 AEnemySpawn::GetNextMonsterID() const
 	}
 
 	return 0;
+}
+
+void AEnemySpawn::GetPossibleRoutesAndLight()
+{
+	TSet<int> PossibleRoutes;   
+
+	for (auto& Tmp : CurrentWaveStat)       //look through all mini wave stats
+	{
+		TArray<FString> Temp;
+		Tmp.Route.ParseIntoArray(Temp, TEXT(","), true);     //parse string
+
+		for (FString& StringTmp : Temp)    // look through string route
+		{
+			int TempInt = FCString::Atoi(*StringTmp);
+			if (!PossibleRoutes.Contains(TempInt))    //if this route is not in before, add
+			{
+				PossibleRoutes.Add(TempInt);
+			}
+		}
+	}
+
+	for (auto& Tmp : PossibleRoutes)
+	{
+		Routes[Tmp]->SetSplineMeshesIsHidden(false);
+	}
 }
 //
 //#if PLATFORM_WINDOWS

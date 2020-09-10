@@ -98,5 +98,7 @@ public:
 
 	int32 GetNextMonsterID() const;
 
+	//find possible routes in this wave and light them up
+	void GetPossibleRoutesAndLight();
 
 };

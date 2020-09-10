@@ -30,7 +30,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GamePhase")
 	FOnStartCombatWave OnStartCombatWave;
 
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ABulkheadGameState* BulkheadGameState;
 

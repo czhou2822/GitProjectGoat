@@ -255,15 +255,21 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	CheckIfGameEnd();
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
 //	BulkheadGameState->ClearActiveEnemyList();   //has bug,read memory vialation
+
+	/*testing for turn on/off road*/
+	SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
+	CurrentWaveDetail = GetAndSetWaveStat(WaveNumber);
+	ParseAndSetActiveSpawnPoints(CurrentWaveDetail);
+
 }
 
 void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
 {
 	if (GM)
 	{
-		SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
-		CurrentWaveDetail = GetAndSetWaveStat(InWaveNumber);
-		ParseAndSetActiveSpawnPoints(CurrentWaveDetail);
+		//SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
+		//CurrentWaveDetail = GetAndSetWaveStat(InWaveNumber);
+		//ParseAndSetActiveSpawnPoints(CurrentWaveDetail);
 		SetPhaseTimer(GM->BuildingToCombatTickInterval, GM->BuildingToCombatWaitTime);
 	}
 }
@@ -297,6 +303,7 @@ void AProjectGoatGameMode::ParseAndSetActiveSpawnPoints(const FSpawnWaveDetail& 
 		const FActiveSpawnPointStruct& Tmp = InDetail.SpawnPoints[i];
 		SpawnPointsArray[Tmp.SpawnPointIndex]->CurrentWaveStat = Tmp.MiniWaveNumbers;
 		SpawnPointsArray[Tmp.SpawnPointIndex]->SpawnInterval = Tmp.SpawnInterval;
+		SpawnPointsArray[Tmp.SpawnPointIndex]->GetPossibleRoutesAndLight();
 	}
 		
 }
@@ -333,7 +340,6 @@ void AProjectGoatGameMode::PostCombatCheck()
 		}
 	}
 }
-
 
 ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 	const int32& CharacterID,

@@ -45,6 +45,6 @@ public:
 
 	void RouteSplineToArray();
 
-	void SetSplineMeshesVisibility(const bool bIsHidden);
+	void SetSplineMeshesIsHidden(const bool bIsHidden);
 
 };
