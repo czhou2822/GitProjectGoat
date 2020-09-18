@@ -25,6 +25,6 @@ public:
 	UAnimEnemyBase();
 
 	virtual void NativeBeginPlay();
-
+	
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 };
