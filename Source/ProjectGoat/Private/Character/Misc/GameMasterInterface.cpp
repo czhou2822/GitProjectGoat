@@ -35,13 +35,13 @@ void AGameMasterInterface::BeginPlay()
 	if (SMAmbientTreeRusstling)
 	{
 		GMAudioComponent_TreeRusstling->Sound = SMAmbientTreeRusstling;
-		GMAudioComponent_Wind->Play();
+		GMAudioComponent_TreeRusstling->Play();
 	}
 
 	if (SWAmbientMusic)
 	{
 		GMAudioComponent_Music->Sound = SWAmbientMusic;
-		GMAudioComponent_Wind->Play();
+		GMAudioComponent_Music->Play();
 	}
 
 }
