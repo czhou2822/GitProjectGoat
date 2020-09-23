@@ -25,14 +25,14 @@ public:
 	//UPROPERTY(meta = (BindWidget))
 	//	class UTextBlock* TBSnowText;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* TBMortar;
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//	class UButton* TBMortar;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* TBTesla;
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//	class UButton* TBTesla;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* TBGatling;
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//	class UButton* TBGatling;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UTextBlock* GoldCount;

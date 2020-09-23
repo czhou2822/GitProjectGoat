@@ -19,46 +19,31 @@ void UUI_PlayerInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	BulkheadPlayerState->OnSelectedTowerChanged.AddDynamic(this, &UUI_PlayerInfo::SelectTower);
+//	BulkheadPlayerState->OnSelectedTowerChanged.AddDynamic(this, &UUI_PlayerInfo::SelectTower);
 	BulkheadPlayerState->OnGoldChanged.AddDynamic(this, &UUI_PlayerInfo::UpdateGold);
 
 
 
-	ButtonArray.Add(TBMortar);
-	ButtonArray.Add(TBTesla);
-	ButtonArray.Add(TBGatling);
+	//ButtonArray.Add(TBMortar);
+	//ButtonArray.Add(TBTesla);
+	//ButtonArray.Add(TBGatling);
 
 	UpdateGold(BulkheadPlayerState->GetGold());
-	SelectTower(BulkheadPlayerState->SelectedTower);
+//	SelectTower(BulkheadPlayerState->SelectedTower);
 }
 
 void UUI_PlayerInfo::SelectTower(ETowerType InTower)
 {
 	ResetButtonOpacity();
 
-	switch (InTower)
-	{
-	case ETowerType::TESLA:
-		TBTesla->SetRenderOpacity(1.0);
-		//UE_LOG(LogTemp, Warning, TEXT("TESLA"));
-		break;
-	case ETowerType::MORTAR:
-		TBMortar->SetRenderOpacity(1.0);
-		//UE_LOG(LogTemp, Warning, TEXT("MORTAR"));
-		break;
-	case ETowerType::GATLING:
-		//UE_LOG(LogTemp, Warning, TEXT("GATLING"));
-		TBGatling->SetRenderOpacity(1.0);
-		break;
-	default:
-		//UE_LOG(LogTemp, Warning, TEXT("default"));
-		break;
-	}
 }
 
 void UUI_PlayerInfo::UpdateGold(int32 InGold)
 {
-	FString NewGoldCount = "Gold: ";
+	//FString NewGoldCount = "Gold: ";
+
+	FString NewGoldCount = "";
+
 
 	NewGoldCount.AppendInt(InGold);
 
