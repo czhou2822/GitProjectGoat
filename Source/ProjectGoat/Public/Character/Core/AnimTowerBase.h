@@ -34,7 +34,11 @@ public:
 	bool bIsConstructionComplete;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
-	bool bIsAttack;
+	bool bCanAttack;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
+	float AttackAnimPlayRate;
+
 
 
 public: 

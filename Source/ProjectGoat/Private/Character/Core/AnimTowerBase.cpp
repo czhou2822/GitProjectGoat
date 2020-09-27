@@ -9,7 +9,8 @@ UAnimTowerBase::UAnimTowerBase()
 	,PawnOwner(nullptr)
 	,bIsPlaced(false)
 	,bIsConstructionComplete(false)
-	,bIsAttack(false)
+	,bCanAttack(false)
+	,AttackAnimPlayRate(1.f)
 {
 	
 }
@@ -25,7 +26,9 @@ void UAnimTowerBase::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (PawnOwner)
 	{
-		bIsAttack = PawnOwner->bIsAttack;
+		bCanAttack = PawnOwner->bIsAttack;
+
+		//UE_LOG(LogTemp, Warning, TEXT("bCanAttack: %i"), bCanAttack ? 1 : 0);
 
 	}
 }
