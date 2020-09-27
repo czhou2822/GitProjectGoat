@@ -26,5 +26,5 @@ public:
 
 	virtual void NativeBeginPlay();
 	
-	virtual void NativeUpdateAnimation(float DeltaSeconds);
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 };

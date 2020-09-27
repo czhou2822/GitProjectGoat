@@ -33,9 +33,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
 	bool bIsConstructionComplete;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
+	bool bIsAttack;
+
 
 public: 
 	UAnimTowerBase();
 
 	virtual void NativeBeginPlay();
+
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 };

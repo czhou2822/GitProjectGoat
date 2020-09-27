@@ -5,10 +5,11 @@
 #include "Character/Tower/TowerBase.h"
 
 UAnimTowerBase::UAnimTowerBase()
-	:bIsPlaced(false)
-	,DoomRotation(FRotator::ZeroRotator)
+	:DoomRotation(FRotator::ZeroRotator)
 	,PawnOwner(nullptr)
+	,bIsPlaced(false)
 	,bIsConstructionComplete(false)
+	,bIsAttack(false)
 {
 	
 }
@@ -17,5 +18,14 @@ void UAnimTowerBase::NativeBeginPlay()
 {
 	PawnOwner = Cast<ATowerBase>(TryGetPawnOwner());
 
+}
 
+void UAnimTowerBase::NativeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeUpdateAnimation(DeltaSeconds);
+	if (PawnOwner)
+	{
+		bIsAttack = PawnOwner->bIsAttack;
+
+	}
 }

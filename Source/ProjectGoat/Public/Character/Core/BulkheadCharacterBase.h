@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	class USceneComponent* HomingPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
+	bool bIsAttack;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

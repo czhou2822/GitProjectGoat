@@ -15,7 +15,7 @@
 
 // Sets default values
 ABulkheadCharacterBase::ABulkheadCharacterBase()
-	
+	:bIsAttack(false)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -46,7 +46,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 	
 	ABulkheadCharacterBase* Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
 
-	if (Attacker)
+	if (Attacker && DataTemp.ID != -1)
 	{
 		if (DataTemp.bTeam != Attacker->GetCharacterData().bTeam)
 		{
@@ -56,7 +56,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 
 			UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
 
-			if (!IsActive())
+			if (!IsActive())   //id = -1 -> CharacterNULL
 			{
 				GetCharacterData().Health = 0.0f;
 				Dying();
@@ -126,23 +126,6 @@ void ABulkheadCharacterBase::Dead()
 
 void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, ABulkheadCharacterBase* Target, float DamageValue)
 {
-	//float RealDamageValue = GetCharacterData().Attack;
-
-	//TArray<AActor*> IgnoredActors;
-	//for (TActorIterator<ABulkheadCharacterBase>it(GetWorld(), ABulkheadCharacterBase::StaticClass()); it; ++it)
-	//{
-	//	if (ABulkheadCharacterBase* TheCharacter = *it)
-	//	{
-	//		if (TheCharacter->GetCharacterData().bTeam != )
-	//		{
-	//			IgnoredActors.Add(TheCharacter);
-	//		}
-	//	
-	//		
-	//	}
-	//}
-
-
 	UGameplayStatics::ApplyDamage(
 		Target,
 		DamageValue,
