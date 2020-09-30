@@ -60,7 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	AActor* Base;
 
-	bool IsInitialized;
+	bool bIsInitialized;
+
+	bool bIsGameEnd;
 
 public:
 	AProjectGoatGameMode();
@@ -109,6 +111,7 @@ public:
 	/*GamePhase*/
 	UFUNCTION()
 	void HandleOnPhaseChanged(EGamePhase InPhase);
+
 	UFUNCTION()
 	void HandleOnWaveComplete();
 

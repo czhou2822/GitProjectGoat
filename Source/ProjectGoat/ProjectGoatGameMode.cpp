@@ -18,7 +18,8 @@
 
 
 AProjectGoatGameMode::AProjectGoatGameMode()
-	:IsInitialized(false)
+	:bIsInitialized(false)
+	,bIsGameEnd(false)
 {
 	// set default pawn class to our Blueprinted character
 	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
@@ -243,6 +244,11 @@ void AProjectGoatGameMode::PhaseTimerTick()
 
 void AProjectGoatGameMode::StartBuildingPhase()
 {
+	CheckIfGameEnd();
+	if (bIsGameEnd)
+	{
+		return;
+	}
 	if (!GM)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GM NULL. TickInterval 0, WaveNumber: %i, GamePhase: %i"), WaveNumber, GamePhase);
@@ -252,7 +258,7 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), GM->SWWaveStart);    //shot 1 time off sound effect
 	}
-	CheckIfGameEnd();
+
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
 //	BulkheadGameState->ClearActiveEnemyList();   //has bug,read memory vialation
 
@@ -315,6 +321,7 @@ void AProjectGoatGameMode::CheckIfGameEnd()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("game ended. "));
 		EndGame(true);
+		bIsGameEnd = true;
 	}
 }
 

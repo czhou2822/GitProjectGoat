@@ -121,6 +121,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
 	void TowerFire();
 
+	UFUNCTION()
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 
 	void SetRangeVisibility(bool InVisibility);
