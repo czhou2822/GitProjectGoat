@@ -41,21 +41,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingPhaseWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingPhaseTickInterval;
 
 	/*BuildingToCombat*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingToCombatWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float BuildingToCombatTickInterval;
 
 	/*PostCombat*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatWaitTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatTickInterval;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Phase Param")

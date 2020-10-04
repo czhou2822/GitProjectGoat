@@ -42,6 +42,7 @@ public:
 	/*Number of Spawn Points in scene*/
 	int32 SpawnPointNumbers;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EGamePhase GamePhase;
 
 	int32 WaveNumber;
@@ -52,7 +53,8 @@ public:
 
 	/*PhaseTimer*/
 	float PhaseTickInterval;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 PhaseTickCount;
 
 	FTimerHandle PhaseTimerHandle;

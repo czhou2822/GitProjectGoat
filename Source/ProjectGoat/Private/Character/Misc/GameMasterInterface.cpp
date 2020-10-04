@@ -9,6 +9,9 @@
 
 // Sets default values
 AGameMasterInterface::AGameMasterInterface()
+	:BuildingPhaseTickInterval(1.f)
+	,BuildingToCombatTickInterval(1.f)
+	,PostCombatTickInterval(1.f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
