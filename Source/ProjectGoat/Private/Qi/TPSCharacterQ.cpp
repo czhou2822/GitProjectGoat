@@ -230,6 +230,7 @@ void ATPSCharacterQ::AimStart()
 	SpringArm->SetRelativeLocation(AimOffsetTranslation);
 	Camera->SetRelativeRotation(AimOffsetRotator);
 	AimStartBlueprintInterface();
+	OnCharacterAims.Broadcast(bAiming);
 }
 
 void ATPSCharacterQ::AimEnd()
@@ -241,6 +242,8 @@ void ATPSCharacterQ::AimEnd()
 	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
 	Camera->SetRelativeRotation(FRotator(0, 0, 0));
 	AimEndBlueprintInterface();
+	OnCharacterAims.Broadcast(bAiming);
+
 }
 
 void ATPSCharacterQ::FireDown()

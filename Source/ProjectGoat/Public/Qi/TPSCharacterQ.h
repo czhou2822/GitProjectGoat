@@ -32,6 +32,8 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterAims, bool, bIsCharacterAiming);
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
@@ -39,6 +41,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnCharacterAims OnCharacterAims;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USpringArmComponent* SpringArm;
