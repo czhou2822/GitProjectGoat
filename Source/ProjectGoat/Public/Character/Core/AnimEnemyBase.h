@@ -19,6 +19,9 @@ public:
 	float Speed;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
+	float GlobalAnimPlayRate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "C++")
 	class AEnemyBase* ControlledPawn;
 
 public:

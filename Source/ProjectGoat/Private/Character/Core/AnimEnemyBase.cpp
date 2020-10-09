@@ -5,6 +5,8 @@
 #include "Character/Enemy/EnemyBase.h"
 
 UAnimEnemyBase::UAnimEnemyBase()
+	:GlobalAnimPlayRate(1.f)
+	,ControlledPawn(nullptr)
 {
 }
 

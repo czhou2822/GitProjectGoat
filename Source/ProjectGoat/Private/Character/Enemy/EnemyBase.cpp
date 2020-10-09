@@ -10,6 +10,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProjectGoat/ProjectGoatGameMode.h"
+#include "Character/Core/AnimEnemyBase.h"
+
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -76,6 +78,7 @@ void AEnemyBase::SlowDown()
 
 	TickCount = SlowedTime / TimerTickInterval;
 	float SlowPercentage = 1;
+
 	if (SlowCount < MaxSlowCount)
 	{
 		SlowCount++;
@@ -85,17 +88,45 @@ void AEnemyBase::SlowDown()
 			SlowPercentage = SlowDownPercentage * SlowPercentage;
 		}
 		OnSlowStart();
-		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
 	}
 	else
 	{
 		SlowCount = MaxSlowCount;
-		GetCharacterMovement()->MaxWalkSpeed = 0;
+		SlowPercentage = 0;
 		OnFrozenStart();
+
 	}
+
+	//SlowPercentage in action
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
+
+	SetAnimGlobalPlayrate(SlowPercentage);
 
 	GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
 
+}
+
+void AEnemyBase::HandleSlowDown()
+{
+
+	if (TickCount <= 0)   //timer done, reset walk speed
+	{
+
+		SlowCount = 0;
+		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
+
+		GetWorldTimerManager().ClearTimer(SlowTimer);
+		//UE_LOG(LogTemp, Log, TEXT("Back Normal"));
+		SetAnimGlobalPlayrate(1.f);
+
+		OnSlowEnd();
+	}
+	else
+	{
+		//UE_LOG(LogTemp, Log, TEXT("slow down tick"));
+		TickCount--;
+	}
+	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
 }
 
 void AEnemyBase::StartSlow()
@@ -107,7 +138,6 @@ void AEnemyBase::StartSlow()
 void AEnemyBase::EndSlow()
 {
 	GetWorld()->GetTimerManager().ClearTimer(SlowListener);
-
 }
 
 void AEnemyBase::StartBrittle()
@@ -133,6 +163,16 @@ void AEnemyBase::EndBrittle()
 	}
 //	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
 }
+void AEnemyBase::SetAnimGlobalPlayrate(float InPlayRate)
+{
+	//slow animation for slowing effect
+	auto EnemyAnim = Cast<UAnimEnemyBase>(GetMesh()->GetAnimInstance());
+
+	if (EnemyAnim)
+	{
+		EnemyAnim->GlobalAnimPlayRate = InPlayRate;
+	}
+}
 //void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
 //{
 //	NavPoints = InPoints;
@@ -140,26 +180,7 @@ void AEnemyBase::EndBrittle()
 //
 //}
 
-void AEnemyBase::HandleSlowDown()
-{
 
-	if (TickCount <= 0)   //timer done, reset walk speed
-	{
-
-		SlowCount = 0;
-		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
-
-		GetWorldTimerManager().ClearTimer(SlowTimer);
-		//UE_LOG(LogTemp, Log, TEXT("Back Normal"));
-		OnSlowEnd();
-	}
-	else
-	{
-		//UE_LOG(LogTemp, Log, TEXT("slow down tick"));
-		TickCount--;
-	}
-	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
-}
 
 
 

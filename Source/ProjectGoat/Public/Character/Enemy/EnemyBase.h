@@ -75,6 +75,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void EndBrittle();
 
+	UFUNCTION(BlueprintCallable, Category = "C++")
+		void SetAnimGlobalPlayrate(float InPlayRate);
+
 	//UFUNCTION(BlueprintCallable, Category = "EnemyBase")
 	//	void SetNavPoints(TArray<FVector> InPoints);
 
