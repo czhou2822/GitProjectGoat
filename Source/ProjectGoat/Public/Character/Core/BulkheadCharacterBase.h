@@ -36,6 +36,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
 	bool bIsAttack;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "BH C++")
+	void OnReceivedDamage(const float ReceivedDamage, const float RemainingHealthPercentage);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

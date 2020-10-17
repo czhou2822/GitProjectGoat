@@ -394,7 +394,9 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 
 AEnemyBase* AProjectGoatGameMode::SpawnMonster(const int32& CharacterID, const FVector& Location, const FRotator& Rotator)
 {
-	return SpawnCharacter<AEnemyBase>(CharacterID, ECharacterType::MONSTER, Location, Rotator);
+	AEnemyBase* newEnemy = SpawnCharacter<AEnemyBase>(CharacterID, ECharacterType::MONSTER, Location, Rotator);
+	BulkheadGameState->AddActiveEnemy(newEnemy);
+	return newEnemy;
 }
 
 ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, const FVector& Location, const FRotator& Rotator)

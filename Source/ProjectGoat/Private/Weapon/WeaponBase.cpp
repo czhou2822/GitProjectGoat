@@ -44,9 +44,9 @@ void AWeaponBase::FireStart()
 	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
 	bShowDebugCollision = true;
 	bIsFiring = true;
-	if (SWFireDown)
+	if (SWFireStart)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWFireDown);
+		UGameplayStatics::PlaySound2D(GetWorld(), SWFireStart);
 	}
 	if (SWFire) 
 	{
@@ -65,9 +65,9 @@ void AWeaponBase::FireEnd()
 		//GMAudioComponent_Fire->Sound = SWFire;
 		GMAudioComponent_Fire->Stop();
 	}
-	if (SWFireUp)
+	if (SWFireEnd)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWFireUp);
+		UGameplayStatics::PlaySound2D(GetWorld(), SWFireEnd);
 	}
 }
 

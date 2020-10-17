@@ -25,8 +25,6 @@ class PROJECTGOAT_API ABulkheadGameState : public AGameState
 	GENERATED_BODY()
 
 private:
-
-
 	UPROPERTY()
 	UDataTable* WaveStructDataTable;
 
@@ -35,7 +33,6 @@ private:
 
 	//used to store every live enemy in the scene
 	TSet<AEnemyBase*> ActiveEnemies;
-
 
 	//check if such enemy is invalid. e.g. pending death or already dead.
 	void CheckActiveEnemy(AEnemyBase* InEnemy);
@@ -68,6 +65,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "C++")
 	TSet<AEnemyBase*> PrioritizedEnemyList;
 
+	UPROPERTY(BlueprintReadOnly, Category = "C++")
+	int32 ActiveEnemyCounts;
 
 public:
 	ABulkheadGameState();
@@ -106,6 +105,12 @@ public:
 	//hard reset on ActiveEnemyList 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
 	void ClearActiveEnemyList();
+
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	void UpdateActiveEnemyCounts();
+
+	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	FORCEINLINE int GetActiveEnemyCounts() { return ActiveEnemyCounts; }
 	
 	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
 	void AddToPrioritizedList(AEnemyBase* InEnemy);

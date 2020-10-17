@@ -16,6 +16,7 @@ FCharacterData CharacterDataNULL;
 
 
 ABulkheadGameState::ABulkheadGameState()
+	:ActiveEnemyCounts(0)
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> GruntTable(TEXT("/Game/DataTable/DataTable_Monster"));
 	MonsterDataTable = GruntTable.Object;
@@ -129,6 +130,7 @@ void ABulkheadGameState::AddActiveEnemy(AEnemyBase* InEnemy)
 	if (InEnemy)
 	{
 		ActiveEnemies.Add(InEnemy);
+		UpdateActiveEnemyCounts();
 	}
 }
 
@@ -143,6 +145,7 @@ void ABulkheadGameState::CheckActiveEnemy(AEnemyBase* InEnemy)
 void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
 {
 	ActiveEnemies.Remove(InEnemy);
+	UpdateActiveEnemyCounts();
 }
 
 //if return true->all enemy are cleared. 
@@ -168,7 +171,14 @@ void ABulkheadGameState::ClearActiveEnemyList()
 {
 	DestoryAllEnemy();
 	ActiveEnemies.Empty();
+	UpdateActiveEnemyCounts();
 }
+
+void ABulkheadGameState::UpdateActiveEnemyCounts()
+{
+	ActiveEnemyCounts = ActiveEnemies.Num();
+}
+
 
 void ABulkheadGameState::AddToPrioritizedList(AEnemyBase* InEnemy)
 {

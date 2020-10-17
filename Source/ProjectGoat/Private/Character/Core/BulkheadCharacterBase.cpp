@@ -42,7 +42,7 @@ void ABulkheadCharacterBase::BeginPlay()
 
 float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	FCharacterData DataTemp = GetCharacterData();
+	FCharacterData& DataTemp = GetCharacterData();
 	
 	ABulkheadCharacterBase* Attacker = Cast<ABulkheadCharacterBase>(DamageCauser);
 
@@ -63,6 +63,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 			}
 
 			UpdateUI();
+			OnReceivedDamage(Damage, DataTemp.Health/DataTemp.MaxHealth);
 		}
 
 	}

@@ -87,10 +87,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WeaponRange = 700.f;
 
-
-	/*UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		int coinCount;*/
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class USoundBase* fireSound;
 
