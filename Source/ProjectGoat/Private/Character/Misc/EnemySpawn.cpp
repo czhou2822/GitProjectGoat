@@ -115,6 +115,7 @@ void AEnemySpawn::HandleOnMiniWaveComplete()
 	if (CurrentMiniWaveIndex >= CurrentWaveStat.Num())   //all mini wave spawned
 	{
 		OnWaveComplete.Broadcast();
+		CurrentWaveStat.Empty();
 		for (auto& Tmp : Routes)
 		{
 			Tmp->SetSplineMeshesIsHidden(true);
@@ -215,6 +216,9 @@ int32 AEnemySpawn::GetNextMonsterID() const
 	return 0;
 }
 
+/*
+
+*/
 void AEnemySpawn::GetPossibleRoutesAndLight()
 {
 	TSet<int> PossibleRoutes;   

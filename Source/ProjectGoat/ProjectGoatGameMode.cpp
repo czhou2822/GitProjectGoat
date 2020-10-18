@@ -273,9 +273,6 @@ void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
 {
 	if (GM)
 	{
-		//SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
-		//CurrentWaveDetail = GetAndSetWaveStat(InWaveNumber);
-		//ParseAndSetActiveSpawnPoints(CurrentWaveDetail);
 		SetPhaseTimer(GM->BuildingToCombatTickInterval, GM->BuildingToCombatWaitTime);
 	}
 }

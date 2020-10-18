@@ -40,7 +40,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnMiniWaveComplete OnMiniWaveComplete;
 
-	//inclues an array of mini wave. Again, a Wave is consists of multiple mini waves
+	//inclues an array of mini wave. Again, a Wave could consist multiple mini waves
 	TArray<FMiniWaveDetail> CurrentWaveStat;
 
 	FMiniWaveDetail CurrentMiniWaveStat;
