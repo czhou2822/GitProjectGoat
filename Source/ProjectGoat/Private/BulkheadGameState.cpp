@@ -149,21 +149,23 @@ void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
 }
 
 //if return true->all enemy are cleared. 
-bool ABulkheadGameState::CheckAllActiveEnemy()
+bool ABulkheadGameState::IsAllEnemyDead()
 {
-	bool IsAllDead = false;
+	bool IsAllDead = true;
 	for (AEnemyBase* Tmp : ActiveEnemies)
 	{
 		if (Tmp)
 		{
-			IsAllDead = true;
+			//IsAllDead = false;
+			return false;						//if one of them is alive, meaning IsAllDead is false
 		}
 		else
 		{
-			ActiveEnemies.Remove(Tmp);
+			ActiveEnemies.Remove(Tmp);			//else, remove invalid pointer, if they are not removed already
 		}
 	}
-	return !IsAllDead;    //if IsAllDead is true, meaning at least one EnemyBase is alive, return false (enemy are not cleared)
+	//return IsAllDead ;
+	return true;    //if IsAllDead is true, meaning at least one EnemyBase is alive, return false (enemy are not cleared)
 						  //only if all condition falls to else path, can IsAllDead stays false->return true(enemy are all cleared)
 }
 

@@ -100,7 +100,7 @@ public:
 
 	//check active enemy list. if all invalid (e.g. all dead), return true -> all enemy are cleared. 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
-	bool CheckAllActiveEnemy();
+	bool IsAllEnemyDead();
 
 	//hard reset on ActiveEnemyList 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")

@@ -190,10 +190,10 @@ void AProjectGoatGameMode::HandleOnWaveComplete()
 
 bool AProjectGoatGameMode::SetPhaseTimer(const float& TickInterval, const float& TimerDuration)
 {
-	if (PhaseTickCount > 0) //meaning timer is going
-	{
-		return false;
-	}
+	//if (PhaseTickCount > 0) //meaning timer is going
+	//{
+	//	return false;
+	//}
 
 	if (TickInterval == 0)
 	{
@@ -215,6 +215,7 @@ void AProjectGoatGameMode::PhaseTimerTick()
 		if (GamePhase == EGamePhase::POSTCOMBAT)
 		{
 			PostCombatCheck();
+			return;
 		}
 		PhaseTickCount--;
 	}
@@ -260,9 +261,7 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	}
 
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
-//	BulkheadGameState->ClearActiveEnemyList();   //has bug,read memory vialation
 
-	/*testing for turn on/off road*/
 	SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
 	CurrentWaveDetail = GetAndSetWaveStat(WaveNumber);
 	ParseAndSetActiveSpawnPoints(CurrentWaveDetail);
@@ -337,9 +336,10 @@ void AProjectGoatGameMode::PostCombatCheck()
 {
 	if (BulkheadGameState)
 	{
-		if (BulkheadGameState->CheckAllActiveEnemy())
+		if (BulkheadGameState->IsAllEnemyDead())
 		{
 			GetWorld()->GetTimerManager().ClearTimer(PhaseTimerHandle);   //if timer done, move on to next phase.
+
 			SetGamePhase(EGamePhase::BUILDINGPHASE);
 		}
 	}
