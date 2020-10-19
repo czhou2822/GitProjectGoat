@@ -23,6 +23,7 @@ AWeaponBase::AWeaponBase()
 	//WeaponCollisionRange->bHiddenInGame = false;
 	//WeaponCollisionRange->bVisible = false;
 	GMAudioComponent_Fire = CreateDefaultSubobject<UAudioComponent>(TEXT("Fire"));
+	GMAudioComponent_Fire->OnAudioFinished.AddDynamic(this, &AWeaponBase::HandleOnAudioFinished);
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +31,18 @@ void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AWeaponBase::HandleOnAudioFinished()
+{
+	if (GMAudioComponent_Fire->Sound == SWFireStart)
+	{
+		if (SWFire)
+		{
+			GMAudioComponent_Fire->SetSound(SWFire);
+			GMAudioComponent_Fire->Play();
+		}
+	}
 }
 
 // Called every frame
@@ -44,15 +57,16 @@ void AWeaponBase::FireStart()
 	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
 	bShowDebugCollision = true;
 	bIsFiring = true;
+
+	GMAudioComponent_Fire->Stop();
+
 	if (SWFireStart)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWFireStart);
+		//UGameplayStatics::PlaySound2D(GetWorld(), SWFireStart);
+		GMAudioComponent_Fire->SetSound(SWFireStart);
+		GMAudioComponent_Fire->Play();
 	}
-	if (SWFire) 
-	{
-		GMAudioComponent_Fire->Sound = SWFire;
-		GMAudioComponent_Fire->Play(2.f);
-	}
+
 }
 
 void AWeaponBase::FireEnd()
@@ -60,14 +74,13 @@ void AWeaponBase::FireEnd()
 	GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 	bShowDebugCollision = false;
 	bIsFiring = false;
-	if (SWFire)
-	{
-		//GMAudioComponent_Fire->Sound = SWFire;
-		GMAudioComponent_Fire->Stop();
-	}
+
+	GMAudioComponent_Fire->Stop();
+	
 	if (SWFireEnd)
 	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWFireEnd);
+		GMAudioComponent_Fire->SetSound(SWFireEnd);
+		GMAudioComponent_Fire->Play();
 	}
 }
 
