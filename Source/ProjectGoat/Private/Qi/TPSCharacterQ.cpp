@@ -15,7 +15,6 @@
 #include "Windows/LiveCoding/Private/External/LC_StringUtil.h"
 #include "Logging/LogMacros.h"
 #include "GameFramework/Actor.h"
-#include "Qi/AICharacter.h"
 #include "Character/Enemy/EnemyBase.h"
 #include "CollisionShape.h"
 #include "Engine/EngineTypes.h"
@@ -53,13 +52,10 @@ ATPSCharacterQ::ATPSCharacterQ()
 
 	InventoryComp = CreateDefaultSubobject<UInventoryComponent>("InventoryComp");
 
-	//tpsGun = CreateDefaultSubobject<USkeletalMeshComponent>("tpsGun");
-	//tpsGun->SetupAttachment(GetMesh(), "weapon_socket");
 
 	WeaponSlot = CreateDefaultSubobject<UChildActorComponent>("WeaponSlot");
 	WeaponSlot->SetupAttachment(GetMesh(), "weapon_socket");
-	//WeaponSlot->SetChildActorClass(AWeaponBase::StaticClass());
-	//WeaponSlot->CreateChildActor();
+
 
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -70,10 +66,6 @@ ATPSCharacterQ::ATPSCharacterQ()
 	GetCharacterMovement()->MaxWalkSpeed = 600;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300;
 
-	//following is for collision test
-	//GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATPSCharacterQ::onOverlap);
-	//UE_LOG(LogTemp, Warning, TEXT("start"));
-	//tpsCamera->
 	GMAudioComponent_Suck = CreateDefaultSubobject<UAudioComponent>(TEXT("CharacterSuck"));
 	
 }
@@ -82,12 +74,6 @@ ATPSCharacterQ::ATPSCharacterQ()
 void ATPSCharacterQ::BeginPlay()
 {
 	Super::BeginPlay();
-//	UMaterialInterface* HitOnSnowInterface = LoadObject<UMaterialInterface>(NULL, TEXT("/Game/Material/Snow/SnowDeformation/HitOnSnow.HitOnSnow"), NULL, LOAD_None, NULL);
-//	if (HitOnSnowInterface) {
-//		HitSnowMaterial = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HitOnSnowInterface);
-//	}
-
-	//SetupVariable
 
 	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetAuthGameMode()->GameState);
 
@@ -124,7 +110,7 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATPSCharacterQ::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ATPSCharacterQ::MoveRight);
-	//PlayerInputComponent->BindAxis("MoveForward",)
+
 	PlayerInputComponent->BindAxis("Turn", this, &ATPSCharacterQ::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATPSCharacterQ::AddControllerPitchInput);
 
@@ -481,11 +467,13 @@ void ATPSCharacterQ::InputActionBuild()
 
 ATowerBase* ATPSCharacterQ::WhichTower()
 {
-	FHitResult result = this->GetScreentoWorldLocation();
-	FTransform transform = FTransform(result.Location);
+	FHitResult Result = this->GetScreentoWorldLocation();
+	FTransform Transform = FTransform(Result.Location);
+	FRotator NewRotator = UKismetMathLibrary::FindLookAtRotation(Transform.GetLocation(), GetActorLocation());
+	NewRotator.Roll = 0;
+	NewRotator.Pitch = 0;
 
-
-	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, transform.GetLocation(), transform.Rotator());  //3->preview tower
+	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, Transform.GetLocation(), NewRotator);  //3->preview tower
 
 	//return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
 
@@ -550,7 +538,11 @@ void ATPSCharacterQ::AdjustTowerLocation()
 		float DistanceFromActor = (hr.Location - WorldPosition).Size();
 		if (DistanceFromActor > 500 && hit == true)
 		{
+			FRotator NewRotator = UKismetMathLibrary::FindLookAtRotation(SpawnedTower->GetActorLocation(), GetActorLocation());
+			NewRotator.Roll = 0;
+			NewRotator.Pitch = 0;
 			SpawnedTower->SetActorLocation(hr.Location, false, nullptr, ETeleportType::TeleportPhysics);
+			SpawnedTower->SetActorRotation(NewRotator);
 		}
 	}
 }

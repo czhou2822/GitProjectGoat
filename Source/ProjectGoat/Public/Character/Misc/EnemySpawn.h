@@ -27,7 +27,7 @@ private:
 	int32 TimerTickCount;
 	
 	//active enemy for THIS spawn point
-	TSet<class AEnemyBase*> ActiveEnemy;
+	//TSet<class AEnemyBase*> ActiveEnemy;
 
 public:	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWaveComplete);
@@ -59,6 +59,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<class AEnemyRoute*> Routes;
 
+private:
+	//determine next route using member variable EnemyToBeSpawn
+	//if there are multiple routes, it picks the route 1 by 1
+	int32 GetNextRoute();
+
 public:	
 
 	// Sets default values for this actor's properties
@@ -86,8 +91,6 @@ public:
 	bool SetWaitTimer(const float& TickInterval, const float& TimerDuration);
 
 	void WaitTimerTick();
-
-	void DestroyWaveActor();
 
 	TArray<FVector>& GetNavPoints(const int32& Index);
 

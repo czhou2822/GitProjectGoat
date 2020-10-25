@@ -41,12 +41,17 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 }
-/*void AEnemyBase::onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+
+AEnemyBase::~AEnemyBase()
 {
-	this->SlowDown();
-}*/
+	if (GetWorld())
+	{
+		MarkForDead();
+
+	}
+}
+
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
@@ -73,7 +78,6 @@ void AEnemyBase::BulkheadInit()
 
 void AEnemyBase::SlowDown()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("SlowDown"));
 
 
 	TickCount = SlowedTime / TimerTickInterval;
@@ -116,17 +120,14 @@ void AEnemyBase::HandleSlowDown()
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
 
 		GetWorldTimerManager().ClearTimer(SlowTimer);
-		//UE_LOG(LogTemp, Log, TEXT("Back Normal"));
 		SetAnimGlobalPlayrate(1.f);
 
 		OnSlowEnd();
 	}
 	else
 	{
-		//UE_LOG(LogTemp, Log, TEXT("slow down tick"));
 		TickCount--;
 	}
-	//GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(GetCharacterMovement()->MaxWalkSpeed));
 }
 
 void AEnemyBase::StartSlow()
@@ -144,7 +145,6 @@ void AEnemyBase::StartBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, true);
-//	UE_LOG(LogTemp, Log, TEXT("StartBrittle"));
 	if (SWEnemyBreath)
 	{
 		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
@@ -161,7 +161,6 @@ void AEnemyBase::EndBrittle()
 		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
 		GMAudioComponent_EnemyBreath->Play();
 	}
-//	UE_LOG(LogTemp, Log, TEXT("EndBrittle"));
 }
 void AEnemyBase::SetAnimGlobalPlayrate(float InPlayRate)
 {
@@ -173,15 +172,6 @@ void AEnemyBase::SetAnimGlobalPlayrate(float InPlayRate)
 		EnemyAnim->GlobalAnimPlayRate = InPlayRate;
 	}
 }
-//void AEnemyBase::SetNavPoints(TArray<FVector> InPoints)
-//{
-//	NavPoints = InPoints;
-//	NavPoints.Num();
-//
-//}
-
-
-
 
 
 float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -189,33 +179,27 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	//APawn::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	//ABulkheadGameState* InGameState = Cast<ABulkheadGameState>(GetGameState());
 
-	FCharacterData DataTemp = GetCharacterData();
 
 	float NewDamage = Damage;
 
-	if (DataTemp.bIsBrittle == true) 
+	if (GetCharacterData().bIsBrittle == true)
 	{
 		NewDamage = NewDamage * BrittleDamageRate;
 	}
 
 	ABulkheadCharacterBase::TakeDamage(NewDamage, DamageEvent, EventInstigator, DamageCauser);
 
-	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
-
-	//UE_LOG(LogTemp, Warning, TEXT("%s taking damage %s, remaing health %s / %s"), *GetName(), *FString::SanitizeFloat(Damage), *FString::SanitizeFloat(GetCharacterData().Health), *FString::SanitizeFloat(GetCharacterData().MaxHealth));
-
 
 	return NewDamage;
 }
 
-void AEnemyBase::Dying()
+void AEnemyBase::MarkForDead()
 {
-	Super::Dying();
 	if (SWEnemyDeath)
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), SWEnemyDeath);
 	}
 	GetGameState()->DeleteFromPrioritizedList(this);
 	GetGameState()->DeleteActiveEnemy(this);
+	Super::MarkForDead();
 }

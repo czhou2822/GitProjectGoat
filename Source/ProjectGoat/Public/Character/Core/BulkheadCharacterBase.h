@@ -70,7 +70,8 @@ public:
 
 	virtual float GetMaxHealth();
 
-	virtual void Dying();
+	UFUNCTION(BlueprintCallable)
+	virtual void MarkForDead();
 
 	virtual void Dead();
 

@@ -130,7 +130,7 @@ void ABulkheadGameState::AddActiveEnemy(AEnemyBase* InEnemy)
 	if (InEnemy)
 	{
 		ActiveEnemies.Add(InEnemy);
-		UpdateActiveEnemyCounts();
+		//UpdateActiveEnemyCounts();
 	}
 }
 
@@ -144,8 +144,10 @@ void ABulkheadGameState::CheckActiveEnemy(AEnemyBase* InEnemy)
 
 void ABulkheadGameState::DeleteActiveEnemy(AEnemyBase* InEnemy)
 {
-	ActiveEnemies.Remove(InEnemy);
-	UpdateActiveEnemyCounts();
+	if (InEnemy)
+	{
+		ActiveEnemies.Remove(InEnemy);
+	}
 }
 
 //if return true->all enemy are cleared. 
@@ -156,16 +158,15 @@ bool ABulkheadGameState::IsAllEnemyDead()
 	{
 		if (Tmp)
 		{
-			//IsAllDead = false;
-			return false;						//if one of them is alive, meaning IsAllDead is false
+			IsAllDead = false;
 		}
 		else
 		{
 			ActiveEnemies.Remove(Tmp);			//else, remove invalid pointer, if they are not removed already
 		}
 	}
-	//return IsAllDead ;
-	return true;    //if IsAllDead is true, meaning at least one EnemyBase is alive, return false (enemy are not cleared)
+	return IsAllDead ;
+	    //if IsAllDead is true, meaning at least one EnemyBase is alive, return false (enemy are not cleared)
 						  //only if all condition falls to else path, can IsAllDead stays false->return true(enemy are all cleared)
 }
 
@@ -173,7 +174,7 @@ void ABulkheadGameState::ClearActiveEnemyList()
 {
 	DestoryAllEnemy();
 	ActiveEnemies.Empty();
-	UpdateActiveEnemyCounts();
+	//UpdateActiveEnemyCounts();
 }
 
 void ABulkheadGameState::UpdateActiveEnemyCounts()
@@ -181,6 +182,10 @@ void ABulkheadGameState::UpdateActiveEnemyCounts()
 	ActiveEnemyCounts = ActiveEnemies.Num();
 }
 
+const int32 ABulkheadGameState::GetActiveEnemyCounts()
+{
+	return ActiveEnemies.Num();
+}
 
 void ABulkheadGameState::AddToPrioritizedList(AEnemyBase* InEnemy)
 {

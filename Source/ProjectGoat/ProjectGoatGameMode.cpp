@@ -153,7 +153,7 @@ void AProjectGoatGameMode::HandleOnPhaseChanged(EGamePhase InPhase)
 
 	case EGamePhase::BUILDINGTOCOMBAT:
 		StartBuildingToCombatPhase(WaveNumber);
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0);
+		//UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0);
 		UE_LOG(LogTemp, Warning, TEXT("Building To Combat Phase"));
 		break;
 
@@ -353,14 +353,6 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 {
 	if (FCharacterData* NewCharacterData = BulkheadGameState->GetCharacterDataByID(CharacterID, Type))
 	{
-		//if (Type == ECharacterType::TOWER)
-		//{
-		//	NewCharacterData->bTeam = true;
-		//}
-		//else
-		//{
-		//	NewCharacterData->bTeam = false;
-		//}
 		UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
 
 		if (GetWorld() && NewClass)

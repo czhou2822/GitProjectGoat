@@ -21,6 +21,7 @@ public:
 
 	USceneComponent* RootSceneComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FVector> NavPoints;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -43,6 +44,7 @@ public:
 
 	void CreateSplineMesh();
 
+	UFUNCTION(BlueprintCallable)
 	void RouteSplineToArray();
 
 	void SetSplineMeshesIsHidden(const bool bIsHidden);

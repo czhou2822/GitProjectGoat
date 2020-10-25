@@ -25,8 +25,9 @@ AEnemyRoute::AEnemyRoute()
 
 void AEnemyRoute::RouteSplineToArray()
 {
+	//navpoint were created backwards in editor -> reads in backward
 	NavPoints.Empty();
-	for (int32 i = 0; i < NavSplinePoints->GetNumberOfSplinePoints(); i++)
+	for (int32 i = NavSplinePoints->GetNumberOfSplinePoints() - 1; i >=0; i--)
 	{
 		NavPoints.Add(NavSplinePoints->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World));
 	}

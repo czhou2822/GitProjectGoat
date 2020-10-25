@@ -110,7 +110,10 @@ public:
 	void UpdateActiveEnemyCounts();
 
 	UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
-	FORCEINLINE int GetActiveEnemyCounts() { return ActiveEnemyCounts; }
+	const int32 GetActiveEnemyCounts();
+
+	//UFUNCTION(BlueprintCallable, Category = "ActiveEnemy")
+	//FORCEINLINE int GetActiveEnemyCounts() { return ActiveEnemyCounts; }
 	
 	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
 	void AddToPrioritizedList(AEnemyBase* InEnemy);

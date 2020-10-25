@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Character/Misc/EnemySpawn.h"
 #include "Sound/SoundWave.h"
+#include "Character/Misc/Trap.h"
+
 #include "GameMasterInterface.generated.h"
 
 
@@ -62,7 +64,7 @@ public:
 	int32 WaveNumber;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
-	AActor* Base;
+	ATrap* Base;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	int32 InitGold;

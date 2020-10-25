@@ -6,6 +6,7 @@
 #include "Character/Enemy/EnemyBase.h"
 #include "BulkheadGameState.h"
 #include "Components/ArrowComponent.h"
+#include "Character/Misc/Trap.h"
 #include "TimerManager.h"
 #include "Character/Misc/EnemyRoute.h"
 //#if PLATFORM_WINDOWS
@@ -58,13 +59,13 @@ void AEnemySpawn::SpawnSingleEnemy()
 
 		AEnemyBase* NewMonster = ProjectGoatGameMode->SpawnMonster(NextMonsterID, ArrowComp->GetComponentLocation(), ArrowComp->GetComponentRotation());  //spawning monster
 
-		NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetActorLocation();    //set monster's base(destination) location
+		NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetBaseNavPoint() ;    //set monster's base(destination) location
 
-		NewMonster->NavPoints = GetNavPoints(EnemyToBeSpawn % CurrentRoutes.Num());  //set monster's nav points
+		NewMonster->NavPoints = GetNavPoints(GetNextRoute());  //set monster's nav points
 
 		ProjectGoatGameState->AddActiveEnemy(NewMonster);      //add to global monster list
 
-		ActiveEnemy.Add(NewMonster);                         //add to local monster list
+		//ActiveEnemy.Add(NewMonster);                         //add to local monster list
 
 		EnemyToBeSpawn--;
 	}
@@ -127,6 +128,20 @@ void AEnemySpawn::HandleOnMiniWaveComplete()
 	}
 }
 
+int32 AEnemySpawn::GetNextRoute()
+{
+
+	if (CurrentRoutes.Num() == 1)
+	{
+		return CurrentRoutes[0];
+	}
+	else
+	{
+		return CurrentRoutes[EnemyToBeSpawn % CurrentRoutes.Num()];
+	}
+
+}
+
 bool AEnemySpawn::SetWaitTimer(const float& TickInterval, const float& TimerDuration)
 {
 	if (TimerTickCount > 0) //meaning timer is going
@@ -157,13 +172,6 @@ void AEnemySpawn::WaitTimerTick()
 	}
 }
 
-void AEnemySpawn::DestroyWaveActor()
-{
-	for (AActor* Tmp : ActiveEnemy)
-	{
-		Tmp->Destroy();
-	}
-}
 
 /*
 get nav point for NavPointArray. 

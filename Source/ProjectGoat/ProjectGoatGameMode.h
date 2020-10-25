@@ -7,6 +7,8 @@
 #include "BulkheadGameState.h"
 #include "BulkheadPlayerState.h"
 #include "ProjectGoatType.h"
+#include "Character/Misc/Trap.h"
+
 #include "ProjectGoatGameMode.generated.h"
 
 //class ABulkheadGameState BulkheadGameState;
@@ -60,7 +62,7 @@ public:
 	FTimerHandle PhaseTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	AActor* Base;
+	ATrap* Base;
 
 	bool bIsInitialized;
 

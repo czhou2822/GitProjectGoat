@@ -31,6 +31,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	~AEnemyBase();
+
 	UPROPERTY(EditDefaultsOnly)
 		float DefaultMaxSpeed = 600.f;
 
@@ -98,7 +100,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFrozenStart();
 
-	virtual void Dying();
+	virtual void MarkForDead() override;
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

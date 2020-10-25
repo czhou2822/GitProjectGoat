@@ -59,7 +59,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 			if (!IsActive())   //id = -1 -> CharacterNULL
 			{
 				GetCharacterData().Health = 0.0f;
-				Dying();
+				MarkForDead();
 			}
 
 			UpdateUI();
@@ -113,7 +113,7 @@ float ABulkheadCharacterBase::GetMaxHealth()
 	return GetCharacterData().MaxHealth;
 }
 
-void ABulkheadCharacterBase::Dying()
+void ABulkheadCharacterBase::MarkForDead()
 {
 	GetGameState()->RemoveCharacterData(GUID);
 	OnBulkheadCharacterDead.Broadcast();
