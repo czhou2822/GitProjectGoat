@@ -22,6 +22,11 @@ class AProjectGoatGameMode : public AGameMode
 		
 public:
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameEnd, bool, bIsGameEndSuccess);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnGameEnd OnGameEnd;
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPhaseChanged, EGamePhase, OutGamePhase);
 
 	UPROPERTY(BlueprintAssignable, Category = "GamePhase")
@@ -67,6 +72,9 @@ public:
 	bool bIsInitialized;
 
 	bool bIsGameEnd;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsGameBeaten;
 
 public:
 	AProjectGoatGameMode();

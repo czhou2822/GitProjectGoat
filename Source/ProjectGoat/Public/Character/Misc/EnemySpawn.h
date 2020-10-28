@@ -104,4 +104,6 @@ public:
 	//find possible routes in this wave and light them up
 	void GetPossibleRoutesAndLight();
 
+	void HideAllEnemyRoute();
+
 };

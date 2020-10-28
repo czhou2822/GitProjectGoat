@@ -117,10 +117,7 @@ void AEnemySpawn::HandleOnMiniWaveComplete()
 	{
 		OnWaveComplete.Broadcast();
 		CurrentWaveStat.Empty();
-		for (auto& Tmp : Routes)
-		{
-			Tmp->SetSplineMeshesIsHidden(true);
-		}
+
 	}
 	else
 	{
@@ -249,6 +246,13 @@ void AEnemySpawn::GetPossibleRoutesAndLight()
 	for (auto& Tmp : PossibleRoutes)
 	{
 		Routes[Tmp]->SetSplineMeshesIsHidden(false);
+	}
+}
+void AEnemySpawn::HideAllEnemyRoute()
+{
+	for (auto& Tmp : Routes)
+	{
+		Tmp->SetSplineMeshesIsHidden(true);
 	}
 }
 //

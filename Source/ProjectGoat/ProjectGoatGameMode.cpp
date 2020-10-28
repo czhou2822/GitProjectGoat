@@ -20,6 +20,7 @@
 AProjectGoatGameMode::AProjectGoatGameMode()
 	:bIsInitialized(false)
 	,bIsGameEnd(false)
+	,bIsGameBeaten(false)
 {
 	// set default pawn class to our Blueprinted character
 	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
@@ -260,6 +261,11 @@ void AProjectGoatGameMode::StartBuildingPhase()
 		UGameplayStatics::PlaySound2D(GetWorld(), GM->SWWaveStart);    //shot 1 time off sound effect
 	}
 
+	for (auto& TmpSpawn : SpawnPointsArray)
+	{
+		TmpSpawn->HideAllEnemyRoute();
+	}
+
 	SetPhaseTimer(GM->BuildingPhaseTickInterval, GM->BuildingPhaseWaitTime);
 
 	SpawnPointNumbers = GM->SpawnPointsArrayInterface.Num();
@@ -317,18 +323,22 @@ void AProjectGoatGameMode::CheckIfGameEnd()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("game ended. "));
 		EndGame(true);
-		bIsGameEnd = true;
 	}
 }
 
 void AProjectGoatGameMode::EndGame(const bool& Success)
 {
 	UE_LOG(LogTemp, Warning, TEXT("end game function"));
+	bIsGameEnd = true;
+
 	if (Success) //if game ended success
 	{
+		bIsGameBeaten = true;
 		UE_LOG(LogTemp, Warning, TEXT("game ended success "));
-		UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/EndGameLevel"), true);
+		//UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/EndGameLevel"), true);
 	}
+
+	OnGameEnd.Broadcast(Success);
 
 }
 
