@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "BulkheadGameState.h"
-#include "BulkheadPlayerState.h"
 #include "ProjectGoatType.h"
 #include "Character/Misc/Trap.h"
 
+#include "BulkheadPlayerState.h"
+#include "BulkheadGameState.h"
 #include "ProjectGoatGameMode.generated.h"
 
 //class ABulkheadGameState BulkheadGameState;
@@ -110,6 +110,9 @@ public:
 
 	void StartGame();
 
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	void RestartBulkheadGame();
+
 	/*Gold*/
 	UFUNCTION(BlueprintCallable)
 	void CollectGold(int InGold);
@@ -159,6 +162,9 @@ public:
 	called when its postcombat. postcombat will be terminate early if all enemy were killed
 	*/
 	void PostCombatCheck();
+
+
+
 };
 
 

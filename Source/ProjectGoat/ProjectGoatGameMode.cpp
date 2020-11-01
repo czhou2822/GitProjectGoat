@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "ProjectGoatGameMode.h"
+#include "Engine/LevelStreaming.h"
 #include "ProjectGoatCharacter.h"
 #include "BulkheadGameState.h"
 #include "BulkheadPlayerState.h"
@@ -112,6 +113,20 @@ void AProjectGoatGameMode::SetIsBrittle(FGuid InID, bool result)
 void AProjectGoatGameMode::StartGame()
 {
 	SetGamePhase(EGamePhase::BUILDINGPHASE);
+}
+
+void AProjectGoatGameMode::RestartBulkheadGame()
+{
+	WaveNumber = 0;
+//	const TArray<ULevelStreaming*> StreamingLevels = GetWorld()->GetStreamingLevels();
+
+//	ULevel* PersistentLevel = GetWorld()->PersistentLevel;
+
+	UGameplayStatics::OpenLevel(this, GetWorld()->GetFName(), false);
+
+	//FName ThisLevel = ULevelStreaming::GetWorldAssetPackageFName();
+
+	StartGame();
 }
 
 void AProjectGoatGameMode::CollectGold(int InGold)

@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+#include "Character/Misc/Trap.h"
 
 #include "Components/StaticMeshComponent.h" 
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 
-#include "Character/Misc/Trap.h"
 
 
 
