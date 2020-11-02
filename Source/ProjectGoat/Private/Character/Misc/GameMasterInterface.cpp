@@ -28,6 +28,7 @@ void AGameMasterInterface::BeginPlay()
 {
 	//GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AGameMasterInterface::GMTick, 0.5, true, 0.f);
 	//UE_LOG(LogTemp, Warning, TEXT("GameMasterInterface"));
+	Super::BeginPlay();
 
 	if (SWAmbientWind)
 	{
