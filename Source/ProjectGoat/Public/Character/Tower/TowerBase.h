@@ -148,6 +148,7 @@ public:
 
 	void SetRedOutLine(bool IsOutline);
 
+	UFUNCTION(BlueprintCallable)
 	void PlayFireSound();
 
 	UFUNCTION(BlueprintCallable)

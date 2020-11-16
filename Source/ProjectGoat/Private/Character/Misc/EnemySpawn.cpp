@@ -59,15 +59,18 @@ void AEnemySpawn::SpawnSingleEnemy()
 
 		AEnemyBase* NewMonster = ProjectGoatGameMode->SpawnMonster(NextMonsterID, ArrowComp->GetComponentLocation(), ArrowComp->GetComponentRotation());  //spawning monster
 
-		NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetBaseNavPoint() ;    //set monster's base(destination) location
+		if (NewMonster)
+		{
+			NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetBaseNavPoint();    //set monster's base(destination) location
 
-		NewMonster->NavPoints = GetNavPoints(GetNextRoute());  //set monster's nav points
+			NewMonster->NavPoints = GetNavPoints(GetNextRoute());  //set monster's nav points
 
-		ProjectGoatGameState->AddActiveEnemy(NewMonster);      //add to global monster list
+			ProjectGoatGameState->AddActiveEnemy(NewMonster);      //add to global monster list
 
-		//ActiveEnemy.Add(NewMonster);                         //add to local monster list
+			//ActiveEnemy.Add(NewMonster);                         //add to local monster list
 
-		EnemyToBeSpawn--;
+			EnemyToBeSpawn--;
+		}
 	}
 	else
 	{

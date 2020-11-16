@@ -383,7 +383,7 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 		if (GetWorld() && NewClass)
 		{
 			FActorSpawnParameters SpawnParam;
-			SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 			ABulkheadCharacterBase* RuleOfTheCharacter = nullptr;
 			RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
 			if (RuleOfTheCharacter)
