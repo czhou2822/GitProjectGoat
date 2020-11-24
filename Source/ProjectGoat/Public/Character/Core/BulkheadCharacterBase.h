@@ -24,19 +24,22 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBulkheadCharacterDead);
 
-	UPROPERTY(BlueprintAssignable, Category = "Character")
+	UPROPERTY(BlueprintAssignable, Category = "BulkheadCharacterBase")
 	FOnBulkheadCharacterDead OnBulkheadCharacterDead;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BulkheadCharacterBase")
 	FGuid GUID;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BulkheadCharacterBase")
 	class USceneComponent* HomingPoint;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BulkheadCharacterBase")
 	bool bIsAttack;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "BH C++")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BulkheadCharacterBase")
+	class USoundAttenuation* SoundAttenuationSetting;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "BulkheadCharacterBase")
 	void OnReceivedDamage(const float ReceivedDamage, const float RemainingHealthPercentage);
 
 protected:
@@ -60,7 +63,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable, Category = "CharacterBase")
+	UFUNCTION(BlueprintCallable, Category = "BulkheadCharacterBase")
 	virtual FCharacterData& GetCharacterData();
 
 

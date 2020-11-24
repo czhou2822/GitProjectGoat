@@ -194,7 +194,7 @@ void ATowerBase::PlayFireSound()
 	{
 		if (SWTowerAttack)
 		{
-			UGameplayStatics::PlaySoundAtLocation(this, SWTowerAttack, FirePoint);
+			UGameplayStatics::PlaySoundAtLocation(this, SWTowerAttack, FirePoint, 1.f, 1.f, 0.f, SoundAttenuationSetting, nullptr);
 		}
 
 	}

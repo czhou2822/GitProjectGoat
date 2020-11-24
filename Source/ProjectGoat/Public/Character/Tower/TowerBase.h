@@ -80,16 +80,16 @@ public:
 	//	USoundWave* SWMortarTowerConstruction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTowerAttack;
+		USoundBase* SWTowerAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTowerImpact;
+		USoundBase* SWTowerImpact;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTowerDamage;
+		USoundBase* SWTowerDamage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWTowerDestruction;
+		USoundBase* SWTowerDestruction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++")
 		int32 SelfTowerID;
