@@ -45,11 +45,10 @@ void AEnemyBase::BeginPlay()
 
 AEnemyBase::~AEnemyBase()
 {
-	if (GetWorld())
-	{
-		MarkForDead();
-
-	}
+	//if (GetWorld())
+	//{
+	//	MarkForDead();
+	//}
 }
 
 // Called every frame
@@ -199,7 +198,10 @@ void AEnemyBase::MarkForDead()
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), SWEnemyDeath);
 	}
+
 	GetGameState()->DeleteFromPrioritizedList(this);
 	GetGameState()->DeleteActiveEnemy(this);
 	Super::MarkForDead();
+
+
 }

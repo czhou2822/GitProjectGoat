@@ -6,7 +6,9 @@
 
 UAnimEnemyBase::UAnimEnemyBase()
 	:GlobalAnimPlayRate(1.f)
+	,bIsAttacking(false)
 	,ControlledPawn(nullptr)
+	
 {
 }
 
