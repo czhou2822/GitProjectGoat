@@ -122,11 +122,11 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATPSCharacterQ::AimStart);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ATPSCharacterQ::AimEnd);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireDown);
-	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireUp);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireStart);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireEnd);
 
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectDown);
-	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectUp);
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectStart);
+	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectEnd);
 
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
 
@@ -135,7 +135,7 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Cancel", IE_Pressed, this, &ATPSCharacterQ::InputActionCancel);
 
-	PlayerInputComponent->BindAction("OpenMenu", IE_Pressed, this, &ATPSCharacterQ::OpenMenu);
+	//PlayerInputComponent->BindAction("OpenMenu", IE_Pressed, this, &ATPSCharacterQ::OpenMenu);
 
 	PlayerInputComponent->BindAction("FastForward", IE_Pressed, this, &ATPSCharacterQ::FastForward);
 	PlayerInputComponent->BindAction("FastForward", IE_Released, this, &ATPSCharacterQ::FastForwardEnd);
@@ -232,7 +232,7 @@ void ATPSCharacterQ::AimEnd()
 
 }
 
-void ATPSCharacterQ::FireDown()
+void ATPSCharacterQ::FireStart()
 {
 	//GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
 
@@ -248,25 +248,20 @@ void ATPSCharacterQ::FireDown()
 
 }
 
-void ATPSCharacterQ::FireUp()
+void ATPSCharacterQ::FireEnd()
 {
-	//GetWorld()->GetTimerManager().ClearTimer(fireTimer);
 	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
 	if (WeaponDummy)
 	{
-		//UE_LOG(LogTemp, Log, TEXT("Weapon valid"));
-		WeaponDummy->FireEnd();
+		if (bAiming)
+		{
+			WeaponDummy->FireEnd();
+		}
 	}
 }
 
-void ATPSCharacterQ::FireEnd()
-{
-}
 
-/*void ATPSCharacterQ::coinCollect()
-{
-	ATPSCharacterQ::coinCount++;
-}*/
+
 
 void ATPSCharacterQ::CoinCollect(int32 InGold)
 {
@@ -280,58 +275,17 @@ void ATPSCharacterQ::OnOverlap(AActor* OtherActor, class UPrimitiveComponent* Ot
 
 }
 
-void ATPSCharacterQ::ThrowSeed()
-{
-	//FVector seedStartPoint = tpsGun->GetSocketLocation("Muzzle");
-	//if (bAiming) {
-	//	if (SeedClass)
-	//	{
-	//		// Get the camera transform.
-	//		FVector CameraLocation;
-	//		FRotator CameraRotation;
-	//		GetActorEyesViewPoint(CameraLocation, CameraRotation);
-
-	//		// Transform MuzzleOffset from camera space to world space.
-	//		FVector MuzzleLocation = seedStartPoint;// CameraLocation + FTransform(CameraRotation).TransformVector(seedStartPoint);
-	//		FRotator MuzzleRotation = CameraRotation;
-	//		// Skew the aim to be slightly upwards.
-	//		MuzzleRotation.Pitch += 10.0f;
-	//		UWorld* World = GetWorld();
-	//		if (World)
-	//		{
-	//			FActorSpawnParameters SpawnParams;
-	//			SpawnParams.Owner = this;
-	//			SpawnParams.Instigator = Instigator;
-	//			// Spawn the projectile at the muzzle.
-	//			ATowerSeed* seed = World->SpawnActor<ATowerSeed>(SeedClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-	//			if (seed)
-	//			{
-	//				// Set the projectile's initial trajectory.
-	//				FVector LaunchDirection = MuzzleRotation.Vector();
-	//				seed->FireInDirection(LaunchDirection);
-	//			}
-	//		}
-	//	}
-	//}
-}
-
 void ATPSCharacterQ::CollectSnow()
 {
 	if (bAiming)
 	{
-		/*PlayAnimMontage(fireAnima);
-		UGameplayStatics::PlaySoundAtLocation(this, fireSound, GetActorLocation());*/
 
-		//FVector fireStartPoint = tpsGun->GetSocketLocation("Muzzle");
 		FVector fireStartPoint = Camera->GetComponentLocation();
 
-		//FVector fireStartPoint =  Scene->GetLocation
-		//FVector fireEndPoint = tpsGun->GetRightVector() *5000 + fireStartPoint;
+
 		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
 
 
-
-		//DrawDebugLine(GetWorld(), fireStartPoint, fireEndPoint, FColor::Blue, false, 2.f, 0, 5.f);
 
 
 		FCollisionQueryParams cqp;
@@ -342,20 +296,23 @@ void ATPSCharacterQ::CollectSnow()
 		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
 
 
-		if (hr.bBlockingHit == true) {
-			if (hr.GetActor() != this) {
+		if (hr.bBlockingHit == true) 
+		{
+			if (hr.GetActor() != this) 
+			{
 
 				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
 				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-				//hr.GetActor()->Destroy();
 				bAiming_collecting = true;
 				OnCollectSnow(hr.Location);
-				//DrawDebugLine(GetWorld(), hr.Location, hr.Location + FVector::UpVector * 5000, FColor::Blue, false, 2.f, 0, 5.f);
-				if (SnowCount <= 99) {
+
+				if (SnowCount <= 99) 
+				{
 					SnowCount++;
 				}
-				else {
+				else 
+				{
 					SnowCount = 100;
 				}
 				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(SnowCount));
@@ -366,34 +323,18 @@ void ATPSCharacterQ::CollectSnow()
 	}
 }
 
-void ATPSCharacterQ::CollectUp()
+void ATPSCharacterQ::CollectEnd()
 {
 	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
 	bAiming_collecting = false;
-	//if (SWSuckUp)
-	//{
-	//	UGameplayStatics::PlaySound2D(GetWorld(), SWSuckUp);
-	//}
-	//if (SWSuck) 
-	//{
-	//	GMAudioComponent_Suck->Stop();
-	//}
+
 }
 
-void ATPSCharacterQ::CollectDown()
+void ATPSCharacterQ::CollectStart()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
 	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
-	//if (SWSuckDown)
-	//{
-	//	UGameplayStatics::PlaySound2D(GetWorld(), SWSuckDown);
-	//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "SuckDown Played");
-	//}
-	//if (SWSuck)
-	//{
-	//	GMAudioComponent_Suck->Sound = SWSuck;
-	//	GMAudioComponent_Suck->Play();
-	//}
+
 }
 
 void ATPSCharacterQ::SetupVariables()
@@ -416,9 +357,6 @@ void ATPSCharacterQ::SelectTower()
 void ATPSCharacterQ::SelectTowerEnd()
 {
 	IsSelecting = false;
-
-
-
 
 }
 
@@ -475,7 +413,6 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 
 	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, Transform.GetLocation(), NewRotator);  //3->preview tower
 
-	//return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(SpawnTowerID, transform.GetLocation(), transform.Rotator());
 
 }
 
@@ -545,25 +482,6 @@ void ATPSCharacterQ::AdjustTowerLocation()
 			SpawnedTower->SetActorRotation(NewRotator);
 		}
 	}
-}
-
-void ATPSCharacterQ::OpenMenu()
-{
-	//APlayerController* PlayerController;
-	//PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-	//PlayerController->SetPause(true);
-	//PauseWidget = CreateWidget<UUserWidget>(this, UPauseWidgetTemplate);
-	//PauseWidget->AddToViewport();
-
-	//FInputModeUIOnly InputModeData;
-	//InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	//PlayerController->SetInputMode(InputModeData);
-
-	//PlayerController->bShowMouseCursor = true;
-	////PlayerController->SetInputModeUI();
-	////PlayerController->Createwidget
-
-
 }
 
 void ATPSCharacterQ::FastForward()

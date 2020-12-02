@@ -17,6 +17,8 @@
 #include "projectgoat/Public/BulkheadPlayerState.h"
 #include "Components/MeshComponent.h"
 #include "components/SkeletalMeshComponent.h"
+#include "Character/Enemy/EnemyBase.h"
+
 #include "Kismet/GameplayStatics.h"
 
 //#if PLATFORM_WINDOWS
@@ -158,7 +160,7 @@ void ATowerBase::TowerInit()
 
 void ATowerBase::FireTimerTick()
 {
-	if (TargetEnemy)
+	if (TargetEnemy && !TargetEnemy->IsPendingKill())
 	{
 		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 

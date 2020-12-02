@@ -64,21 +64,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float TowerRange;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWTeslaTowerConstruction;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWTeslaTowerAttack;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWGatlingTowerConstruction;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWGatlingTowerAttack;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWMortarTowerConstruction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundBase* SWTowerAttack;
 
@@ -131,16 +116,11 @@ public:
 
 	void TowerInit();
 
-//	UFUNCTION()
-//	virtual void HandleFireEvent();
-
 	virtual void BulkheadInit() override;
 
 	void OnConstructionCompleteEvent();
 
 	void SetTargetActor();
-
-//	void FireTimer(float B);
 
 	void OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

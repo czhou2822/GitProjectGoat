@@ -128,12 +128,16 @@ void ABulkheadCharacterBase::Dead()
 
 void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, ABulkheadCharacterBase* Target, float DamageValue)
 {
-	UGameplayStatics::ApplyDamage(
-		Target,
-		DamageValue,
-		DamageCauser->GetController(),
-		DamageCauser,
-		UDamageType::StaticClass());
+	if (Target)
+	{
+		UGameplayStatics::ApplyDamage(
+			Target,
+			DamageValue,
+			DamageCauser->GetController(),
+			DamageCauser,
+			UDamageType::StaticClass());
+	}
+
 }
 
 void ABulkheadCharacterBase::UpdateUI()

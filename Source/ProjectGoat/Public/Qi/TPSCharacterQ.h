@@ -93,7 +93,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class USoundBase* OnSnowCollectSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadwrite)
+	UPROPERTY(EditAnywhere, BlueprintReadwrite, Category = "C++")
 	bool bAllowSnowNegative;  //allow snow to go nagetive
 
 	UPROPERTY(EditAnywhere, Category = seed)
@@ -104,9 +104,6 @@ public:
 	FTimerHandle SnowTimer;
 
 	FTimerHandle TowerAdjustTimer;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	//	ETowerType Tower;
 
 	float DefaultFOV;
 
@@ -135,15 +132,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 		UAudioComponent* GMAudioComponent_CharacterBreath;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWSuck;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWSuckUp;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-	//	USoundWave* SWSuckDown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundWave* SWCharacterFootStep;
@@ -199,10 +187,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void AimEndBlueprintInterface();
 
-	//void FireStart();
-	void FireDown();
-
-	void FireUp();
+	void FireStart();
 
 	void FireEnd();
 
@@ -213,14 +198,11 @@ public:
 
 	void OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION(BlueprintCallable)
-	void ThrowSeed();
-
 	void CollectSnow();
 
-	void CollectUp();
+	void CollectEnd();
 
-	void CollectDown();
+	void CollectStart();
 
 	UFUNCTION(BlueprintCallable)
 	void SetupVariables();
@@ -245,26 +227,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ResetBuildingCamera();
 
-	void OpenMenu();
-
 	void FastForward();
 
 	void FastForwardEnd();
 
 	FHitResult GetScreentoWorldLocation();
-
-
-	//bool CheckValid();
-	//void onCharacterStartPlacing();
-	//FCharacterPlacingDelegate CharacterPlacingDelegate;
-	UClass* UPauseWidgetTemplate = LoadObject<UClass>(NULL, TEXT("/Game/CC/widget/widget/UMG_Pause.UMG_Pause_C"), NULL, LOAD_None, NULL);
-	/*ConstructorHelpers::FClassFinder<UUserWidget> PauseClassFinder(TEXT("/Game/CC/widget/widget/UMG_Pause.UMG_Pause_C"));
-	TSubclassOf<class UUserWidget> PauseClass = PauseClassFinder.Class;*/
-	UUserWidget* PauseWidget;
-	//UMGPauseWidget* PauseWidget;
-	//FTimeline CameraReset;
-	/*UPROPERTY()
-	class UTimelineComponent* PullOutBuildingCameraTimeline£»*/
 
 	bool isMoving();
 
