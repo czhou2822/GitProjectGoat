@@ -25,6 +25,9 @@ public:
 	FVector BaseLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSpawnScraps = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FVector> NavPoints;
 
 protected:
