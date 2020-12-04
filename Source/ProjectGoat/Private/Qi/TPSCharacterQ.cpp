@@ -282,16 +282,10 @@ void ATPSCharacterQ::CollectSnow()
 
 		FVector fireStartPoint = Camera->GetComponentLocation();
 
-
 		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
-
-
-
 
 		FCollisionQueryParams cqp;
 		FHitResult hr;
-
-
 
 		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
 
@@ -418,20 +412,28 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 
 void ATPSCharacterQ::InputActionCancel()
 {
-	if (IsValid(SpawnedTower)) 
+	try
 	{
-		BulkheadPlayerState->AddCoinToPlayer(SpawnedTower->GetCharacterData().Gold);
-		SpawnedTower->Destroy();
-		if (IsCharacterPlacingTower == true) 
+		if (SpawnedTower == nullptr) 
 		{
-			IsCharacterPlacingTower = false;
-			this->OnTowerPlaced.Broadcast();
-			this->OnCharacterStartPlacing.Broadcast(false);
-			GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
-			ResetBuildingCamera();
-			BuildCounter = true;
+			SpawnedTower->Destroy();
 		}
 	}
+	catch (...)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SpawnTower Error"));
+	}
+
+	if (IsCharacterPlacingTower)
+	{
+		IsCharacterPlacingTower = false;
+		this->OnTowerPlaced.Broadcast();
+		this->OnCharacterStartPlacing.Broadcast(false);
+		GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+		ResetBuildingCamera();
+		BuildCounter = true;
+	}
+
 }
 	
 
