@@ -52,15 +52,19 @@ public:
 
 	virtual void BeginPlay();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	void AddCoinToPlayer(int32 InGold);
 
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	bool ConsumeCoin(int32 InGold);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	bool CanConsumeCoin(int32 InGold);
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	int32& GetGold();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	void SetTowerType(const ETowerType InTowerType);
 	
 	void NextTower();

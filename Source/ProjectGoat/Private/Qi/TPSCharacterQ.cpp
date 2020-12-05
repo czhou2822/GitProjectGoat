@@ -381,11 +381,22 @@ void ATPSCharacterQ::InputActionBuild()
 					int32 Cost = 0;
 					int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
 					Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
-					if (BulkheadPlayerState->ConsumeCoin(Cost))  //consume success
+
+					if (BulkheadPlayerState->CanConsumeCoin(Cost))
 					{
-						Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
-						this->OnTowerPlaced.Broadcast();
+						ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
+						if (TempTower) //problem spawning 
+						{
+							BulkheadPlayerState->ConsumeCoin(Cost);
+							this->OnTowerPlaced.Broadcast();
+						}
 					}
+					//if (BulkheadPlayerState->ConsumeCoin(Cost))  //consume success
+					//{
+					//	ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
+					//	this->OnTowerPlaced.Broadcast();
+					//}
+
 					SpawnedTower->Destroy();
 				}
 				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);

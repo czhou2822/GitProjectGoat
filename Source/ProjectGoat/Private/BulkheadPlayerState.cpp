@@ -30,7 +30,7 @@ void ABulkheadPlayerState::AddCoinToPlayer(int32 InGold)
 
 bool ABulkheadPlayerState::ConsumeCoin(int32 InGold)
 {
-	if (InGold > Gold)
+	if (!CanConsumeCoin(InGold))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Not enough Gold"));
 		OnGoldConsumeFailed.Broadcast();
@@ -38,6 +38,11 @@ bool ABulkheadPlayerState::ConsumeCoin(int32 InGold)
 	}
 	SetGold(Gold - InGold);
 	return true;
+}
+
+bool ABulkheadPlayerState::CanConsumeCoin(int32 InGold)
+{
+	return InGold > Gold ? false : true;
 }
 
 int32& ABulkheadPlayerState::GetGold()
