@@ -7,7 +7,7 @@
 #include "ProjectGoatType.generated.h"
 
 
-
+#define ECC_SnowCollect ECollisionChannel::ECC_GameTraceChannel3;
 
 UENUM(BlueprintType)
 enum class EGamePhase : uint8

@@ -29,9 +29,9 @@
 #include "Components/CapsuleComponent.h"
 #include "projectgoat/Public/BulkheadGameState.h"
 
-//#if PLATFORM_WINDOWS
-//#pragma optimize("", on)
-//#endif
+#if PLATFORM_WINDOWS
+#pragma optimize("", on)
+#endif
 
 
 // Sets default values
@@ -125,8 +125,8 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireStart);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireEnd);
 
-	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ATPSCharacterQ::CollectStart);
-	PlayerInputComponent->BindAction("Collect", IE_Released, this, &ATPSCharacterQ::CollectEnd);
+	PlayerInputComponent->BindAction("Collector", IE_Pressed, this, &ATPSCharacterQ::CollectStart);
+	PlayerInputComponent->BindAction("Collector", IE_Released, this, &ATPSCharacterQ::CollectEnd);
 
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
 
@@ -145,7 +145,10 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ATPSCharacterQ::OnCollectSnow(FVector location)
 {
 	HitSnowMaterial->SetVectorParameterValue("HitLocationW", FLinearColor(location));
-	UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
+	if (OnSnowCollectSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
+	}
 }
 
 void ATPSCharacterQ::MoveForward(float v)
@@ -275,6 +278,21 @@ void ATPSCharacterQ::OnOverlap(AActor* OtherActor, class UPrimitiveComponent* Ot
 
 }
 
+
+void ATPSCharacterQ::CollectEnd()
+{
+	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
+	bAiming_collecting = false;
+
+}
+
+void ATPSCharacterQ::CollectStart()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
+	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
+
+}
+
 void ATPSCharacterQ::CollectSnow()
 {
 	if (bAiming)
@@ -317,19 +335,7 @@ void ATPSCharacterQ::CollectSnow()
 	}
 }
 
-void ATPSCharacterQ::CollectEnd()
-{
-	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
-	bAiming_collecting = false;
 
-}
-
-void ATPSCharacterQ::CollectStart()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
-	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
-
-}
 
 void ATPSCharacterQ::SetupVariables()
 {
@@ -391,13 +397,9 @@ void ATPSCharacterQ::InputActionBuild()
 							this->OnTowerPlaced.Broadcast();
 						}
 					}
-					//if (BulkheadPlayerState->ConsumeCoin(Cost))  //consume success
-					//{
-					//	ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
-					//	this->OnTowerPlaced.Broadcast();
-					//}
 
 					SpawnedTower->Destroy();
+					SpawnedTower = nullptr;
 				}
 				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 				ResetBuildingCamera();
@@ -423,17 +425,13 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 
 void ATPSCharacterQ::InputActionCancel()
 {
-	try
+
+	if (SpawnedTower) 
 	{
-		if (SpawnedTower == nullptr) 
-		{
-			SpawnedTower->Destroy();
-		}
+		SpawnedTower->Destroy();
 	}
-	catch (...)
-	{
-		UE_LOG(LogTemp, Error, TEXT("SpawnTower Error"));
-	}
+	
+
 
 	if (IsCharacterPlacingTower)
 	{
@@ -562,6 +560,6 @@ int32 ATPSCharacterQ::GetTowerID(const ETowerType& InTowerType) const
 	return SpawnTowerID;
 }
 
-//#if PLATFORM_WINDOWS
-//#pragma optimize("", off)
-//#endif
+#if PLATFORM_WINDOWS
+#pragma optimize("", off)
+#endif
