@@ -29,9 +29,9 @@
 #include "Components/CapsuleComponent.h"
 #include "projectgoat/Public/BulkheadGameState.h"
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", on)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", on)
+//#endif
 
 
 // Sets default values
@@ -560,6 +560,6 @@ int32 ATPSCharacterQ::GetTowerID(const ETowerType& InTowerType) const
 	return SpawnTowerID;
 }
 
-#if PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
+//#if PLATFORM_WINDOWS
+//#pragma optimize("", off)
+//#endif
