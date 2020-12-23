@@ -391,11 +391,16 @@ void ATPSCharacterQ::InputActionBuild()
 					if (BulkheadPlayerState->CanConsumeCoin(Cost))
 					{
 						ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
-						if (TempTower) //problem spawning 
+						if (TempTower) //if false->problem spawning 
 						{
 							BulkheadPlayerState->ConsumeCoin(Cost);
 							this->OnTowerPlaced.Broadcast();
+							BuildSuccessed();
 						}
+					}
+					else
+					{
+						BuildCancelled();
 					}
 
 					SpawnedTower->Destroy();
@@ -425,13 +430,12 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 
 void ATPSCharacterQ::InputActionCancel()
 {
-
+	BuildCancelled();
 	if (SpawnedTower) 
 	{
 		SpawnedTower->Destroy();
 	}
 	
-
 
 	if (IsCharacterPlacingTower)
 	{
@@ -487,10 +491,14 @@ void ATPSCharacterQ::AdjustTowerLocation()
 		if (DistanceFromActor > 500 && hit == true)
 		{
 			FRotator NewRotator = UKismetMathLibrary::FindLookAtRotation(SpawnedTower->GetActorLocation(), GetActorLocation());
+
+
 			NewRotator.Roll = 0;
 			NewRotator.Pitch = 0;
 			SpawnedTower->SetActorLocation(hr.Location, false, nullptr, ETeleportType::TeleportPhysics);
 			SpawnedTower->SetActorRotation(NewRotator);
+
+
 		}
 	}
 }

@@ -215,6 +215,11 @@ public:
 
 	void InputActionCancel();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void BuildSuccessed();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void BuildCancelled();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void PulloutBuildingCamera();
