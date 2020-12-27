@@ -36,7 +36,7 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 
-	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
 	FOnTowerPlaced OnTowerPlaced;
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
@@ -181,6 +181,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void AimStartBlueprintInterface();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void AdjustTowerLocationInterface(FVector TowerLocation);
 
 	void AimEnd();
 

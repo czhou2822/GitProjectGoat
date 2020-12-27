@@ -394,7 +394,7 @@ void ATPSCharacterQ::InputActionBuild()
 						if (TempTower) //if false->problem spawning 
 						{
 							BulkheadPlayerState->ConsumeCoin(Cost);
-							this->OnTowerPlaced.Broadcast();
+							//this->OnTowerPlaced.Broadcast();
 							BuildSuccessed();
 						}
 					}
@@ -497,7 +497,7 @@ void ATPSCharacterQ::AdjustTowerLocation()
 			NewRotator.Pitch = 0;
 			SpawnedTower->SetActorLocation(hr.Location, false, nullptr, ETeleportType::TeleportPhysics);
 			SpawnedTower->SetActorRotation(NewRotator);
-
+			AdjustTowerLocationInterface(hr.Location);
 
 		}
 	}
