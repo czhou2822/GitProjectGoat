@@ -164,13 +164,13 @@ void ATowerBase::FireTimerTick()
 	{
 		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 
-		bIsAttack = true;
+		//bIsAttack = true;
 
-		//TowerFire();  //broadcast blueprint fire event
+		TowerFire();  //broadcast blueprint fire event
 		return;
 	}
 
-	bIsAttack = false;
+	//bIsAttack = false;
 	return;
 
 }
