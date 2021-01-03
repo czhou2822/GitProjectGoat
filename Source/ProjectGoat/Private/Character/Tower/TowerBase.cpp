@@ -160,17 +160,19 @@ void ATowerBase::TowerInit()
 
 void ATowerBase::FireTimerTick()
 {
+	TowerFireTickInterface();
+
 	if (TargetEnemy && !TargetEnemy->IsPendingKill())
 	{
 		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
 
-		//bIsAttack = true;
+		bIsAttack = true;
 
 		TowerFire();  //broadcast blueprint fire event
 		return;
 	}
 
-	//bIsAttack = false;
+	bIsAttack = false;
 	return;
 
 }
