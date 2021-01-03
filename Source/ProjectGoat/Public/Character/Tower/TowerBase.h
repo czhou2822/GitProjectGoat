@@ -106,6 +106,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
 	void TowerFire();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
+	void TowerFireTickInterface();
+
 	UFUNCTION()
 	void HandleOnCharacterStartPlacing(bool PlacingMode);
 
