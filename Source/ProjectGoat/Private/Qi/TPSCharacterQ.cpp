@@ -388,29 +388,45 @@ void ATPSCharacterQ::InputActionBuild()
 					int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
 					Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
 
-					if (BulkheadPlayerState->CanConsumeCoin(Cost))
+					if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
 					{
-						ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(TowerID, SpawnedTower->GetActorLocation(), SpawnedTower->GetActorRotation());
-						if (TempTower) //if false->problem spawning 
-						{
-							BulkheadPlayerState->ConsumeCoin(Cost);
-							//this->OnTowerPlaced.Broadcast();
-							BuildSuccessed();
-						}
+						BulkheadPlayerState->ConsumeCoin(Cost);
+						BuildSuccessed();
 					}
 					else
 					{
 						BuildCancelled();
+						SpawnedTower->Destroy();
+						SpawnedTower = nullptr;
 					}
 
-					SpawnedTower->Destroy();
-					SpawnedTower = nullptr;
+
 				}
 				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 				ResetBuildingCamera();
 				this->OnCharacterStartPlacing.Broadcast(false);
 				BuildCounter = !BuildCounter;
 			}
+		}
+	}
+}
+
+/*
+* when constructor hits the floor, call this function
+* this function destroy uses preview's transform to spawn a new tower, and destroy the preview tower
+*/
+void ATPSCharacterQ::TurnConstructorIntoTower()
+{
+	if (SpawnedTower)
+	{
+		FTransform NewTransform = SpawnedTower->GetActorTransform();
+		SpawnedTower->Destroy();
+		SpawnedTower = nullptr;
+
+		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(BulkheadPlayerState->SelectedTower), NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
+		if (TempTower) //if false->problem spawning 
+		{
+			
 		}
 	}
 }
@@ -424,8 +440,6 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 	NewRotator.Pitch = 0;
 
 	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, Transform.GetLocation(), NewRotator);  //3->preview tower
-
-
 }
 
 void ATPSCharacterQ::InputActionCancel()
@@ -448,6 +462,8 @@ void ATPSCharacterQ::InputActionCancel()
 	}
 
 }
+
+
 	
 
 void ATPSCharacterQ::AdjustTowerLocation()

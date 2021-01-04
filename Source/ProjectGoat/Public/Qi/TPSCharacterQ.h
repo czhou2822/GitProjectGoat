@@ -218,21 +218,24 @@ public:
 
 	void InputActionCancel();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
 	void BuildSuccessed();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable, Category = "TowerBuilding")
+	void TurnConstructorIntoTower();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
 	void BuildCancelled();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
 	void PulloutBuildingCamera();
 
 	ATowerBase* WhichTower();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "TowerBuilding")
 	void AdjustTowerLocation();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
 	void ResetBuildingCamera();
 
 	void FastForward();

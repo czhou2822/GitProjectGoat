@@ -23,24 +23,20 @@ private:
 	FInternalTowerPlaced InternalTowerPlaced;
 
 public:	
-	//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerFire);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 
-	//UPROPERTY(BlueprintAssignable, Category = "C++")
-	//FOnTowerFire TowerFire;
-
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnConstructionComplete OnConstructionComplete;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//	class UDecalComponent* Decal;
 
 	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
 		UBoxComponent* TowerPadding;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* RangeMeshC;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanBeBuilt = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;
