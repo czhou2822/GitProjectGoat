@@ -1,16 +1,7 @@
-<<<<<<< HEAD
 {
 	"BuildId": "13144385",
 	"Modules": 
 	{
 		"ProjectGoat": "UE4Editor-ProjectGoat.dll"
 	}
-=======
-{
-	"BuildId": "13144385",
-	"Modules": 
-	{
-		"ProjectGoat": "UE4Editor-ProjectGoat.dll"
-	}
->>>>>>> master
 }
