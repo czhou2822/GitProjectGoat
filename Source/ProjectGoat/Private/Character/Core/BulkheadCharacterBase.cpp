@@ -60,7 +60,7 @@ float ABulkheadCharacterBase::TakeDamage(float Damage, FDamageEvent const& Damag
 			if (!IsActive())   //id = -1 -> CharacterNULL
 			{
 				GetCharacterData().Health = 0.0f;
-				MarkForDead();
+				OnCharacterDying();
 			}
 
 			UpdateUI();
@@ -138,6 +138,12 @@ void ABulkheadCharacterBase::Attack(ABulkheadCharacterBase* DamageCauser, ABulkh
 			UDamageType::StaticClass());
 	}
 
+}
+
+void ABulkheadCharacterBase::OnCharacterDying_Implementation()
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("C++TestFunction"));
+	MarkForDead();
 }
 
 void ABulkheadCharacterBase::UpdateUI()

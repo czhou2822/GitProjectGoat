@@ -90,5 +90,9 @@ public:
 
 	FORCEINLINE ABulkheadGameState* GetGameState() { return GetWorld() ? GetWorld()->GetGameState<ABulkheadGameState>() : NULL; }
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void OnCharacterDying();
+
+
 
 };
