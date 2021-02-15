@@ -121,6 +121,7 @@ public:
 
 	bool IsTDown;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++")
 	ATowerBase* SpawnedTower;
 
 	class ABulkheadPlayerState* BulkheadPlayerState;
