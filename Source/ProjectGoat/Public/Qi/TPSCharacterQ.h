@@ -115,6 +115,7 @@ public:
 
 	bool IsInShop;
 
+	UPROPERTY(BlueprintReadwrite, Category = "C++")
 	bool IsCharacterPlacingTower;
 
 	bool BuildCounter = true;
