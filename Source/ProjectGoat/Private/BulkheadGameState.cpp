@@ -64,6 +64,8 @@ const FCharacterData& ABulkheadGameState::AddCharacterData(const FGuid& ID, cons
 
 bool ABulkheadGameState::RemoveCharacterData(const FGuid& ID)
 {
+	FCharacterData DyingData = GetCharacterData(ID);
+	OnCharacterDead.Broadcast(DyingData);
 	return (bool)InGameCharacterData.Remove(ID);
 }
 

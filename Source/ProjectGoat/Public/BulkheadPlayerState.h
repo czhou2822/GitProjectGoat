@@ -29,7 +29,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnSelectedTowerChanged OnSelectedTowerChanged;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChanged, int32, InGold);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChanged, int32, CurrentGold);
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnGoldChanged OnGoldChanged;

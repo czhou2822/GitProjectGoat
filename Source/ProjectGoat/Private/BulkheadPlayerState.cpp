@@ -4,12 +4,12 @@
 #include "BulkheadPlayerState.h"
 ABulkheadPlayerState::ABulkheadPlayerState()
 	:Gold(0)
+	,SelectedTower(ETowerType::GATLING)
 {
 }
 
 void ABulkheadPlayerState::BeginPlay()
 {
-	SelectedTower = ETowerType::GATLING;
 }
 
 void ABulkheadPlayerState::SetGold(int32 InGold)

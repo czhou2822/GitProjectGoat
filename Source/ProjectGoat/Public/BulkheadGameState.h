@@ -38,6 +38,12 @@ private:
 	void CheckActiveEnemy(AEnemyBase* InEnemy);
 
 public:
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDead, FCharacterData, DyingCharacterData);
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "BulkheadGameState")
+	FOnCharacterDead OnCharacterDead;
+
 	UPROPERTY(SaveGame)
 	TMap<FGuid, FCharacterData> InGameCharacterData;
 
@@ -76,6 +82,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	bool RemoveCharacterData(const FGuid& ID);
+
+
 
 	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	FCharacterData& GetCharacterData(const FGuid& ID);
