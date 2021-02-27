@@ -392,6 +392,7 @@ void ATPSCharacterQ::InputActionBuild()
 					{
 						BulkheadPlayerState->ConsumeCoin(Cost);
 						BuildSuccessed();
+						//this->OnTowerPlaced.Broadcast();
 					}
 					else
 					{
@@ -454,7 +455,7 @@ void ATPSCharacterQ::InputActionCancel()
 	if (IsCharacterPlacingTower)
 	{
 		IsCharacterPlacingTower = false;
-		this->OnTowerPlaced.Broadcast();
+		//this->OnTowerPlaced.Broadcast();
 		this->OnCharacterStartPlacing.Broadcast(false);
 		GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 		ResetBuildingCamera();
