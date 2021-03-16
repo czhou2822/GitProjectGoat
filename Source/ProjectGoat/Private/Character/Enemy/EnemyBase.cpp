@@ -114,7 +114,6 @@ void AEnemyBase::HandleSlowDown()
 
 	if (TickCount <= 0)   //timer done, reset walk speed
 	{
-
 		SlowCount = 0;
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
 
