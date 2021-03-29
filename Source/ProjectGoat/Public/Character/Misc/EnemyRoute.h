@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Character/Misc/EnemyRouteMarker.h"
 #include "EnemyRoute.generated.h"
 
 UCLASS()
@@ -16,12 +15,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USplineComponent* NavSplinePoints;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<class USplineMeshComponent*> SplineMeshes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<class AEnemyRouteSegment*> RouteSegments;
 
 	USceneComponent* RootSceneComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FVector> NavPoints;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)

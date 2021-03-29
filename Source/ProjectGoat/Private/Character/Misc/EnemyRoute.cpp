@@ -2,6 +2,10 @@
 
 
 #include "Character/Misc/EnemyRoute.h"
+#include "Character/Misc/EnemyRouteSegment.h"
+
+
+
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 
@@ -27,10 +31,32 @@ void AEnemyRoute::RouteSplineToArray()
 {
 	//navpoint were created backwards in editor -> reads in backward
 	NavPoints.Empty();
-	for (int32 i = NavSplinePoints->GetNumberOfSplinePoints() - 1; i >=0; i--)
+
+	//for (int32 i = NavSplinePoints->GetNumberOfSplinePoints() - 1; i >= 0; i--)
+	//{
+	//	NavPoints.Add(NavSplinePoints->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World));
+	//}
+
+	for (auto TmpSegment : RouteSegments)
 	{
-		NavPoints.Add(NavSplinePoints->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World));
+		for (int32 i = 0; i < TmpSegment->NavSplinePoints->GetNumberOfSplinePoints(); i++)
+		{
+			FVector NextPoint = TmpSegment->NavSplinePoints->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
+			if (NavPoints.Num())
+			{
+				//check range to add
+				FVector LastVector = NavPoints[NavPoints.Num()-1];
+				float Distance = FVector::Dist(LastVector, NextPoint);
+				if (Distance <= 100.f)
+				{
+					continue;
+				}
+			}
+			NavPoints.Add(NextPoint);
+		}
 	}
+
+
 }
 
 void AEnemyRoute::SetSplineMeshesIsHidden(const bool bIsHidden)

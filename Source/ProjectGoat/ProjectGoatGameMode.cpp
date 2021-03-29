@@ -118,13 +118,8 @@ void AProjectGoatGameMode::StartGame()
 void AProjectGoatGameMode::RestartBulkheadGame()
 {
 	WaveNumber = 0;
-//	const TArray<ULevelStreaming*> StreamingLevels = GetWorld()->GetStreamingLevels();
-
-//	ULevel* PersistentLevel = GetWorld()->PersistentLevel;
 
 	UGameplayStatics::OpenLevel(this, GetWorld()->GetFName(), false);
-
-	//FName ThisLevel = ULevelStreaming::GetWorldAssetPackageFName();
 
 	StartGame();
 }
