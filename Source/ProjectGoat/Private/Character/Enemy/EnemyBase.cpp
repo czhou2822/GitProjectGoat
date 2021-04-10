@@ -31,8 +31,6 @@ AEnemyBase::AEnemyBase()
 	
 	GMAudioComponent_EnemyBreath = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemyBreath"));
 
-	
-	
 
 }
 
@@ -41,14 +39,18 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//gets the needed counter to frozen the enemy. TimerTickInterval is set to 0.1. 
+	//e.g. if FrozenTime = 2.f and TimerTickInterval = 0.1; MaxFrozenMeter = 2/0.1 = 20;
+	//while frozen, a timer increase FrozenMeter by 1 every 0.1 seconds. 
+	MaxFrozenMeter = FrozenTime / FrozenTimerTickInterval;
+
+	//similar to last line. 
+	MaxFrozenPausedMeter = FrozenPauseTime / FrozenTimerTickInterval;
 }
 
 AEnemyBase::~AEnemyBase()
 {
-	//if (GetWorld())
-	//{
-	//	MarkForDead();
-	//}
+
 }
 
 // Called every frame
@@ -74,63 +76,114 @@ void AEnemyBase::BulkheadInit()
 
 
 
-
-void AEnemyBase::SlowDown()
+/*
+* whenever the frost cannon fires, frost cannon loop through its overlapping enemy list and call this function 
+* also, the frost cannon firing is also controlled by a timer -- the timer starts when the fire button is pressed and ends when the fire button is released
+* therefore, if the firing timer has calls every 0.2 seconds, this function is also called every 0.2 seconds
+*/
+void AEnemyBase::FreezeStart()
 {
+	//whenver this function is called, this enemy is either maintaining frozen status or just starts to frozen up. Either way,
+	//we need to reset the FrozenPausedMeter and mark for being freezing
+	FrozenPausedMeter = MaxFrozenPausedMeter;
+	bIsFreezing = true;
 
-
-	TickCount = SlowedTime / TimerTickInterval;
-	float SlowPercentage = 1;
-
-	if (SlowCount < MaxSlowCount)
+	//if the timer is running already, no need to reenable the timer 
+	if (FrozenTimer.IsValid())
 	{
-		SlowCount++;
-
-		for (int i = 0; i <= SlowCount; i++)
-		{
-			SlowPercentage = SlowDownPercentage * SlowPercentage;
-		}
-		OnSlowStart();
+		return;
 	}
-	else
-	{
-		SlowCount = MaxSlowCount;
-		SlowPercentage = 0;
-		OnFrozenStart();
 
-	}
+	GetWorldTimerManager().SetTimer(FrozenTimer, this, &AEnemyBase::FrozenTimerTick, FrozenTimerTickInterval, true, 0.0f);
+
+	//if (FrozenMeter < MaxFrozenMeter)
+	//{
+	//	FrozenMeter++;
+
+	//	for (int i = 0; i <= FrozenMeter; i++)
+	//	{
+	//		SlowPercentage = SlowDownPercentage * SlowPercentage;
+	//	}
+	//	OnSlowStart();
+	//}
+	//else
+	//{
+	//	FrozenMeter = MaxFrozenMeter;
+	//	SlowPercentage = 0;
+	//	OnFrozenStart();
+	//}
 
 	//SlowPercentage in action
-	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
+	//GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
 
-	SetAnimGlobalPlayrate(SlowPercentage);
+	//SetAnimGlobalPlayrate(SlowPercentage);
 
-	GetWorldTimerManager().SetTimer(SlowTimer, this, &AEnemyBase::HandleSlowDown, TimerTickInterval, true, 0.0f);
 
 }
 
-void AEnemyBase::HandleSlowDown()
+void AEnemyBase::FrozenTimerTick()
 {
+	//percentage. 0->no frozen at all, 1-> completly frozen 
+	float FrozenProgress = 0;
 
-	if (TickCount <= 0)   //timer done, reset walk speed
+	//if is being frozed, count up
+	if (bIsFreezing)
 	{
-		SlowCount = 0;
-		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
-
-		GetWorldTimerManager().ClearTimer(SlowTimer);
-		SetAnimGlobalPlayrate(1.f);
-
-		OnSlowEnd();
+		/*
+		* so this is how it works: 
+		* FreezeStart() always set bIsFreezing to true so we need to reset it here so that if FreezeStart() is not being call/enemy is not being freezing
+		* we can use this variable to check
+		*/
+		FrozenMeter++;
+		//clamping frozen meter to the MaxFrozenMeter
+		FrozenMeter = FMath::Min(FrozenMeter, MaxFrozenMeter);
+		bIsFreezing = false;
 	}
+
+	//if is not being frozed, start counting pause counter
 	else
 	{
-		TickCount--;
+		//frozen paused logic
+		if (FrozenPausedMeter >= 0)  //still in frozen paused phase
+		{
+			FrozenPausedMeter--;
+		}
+		else if (FrozenPausedMeter < 0)
+		{
+			FrozenMeter--;
+		}
 	}
+
+	if (FrozenMeter <= 0)//frozen ends, reset everything
+	{
+		GetWorld()->GetTimerManager().ClearTimer(FrozenTimer);
+	}
+
+	FrozenProgress = (float)FrozenMeter / (float)MaxFrozenMeter;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * (1.f - FrozenProgress);
+	SetAnimGlobalPlayrate(1.f - FrozenProgress);
+	OnFrozen(FrozenProgress);
+
+
+	//if (TickCount <= 0)   //timer done, reset walk speed
+	//{
+	//	FrozenMeter = 0;
+	//	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
+
+	//	GetWorldTimerManager().ClearTimer(FrozenTimer);
+	//	SetAnimGlobalPlayrate(1.f);
+
+	//	OnSlowEnd();
+	//}
+	//else
+	//{
+	//	TickCount--;
+	//}
 }
 
 void AEnemyBase::StartSlow()
 {
-	GetWorld()->GetTimerManager().SetTimer(SlowListener, this, &AEnemyBase::SlowDown, 0.2f, true, 0.f);
+	GetWorld()->GetTimerManager().SetTimer(SlowListener, this, &AEnemyBase::FreezeStart, 0.2f, true, 0.f);
 
 }
 
