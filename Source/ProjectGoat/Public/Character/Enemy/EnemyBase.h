@@ -42,14 +42,31 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 		float SlowDownPercentage = 0.7f;
 
-	FTimerHandle SlowTimer;
+	FTimerHandle FrozenTimer;
 
-	float TimerTickInterval = 0.1f;
+	float FrozenTimerTickInterval = 0.1f;
 
-	UPROPERTY(EditDefaultsOnly)
-		float SlowedTime = 2.f;
-	int32 SlowCount = 0;
-	int32 MaxSlowCount = 6;
+	//time it takes for this enemy to completly frozen up. Frozen effect increase linearly. Seconds. E.g. if set to 2, this enemy takes 2 seconds to completly frozen
+	UPROPERTY(EditDefaultsOnly, Category = "Bulkhead | Frozen Variables")
+	float FrozenTime = 2.f;
+
+	//time that enemy remain current frozen state in seconds. e.g. if when frost cannon move away from an enemy, the frozen state will stay this amount of time until the frozen state decays.
+	UPROPERTY(EditDefaultsOnly, Category = "Bulkhead | Frozen Variables")
+	float FrozenPauseTime = 2.f;
+
+	//whether this enemy is being frozen/shot by frost cannon
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsFreezing = false;
+
+	//current frozen meter
+	int32 FrozenMeter = 0;
+	//max frozen meter
+	int32 MaxFrozenMeter = 0;
+	//current frozen meter
+	int32 FrozenPausedMeter = 0;
+	//max frozen meter
+	int32 MaxFrozenPausedMeter = 0;
+
 	int32 TickCount = 0;
 
 public:
@@ -66,7 +83,7 @@ public:
 	virtual void BulkheadInit() override;
 
 	UFUNCTION(BlueprintCallable)
-		void SlowDown();
+		void FreezeStart();
 
 	UFUNCTION(BlueprintCallable)
 		void StartSlow();
@@ -87,7 +104,7 @@ public:
 	//	void SetNavPoints(TArray<FVector> InPoints);
 
 	UFUNCTION()
-	void HandleSlowDown();
+	void FrozenTimerTick();
 
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
@@ -102,6 +119,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnFrozenStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFrozen(float FrozenAmount);
 
 	virtual void MarkForDead() override;
 
