@@ -35,9 +35,14 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterAims, bool, bIsCharacterAiming);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrostCannonChangedPercentage, float, SnowPercentage);
 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
 	FOnTowerPlaced OnTowerPlaced;
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "Bulkhead | Frost Cannon")
+	FOnFrostCannonChangedPercentage OnFrostCannonChangedPercentage;
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
@@ -70,9 +75,6 @@ public:
 	class UAnimMontage* FireAnima;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SnowCount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CapsuleHalfHeight = 500.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -99,7 +101,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = seed)
 	TSubclassOf<class ATowerSeed> SeedClass;
 
-	FTimerHandle FireTimer;
 
 	FTimerHandle SnowTimer;
 
@@ -130,26 +131,31 @@ public:
 	class ABulkheadGameState* BulkheadGameState;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_Suck;
+	UAudioComponent* GMAudioComponent_Suck;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_CharacterBreath;
+	UAudioComponent* GMAudioComponent_CharacterBreath;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterFootStep;
+	USoundWave* SWCharacterFootStep;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterDeath;
+	USoundWave* SWCharacterDeath;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterBreath;
+	USoundWave* SWCharacterBreath;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWCharacterJump;
+	USoundWave* SWCharacterJump;
 
 	bool bMovingF;
 
 	bool bMovingR;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Bulkhead | Frost Cannon")
+	float SnowCountPercentage = 0.f;
+
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -172,10 +178,6 @@ public:
 	void MoveForward(float v);
 
 	void MoveRight(float v);
-
-	void CrouchDown();
-
-	void CrouchUp();
 
 	void JumpFunction();
 
@@ -201,13 +203,11 @@ public:
 
 	void static CoinConsume();
 
-	void OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	//void CollectSnow();
 
-	void CollectSnow();
+	//void CollectEnd();
 
-	void CollectEnd();
-
-	void CollectStart();
+	//void CollectStart();
 
 	UFUNCTION(BlueprintCallable)
 	void SetupVariables();

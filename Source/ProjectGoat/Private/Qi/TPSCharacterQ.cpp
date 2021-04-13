@@ -85,23 +85,7 @@ void ATPSCharacterQ::BeginPlay()
 void ATPSCharacterQ::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	/*if (isMoving()) 
-	{
-		if (SWCharacterBreath && (!GMAudioComponent_CharacterBreath->IsPlaying()))
-		{
-			GMAudioComponent_CharacterBreath->Sound = SWCharacterBreath;
-			GMAudioComponent_CharacterBreath->Play();
-		}
-	}
 
-	if (!isMoving()) 
-	{
-		if (SWCharacterBreath) 
-		{
-			GMAudioComponent_CharacterBreath->Stop();
-		}
-		
-	}*/
 
 }
 
@@ -114,9 +98,6 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Turn", this, &ATPSCharacterQ::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ATPSCharacterQ::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ATPSCharacterQ::CrouchDown);
-	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ATPSCharacterQ::CrouchUp);
-
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATPSCharacterQ::JumpFunction);
 
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ATPSCharacterQ::AimStart);
@@ -125,8 +106,8 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATPSCharacterQ::FireStart);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATPSCharacterQ::FireEnd);
 
-	PlayerInputComponent->BindAction("Collector", IE_Pressed, this, &ATPSCharacterQ::CollectStart);
-	PlayerInputComponent->BindAction("Collector", IE_Released, this, &ATPSCharacterQ::CollectEnd);
+	//PlayerInputComponent->BindAction("Collector", IE_Pressed, this, &ATPSCharacterQ::CollectStart);
+	//PlayerInputComponent->BindAction("Collector", IE_Released, this, &ATPSCharacterQ::CollectEnd);
 
 	PlayerInputComponent->BindAction("Build", IE_Pressed, this, &ATPSCharacterQ::InputActionBuild);
 
@@ -142,22 +123,8 @@ void ATPSCharacterQ::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void ATPSCharacterQ::OnCollectSnow(FVector location)
-{
-	HitSnowMaterial->SetVectorParameterValue("HitLocationW", FLinearColor(location));
-	if (OnSnowCollectSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
-	}
-}
-
 void ATPSCharacterQ::MoveForward(float v)
 {
-
-	//FVector Direction = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraRotation().RotateVector(GetActorForwardVector());
-
-	//AddMovementInput(Direction, v);
-
 
 	AddMovementInput(UKismetMathLibrary::GetForwardVector(GetControlRotation()), v);
 	if (v != 0) {
@@ -173,9 +140,6 @@ void ATPSCharacterQ::MoveForward(float v)
 
 void ATPSCharacterQ::MoveRight(float v)
 {
-	//FVector Direction = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraRotation().RotateVector(GetActorRightVector());
-
-	//AddMovementInput(Direction, v);
 
 	AddMovementInput(UKismetMathLibrary::GetRightVector(GetControlRotation()), v);
 	if (v != 0) {
@@ -188,21 +152,8 @@ void ATPSCharacterQ::MoveRight(float v)
 	}
 }
 
-void ATPSCharacterQ::CrouchDown()
-{
-	Crouch();
-
-}
-
-void ATPSCharacterQ::CrouchUp()
-{
-	UnCrouch();
-}
-
 void ATPSCharacterQ::JumpFunction()
 {
-
-	//UE_LOG(LogTemp, Warning, TEXT("Jump"));
 	Jump();
 	if (SWCharacterJump) {
 		UGameplayStatics::PlaySound2D(GetWorld(), SWCharacterJump);
@@ -237,7 +188,6 @@ void ATPSCharacterQ::AimEnd()
 
 void ATPSCharacterQ::FireStart()
 {
-	//GetWorld()->GetTimerManager().SetTimer(fireTimer, this, &ATPSCharacterQ::FireStart, 0.2f, true, 0.f);
 
 	AWeaponBase* WeaponDummy = Cast<AWeaponBase>(WeaponSlot->GetChildActor());
 	if (WeaponDummy)
@@ -263,77 +213,72 @@ void ATPSCharacterQ::FireEnd()
 	}
 }
 
-
-
-
 void ATPSCharacterQ::CoinCollect(int32 InGold)
 {
-
 	InventoryComp->Gold += InGold;
-
 }
 
-void ATPSCharacterQ::OnOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-
-}
-
-
-void ATPSCharacterQ::CollectEnd()
-{
-	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
-	bAiming_collecting = false;
-
-}
-
-void ATPSCharacterQ::CollectStart()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
-	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, 0.1f, true, 0.f);
-
-}
-
-void ATPSCharacterQ::CollectSnow()
-{
-	if (bAiming)
-	{
-
-		FVector fireStartPoint = Camera->GetComponentLocation();
-
-		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
-
-		FCollisionQueryParams cqp;
-		FHitResult hr;
-
-		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
-
-
-		if (hr.bBlockingHit == true) 
-		{
-			if (hr.GetActor() != this) 
-			{
-
-				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-				bAiming_collecting = true;
-				OnCollectSnow(hr.Location);
-
-				if (SnowCount <= 99) 
-				{
-					SnowCount++;
-				}
-				else 
-				{
-					SnowCount = 100;
-				}
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(SnowCount));
-
-			}
-		}
-
-	}
-}
+//void ATPSCharacterQ::CollectEnd()
+//{
+//	GetWorld()->GetTimerManager().ClearTimer(SnowTimer);
+//	bAiming_collecting = false;
+//
+//}
+//
+//void ATPSCharacterQ::CollectStart()
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, "CollectDown");
+//	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, SnowChargingTickInterval, true, 0.f);
+//
+//}
+//
+//void ATPSCharacterQ::OnCollectSnow(FVector location)
+//{
+//	HitSnowMaterial->SetVectorParameterValue("HitLocationW", FLinearColor(location));
+//	if (OnSnowCollectSound)
+//	{
+//		UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
+//	}
+//}
+//
+//void ATPSCharacterQ::CollectSnow()
+//{
+//	if (bAiming)
+//	{
+//
+//		FVector fireStartPoint = Camera->GetComponentLocation();
+//
+//		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
+//
+//		FCollisionQueryParams cqp;
+//		FHitResult hr;
+//
+//		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
+//
+//
+//		if (hr.bBlockingHit == true) 
+//		{
+//			if (hr.GetActor() != this) 
+//			{
+//
+//				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
+//				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
+//				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
+//				bAiming_collecting = true;
+//				OnCollectSnow(hr.Location);
+//
+//				SnowCountPercentage += FrostCannonChargingSteps;
+//				SnowCountPercentage = FMath::Min(SnowCountPercentage, 1.f);
+//				
+//				OnFrostCannonChangedPercentage.Broadcast(SnowCountPercentage);
+//
+//				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(SnowCountPercentage));
+//
+//			}
+//		}
+//
+//	}
+//}
 
 
 
@@ -464,8 +409,6 @@ void ATPSCharacterQ::InputActionCancel()
 
 }
 
-
-	
 
 void ATPSCharacterQ::AdjustTowerLocation()
 {
