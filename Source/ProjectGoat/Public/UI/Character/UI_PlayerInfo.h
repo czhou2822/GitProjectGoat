@@ -19,7 +19,7 @@ class PROJECTGOAT_API UUI_PlayerInfo : public UUI_BulkheadUIBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UProgressBar* PGSnowMeter;
 
 	//UPROPERTY(meta = (BindWidget))
