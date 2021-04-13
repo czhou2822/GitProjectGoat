@@ -127,20 +127,20 @@ public:
 
 	//void onOverlap(AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_EnemyBreath;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	//	UAudioComponent* GMAudioComponentEnemyBreath;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWEnemyBreath;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWEnemyBreath;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWEnemyFootStep;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWEnemyFootStep;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWEnemyAttack;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWEnemyAttack;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWEnemyDeath;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWEnemyDeath;
 
 
 };
