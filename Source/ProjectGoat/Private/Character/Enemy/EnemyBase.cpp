@@ -29,7 +29,8 @@ AEnemyBase::AEnemyBase()
 	USkeletalMeshComponent* mesh = GetMesh();
 	mesh->SetScalarParameterValueOnMaterials("SnowAmount", 0);
 	
-	GMAudioComponent_EnemyBreath = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemyBreath"));
+	//GMAudioComponentEnemyBreath = CreateDefaultSubobject<UAudioComponent>(TEXT("EnemyBreath"));
+	
 
 
 }
@@ -66,11 +67,11 @@ void AEnemyBase::BulkheadInit()
 	GetCharacterMovement()->MaxWalkSpeed = GetCharacterData().RunSpeed;
 	GetCharacterData().bTeam = false;
 
-	if (SWEnemyBreath)
-	{
-		GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
-		GMAudioComponent_EnemyBreath->Play();
-	}
+	//if (SWEnemyBreath)
+	//{
+	//	GMAudioComponentEnemyBreath->Sound = SWEnemyBreath;
+	//	GMAudioComponentEnemyBreath->Play();
+	//}
 	
 }
 
@@ -95,28 +96,6 @@ void AEnemyBase::FreezeStart()
 	}
 
 	GetWorldTimerManager().SetTimer(FrozenTimer, this, &AEnemyBase::FrozenTimerTick, FrozenTimerTickInterval, true, 0.0f);
-
-	//if (FrozenMeter < MaxFrozenMeter)
-	//{
-	//	FrozenMeter++;
-
-	//	for (int i = 0; i <= FrozenMeter; i++)
-	//	{
-	//		SlowPercentage = SlowDownPercentage * SlowPercentage;
-	//	}
-	//	OnSlowStart();
-	//}
-	//else
-	//{
-	//	FrozenMeter = MaxFrozenMeter;
-	//	SlowPercentage = 0;
-	//	OnFrozenStart();
-	//}
-
-	//SlowPercentage in action
-	//GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed * SlowPercentage;
-
-	//SetAnimGlobalPlayrate(SlowPercentage);
 
 
 }
@@ -165,20 +144,6 @@ void AEnemyBase::FrozenTimerTick()
 	OnFrozen(FrozenProgress);
 
 
-	//if (TickCount <= 0)   //timer done, reset walk speed
-	//{
-	//	FrozenMeter = 0;
-	//	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxSpeed;
-
-	//	GetWorldTimerManager().ClearTimer(FrozenTimer);
-	//	SetAnimGlobalPlayrate(1.f);
-
-	//	OnSlowEnd();
-	//}
-	//else
-	//{
-	//	TickCount--;
-	//}
 }
 
 void AEnemyBase::StartSlow()
@@ -196,22 +161,22 @@ void AEnemyBase::StartBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, true);
-	if (SWEnemyBreath)
-	{
-		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
-		GMAudioComponent_EnemyBreath->Stop();
-	}
+	//if (SWEnemyBreath)
+	//{
+	//	//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
+	//	GMAudioComponentEnemyBreath->Stop();
+	//}
 }
 
 void AEnemyBase::EndBrittle()
 {
 	AProjectGoatGameMode* gameMode = Cast<AProjectGoatGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->SetIsBrittle(GUID, false);
-	if (SWEnemyBreath)
-	{
-		//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
-		GMAudioComponent_EnemyBreath->Play();
-	}
+	//if (SWEnemyBreath)
+	//{
+	//	//GMAudioComponent_EnemyBreath->Sound = SWEnemyBreath;
+	//	GMAudioComponentEnemyBreath->Play();
+	//}
 }
 void AEnemyBase::SetAnimGlobalPlayrate(float InPlayRate)
 {
@@ -246,10 +211,10 @@ float AEnemyBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 
 void AEnemyBase::MarkForDead()
 {
-	if (SWEnemyDeath)
-	{
-		UGameplayStatics::PlaySound2D(GetWorld(), SWEnemyDeath);
-	}
+	//if (SWEnemyDeath)
+	//{
+	//	UGameplayStatics::PlaySound2D(GetWorld(), SWEnemyDeath);
+	//}
 
 	GetGameState()->DeleteFromPrioritizedList(this);
 	GetGameState()->DeleteActiveEnemy(this);
