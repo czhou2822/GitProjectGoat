@@ -18,12 +18,9 @@ AWeaponBase::AWeaponBase()
 	FirePoint = CreateDefaultSubobject<USceneComponent>("FirePoint");
 	FirePoint->SetupAttachment(RootComponent);
 
-	//WeaponCollisionRange = CreateDefaultSubobject<USceneComponent>(TEXT("WeaponCollision"));
 
-	//WeaponCollisionRange->bHiddenInGame = false;
-	//WeaponCollisionRange->bVisible = false;
-	GMAudioComponent_Fire = CreateDefaultSubobject<UAudioComponent>(TEXT("Fire"));
-	GMAudioComponent_Fire->OnAudioFinished.AddDynamic(this, &AWeaponBase::HandleOnAudioFinished);
+	//GMAudioComponent_Fire = CreateDefaultSubobject<UAudioComponent>(TEXT("Fire"));
+	//GMAudioComponent_Fire->OnAudioFinished.AddDynamic(this, &AWeaponBase::HandleOnAudioFinished);
 }
 
 // Called when the game starts or when spawned
@@ -33,17 +30,17 @@ void AWeaponBase::BeginPlay()
 	
 }
 
-void AWeaponBase::HandleOnAudioFinished()
-{
-	if (GMAudioComponent_Fire->Sound == SWFireStart)
-	{
-		if (SWFire)
-		{
-			GMAudioComponent_Fire->SetSound(SWFire);
-			GMAudioComponent_Fire->Play();
-		}
-	}
-}
+//void AWeaponBase::HandleOnAudioFinished()
+//{
+//	if (GMAudioComponent_Fire->Sound == SWFireStart)
+//	{
+//		if (SWFire)
+//		{
+//			GMAudioComponent_Fire->SetSound(SWFire);
+//			GMAudioComponent_Fire->Play();
+//		}
+//	}
+//}
 
 // Called every frame
 void AWeaponBase::Tick(float DeltaTime)
@@ -54,34 +51,35 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::FireStart()
 {
-	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
-	bShowDebugCollision = true;
-	bIsFiring = true;
+	//GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &AWeaponBase::Fire, FireInvetval, true, 0.f);
+	//bShowDebugCollision = true;
+	//bIsFiring = true;
 
-	GMAudioComponent_Fire->Stop();
+	//GMAudioComponent_Fire->Stop();
 
-	if (SWFireStart)
-	{
-		//UGameplayStatics::PlaySound2D(GetWorld(), SWFireStart);
-		GMAudioComponent_Fire->SetSound(SWFireStart);
-		GMAudioComponent_Fire->Play();
-	}
-
+	//if (SWFireStart)
+	//{
+	//	//UGameplayStatics::PlaySound2D(GetWorld(), SWFireStart);
+	//	GMAudioComponent_Fire->SetSound(SWFireStart);
+	//	GMAudioComponent_Fire->Play();
+	//}
+	OnFireStart();
 }
 
 void AWeaponBase::FireEnd()
 {
-	GetWorld()->GetTimerManager().ClearTimer(FireTimer);
-	bShowDebugCollision = false;
-	bIsFiring = false;
+	//GetWorld()->GetTimerManager().ClearTimer(FireTimer);
+	//bShowDebugCollision = false;
+	//bIsFiring = false;
 
-	GMAudioComponent_Fire->Stop();
-	
-	if (SWFireEnd)
-	{
-		GMAudioComponent_Fire->SetSound(SWFireEnd);
-		GMAudioComponent_Fire->Play();
-	}
+	//GMAudioComponent_Fire->Stop();
+	//
+	//if (SWFireEnd)
+	//{
+	//	GMAudioComponent_Fire->SetSound(SWFireEnd);
+	//	GMAudioComponent_Fire->Play();
+	//}
+	OnFireEnd();
 }
 
 void AWeaponBase::Fire()

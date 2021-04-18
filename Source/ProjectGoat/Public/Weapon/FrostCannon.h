@@ -20,8 +20,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UCapsuleComponent* FrostHitCapsule;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* AirStrikeAimBox;
+
 
 
 
@@ -29,17 +28,10 @@ protected:
 public:
 	AFrostCannon();
 
-	virtual void Fire() override;
-	virtual void FireEnd() override;
+	
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void OnFireStart();
-	UFUNCTION(BlueprintImplementableEvent)
-		void OnFireEnd();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnAirStrikeAimUp();
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnAirStrikeAimDown();
+
+
 
 };

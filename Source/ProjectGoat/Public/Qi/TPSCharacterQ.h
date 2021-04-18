@@ -68,9 +68,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
 	bool bAiming = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
-	bool bAiming_collecting = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UAnimMontage* FireAnima;
 
@@ -100,7 +97,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = seed)
 	TSubclassOf<class ATowerSeed> SeedClass;
-
 
 	FTimerHandle SnowTimer;
 

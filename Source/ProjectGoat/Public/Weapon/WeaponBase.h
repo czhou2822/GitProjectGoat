@@ -14,7 +14,8 @@ class PROJECTGOAT_API AWeaponBase : public AActor
 	GENERATED_BODY()
 	
 protected:
-	FTimerHandle FireTimer;
+	//UPROPERTY(BlueprintReadWrite)
+	//FTimerHandle FireTimer;
 
 	bool bShowDebugCollision = false;
 
@@ -25,14 +26,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* WeaponBaseMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float FireInvetval = 0.2;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//float FireInvetval = 0.2;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* FirePoint;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsFiring;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsFiring = false;
 
 
 
@@ -40,8 +41,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void HandleOnAudioFinished();
+	//UFUNCTION()
+	//virtual void HandleOnAudioFinished();
 
 public:	
 	// Called every frame
@@ -52,12 +53,20 @@ public:
 	virtual void FireEnd();
 
 	virtual void Fire();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
-		UAudioComponent* GMAudioComponent_Fire;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWFire;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWFireStart;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
-		USoundWave* SWFireEnd;
+
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	//	UAudioComponent* GMAudioComponent_Fire;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWFire;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWFireStart;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	//	USoundWave* SWFireEnd;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnFireStart();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnFireEnd();
 };

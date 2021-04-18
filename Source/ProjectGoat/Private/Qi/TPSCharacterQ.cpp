@@ -231,54 +231,6 @@ void ATPSCharacterQ::CoinCollect(int32 InGold)
 //	GetWorld()->GetTimerManager().SetTimer(SnowTimer, this, &ATPSCharacterQ::CollectSnow, SnowChargingTickInterval, true, 0.f);
 //
 //}
-//
-//void ATPSCharacterQ::OnCollectSnow(FVector location)
-//{
-//	HitSnowMaterial->SetVectorParameterValue("HitLocationW", FLinearColor(location));
-//	if (OnSnowCollectSound)
-//	{
-//		UGameplayStatics::PlaySoundAtLocation(this, OnSnowCollectSound, location);
-//	}
-//}
-//
-//void ATPSCharacterQ::CollectSnow()
-//{
-//	if (bAiming)
-//	{
-//
-//		FVector fireStartPoint = Camera->GetComponentLocation();
-//
-//		FVector fireEndPoint = Camera->GetForwardVector() * 1000 + Camera->GetComponentLocation();
-//
-//		FCollisionQueryParams cqp;
-//		FHitResult hr;
-//
-//		GetWorld()->LineTraceSingleByChannel(hr, fireStartPoint, fireEndPoint, ECollisionChannel::ECC_GameTraceChannel3, cqp);
-//
-//
-//		if (hr.bBlockingHit == true) 
-//		{
-//			if (hr.GetActor() != this) 
-//			{
-//
-//				UE_LOG(LogTemp, Warning, TEXT("HIT! %s"), *hr.GetActor()->GetName());
-//				UE_LOG(LogTemp, Warning, TEXT("HIT! Location: %s"), *hr.Location.ToString());
-//				UE_LOG(LogTemp, Warning, TEXT("HIT! ImpactPoint: %s"), *hr.ImpactPoint.ToString());
-//				bAiming_collecting = true;
-//				OnCollectSnow(hr.Location);
-//
-//				SnowCountPercentage += FrostCannonChargingSteps;
-//				SnowCountPercentage = FMath::Min(SnowCountPercentage, 1.f);
-//				
-//				OnFrostCannonChangedPercentage.Broadcast(SnowCountPercentage);
-//
-//				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString::SanitizeFloat(SnowCountPercentage));
-//
-//			}
-//		}
-//
-//	}
-//}
 
 
 

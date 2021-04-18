@@ -118,9 +118,6 @@ public:
 	void OnSlowEnd();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnFrozenStart();
-
-	UFUNCTION(BlueprintImplementableEvent)
 	void OnFrozen(float FrozenAmount);
 
 	virtual void MarkForDead() override;
