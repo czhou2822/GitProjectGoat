@@ -93,7 +93,7 @@ void AEnemySpawn::SpawnNextWave(const TArray<FMiniWaveDetail>& InWaveStat)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"),*GetName().Append(" weve stat invalid"));
+		UE_LOG(LogTemp, Warning, TEXT("%s"),*GetName().Append(" wave stat invalid"));
 	}
 }
 
@@ -225,7 +225,7 @@ int32 AEnemySpawn::GetNextMonsterID() const
 }
 
 /*
-
+get possible routes and turn on the vfx
 */
 void AEnemySpawn::GetPossibleRoutesAndLight()
 {
@@ -249,13 +249,16 @@ void AEnemySpawn::GetPossibleRoutesAndLight()
 	for (auto& Tmp : PossibleRoutes)
 	{
 		Routes[Tmp]->SetSplineMeshesIsHidden(false);
+		Routes[Tmp]->ToggleRouteSegmentVFXInterface(true);
 	}
 }
+
 void AEnemySpawn::HideAllEnemyRoute()
 {
 	for (auto& Tmp : Routes)
 	{
 		Tmp->SetSplineMeshesIsHidden(true);
+		Tmp->ToggleRouteSegmentVFXInterface(false);
 	}
 }
 //

@@ -26,9 +26,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<FVector> NavPoints;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	//TArray<AEnemyRouteMarker*> RouteMarkerArray;
-
 	//whether this route is shown
 	//e.g. it should only shown when this is an active path
 	//it should also shown when in editor
@@ -50,5 +47,8 @@ public:
 	void RouteSplineToArray();
 
 	void SetSplineMeshesIsHidden(const bool bIsHidden);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void ToggleRouteSegmentVFXInterface(bool InEnable);
 
 };

@@ -59,6 +59,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<class AEnemyRoute*> Routes;
 
+
+
 private:
 	//determine next route using member variable EnemyToBeSpawn
 	//if there are multiple routes, it picks the route 1 by 1
@@ -103,6 +105,8 @@ public:
 
 	//find possible routes in this wave and light them up
 	void GetPossibleRoutesAndLight();
+
+
 
 	void HideAllEnemyRoute();
 

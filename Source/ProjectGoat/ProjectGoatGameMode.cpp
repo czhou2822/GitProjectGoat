@@ -118,9 +118,7 @@ void AProjectGoatGameMode::StartGame()
 void AProjectGoatGameMode::RestartBulkheadGame()
 {
 	WaveNumber = 0;
-
 	UGameplayStatics::OpenLevel(this, GetWorld()->GetFName(), false);
-
 	StartGame();
 }
 
@@ -130,7 +128,6 @@ void AProjectGoatGameMode::CollectGold(int InGold)
 	{
 		BulkheadPlayerState->AddCoinToPlayer(InGold);
 	}
-
 }
 
 bool AProjectGoatGameMode::ConsumeGold(int InGold)
@@ -349,7 +346,6 @@ void AProjectGoatGameMode::EndGame(const bool& Success)
 	}
 
 	OnGameEnd.Broadcast(Success);
-
 }
 
 void AProjectGoatGameMode::PostCombatCheck()
