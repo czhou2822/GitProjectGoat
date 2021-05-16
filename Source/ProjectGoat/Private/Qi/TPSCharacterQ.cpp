@@ -259,54 +259,58 @@ void ATPSCharacterQ::SelectTowerEnd()
 
 void ATPSCharacterQ::InputActionBuild()
 {
-	if (BuildCounter == true) 
+	if (bIsConstructorDown)
 	{
-		SpawnedTower = WhichTower();
-		if (SpawnedTower)
+		if (BuildCounter == true)
 		{
-			PulloutBuildingCamera();
-			IsCharacterPlacingTower = true;
-			this->OnCharacterStartPlacing.Broadcast(true);
-			GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
-			BuildCounter = !BuildCounter;
-
-		}
-	}
-	else 
-	{
-		if (IsCharacterPlacingTower == true) 
-		{
+			SpawnedTower = WhichTower();
 			if (SpawnedTower)
 			{
-				IsCharacterPlacingTower = false;
-				if (BulkheadGameState && BulkheadPlayerState)
-				{
-					int32 Cost = 0;
-					int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
-					Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
-
-					if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
-					{
-						BulkheadPlayerState->ConsumeCoin(Cost);
-						BuildSuccessed();
-						//this->OnTowerPlaced.Broadcast();
-					}
-					else
-					{
-						BuildCancelled();
-						SpawnedTower->Destroy();
-						SpawnedTower = nullptr;
-					}
-
-
-				}
-				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
-				ResetBuildingCamera();
-				this->OnCharacterStartPlacing.Broadcast(false);
+				PulloutBuildingCamera();
+				IsCharacterPlacingTower = true;
+				this->OnCharacterStartPlacing.Broadcast(true);
+				GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
 				BuildCounter = !BuildCounter;
 			}
 		}
+		else
+		{
+			if (IsCharacterPlacingTower == true)
+			{
+				if (SpawnedTower)
+				{
+					IsCharacterPlacingTower = false;
+					//from here, the player has thrown the constructor out -> constructor is in the air -> IsConstructorDown = false
+					bIsConstructorDown = false;
+
+					if (BulkheadGameState && BulkheadPlayerState)
+					{
+						int32 Cost = 0;
+						int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
+						Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
+
+						if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
+						{
+							BulkheadPlayerState->ConsumeCoin(Cost);
+							BuildSuccessed();
+							//this->OnTowerPlaced.Broadcast();
+						}
+						else
+						{
+							BuildCancelled();
+							SpawnedTower->Destroy();
+							SpawnedTower = nullptr;
+						}
+					}
+					GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+					ResetBuildingCamera();
+					this->OnCharacterStartPlacing.Broadcast(false);
+					BuildCounter = !BuildCounter;
+				}
+			}
+		}
 	}
+
 }
 
 /*
@@ -322,9 +326,11 @@ void ATPSCharacterQ::TurnConstructorIntoTower()
 		SpawnedTower = nullptr;
 
 		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(BulkheadPlayerState->SelectedTower), NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
+		
 		if (TempTower) //if false->problem spawning 
 		{
-			
+			//new tower has been built, reset the flag
+			bIsConstructorDown = true;
 		}
 	}
 }
@@ -358,6 +364,7 @@ void ATPSCharacterQ::InputActionCancel()
 		ResetBuildingCamera();
 		BuildCounter = true;
 	}
+
 
 }
 
