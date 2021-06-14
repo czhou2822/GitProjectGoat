@@ -16,8 +16,8 @@ float AMortarTower::GetAngle(FVector InPosition)
 
 	FVector MyLocation = GetActorLocation();
 
-	float VerticalDif = InPosition.Z - MyLocation.Z;
-	if (VerticalDif <= VerticalTravelDistanceMin || VerticalDif >= VerticalTravelDistanceMax) return -1;
+	//float VerticalDif = InPosition.Z - MyLocation.Z;
+	//if (VerticalDif <= VerticalTravelDistanceMin || VerticalDif >= VerticalTravelDistanceMax) return -1;
 
 	float HorizonalDif = FVector::Dist(FVector(InPosition.X, InPosition.Y, 0), FVector(MyLocation.X, MyLocation.Y, 0));
 	if (HorizonalDif <= TravelDistanceMin || HorizonalDif >= TravelDistanceMax) return -1;
