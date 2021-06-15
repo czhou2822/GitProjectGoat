@@ -47,6 +47,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++")
 		TSet<ATowerBase*> OverlappedTower;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "C++")
+		TSet<AEnemyBase*> EnemyList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float FireInterval = 1;
