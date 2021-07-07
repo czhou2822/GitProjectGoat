@@ -32,6 +32,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
 		UBoxComponent* TowerPadding;
 
+	UPROPERTY(VisibleAnywhere, Category = "BoxCollision")
+		class UAnimTowerBase* TowerAnim = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* RangeMeshC;
 
@@ -61,6 +64,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float TowerRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++|TowerTurning")
+		float TurnSpeed = 0.2f;
+
+	/*
+	* 
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++|TowerTurning")
+		float FacingTolrence = 100.f;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "C++")
+		bool bIsAlignWithTarget = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 		USoundBase* SWTowerAttack;
@@ -137,4 +152,18 @@ public:
 
 	UFUNCTION()
 	void FireTimerTick();
+
+	/*
+	* decides how many degrees that the tower doom should turn in order to face the enemy
+	*/
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	virtual void TurnFirePointToTheEnemy();
+
+	/*
+	* decides how many degrees that the gun barrel, if applied, should pitch in order to face the enemy(for gattling) and fire the cannon(for mortar)
+	*/
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	virtual void PitchFirePointToEnemy();
+
+
 };
