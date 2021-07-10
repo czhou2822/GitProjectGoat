@@ -1,9 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+//user includes
 #include "Character/Tower/TowerBase.h"
+#include "Qi/TPSCharacterQ.h"
+#include "projectgoat/Public/BulkheadGameState.h"
+#include "projectgoat/Public/BulkheadPlayerState.h"
+#include "Character/Enemy/EnemyBase.h"
+#include "Character/Core/AnimTowerBase.h"
+
+
+
+
+//engine includes 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Qi/TPSCharacterQ.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Components/SceneComponent.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
@@ -11,15 +22,10 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
-#include "Containers/Set.h"
-#include "Containers/UnrealString.h"
-#include "projectgoat/Public/BulkheadGameState.h"
-#include "projectgoat/Public/BulkheadPlayerState.h"
 #include "Components/MeshComponent.h"
 #include "components/SkeletalMeshComponent.h"
-#include "Character/Enemy/EnemyBase.h"
-
-#include "Kismet/GameplayStatics.h"
+#include "Containers/Set.h"
+#include "Containers/UnrealString.h"
 
 //#if PLATFORM_WINDOWS
 //#pragma optimize("", on)
@@ -40,6 +46,7 @@ ATowerBase::ATowerBase():ABulkheadCharacterBase()
 
 	RangeMeshC->SetVisibility(false);
 
+
 	//TowerInit();
 	
 }
@@ -59,6 +66,8 @@ void ATowerBase::BeginPlay()
 	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetAuthGameMode()->GameState);
 	BulkheadPlayerState = Cast<ABulkheadPlayerState>(BulkheadGameState->PlayerArray[0]);
 	
+	TowerAnim = Cast< UAnimTowerBase>(GetMesh()->GetAnimInstance());
+
 	
 }
 
@@ -101,22 +110,6 @@ void ATowerBase::HandleOnTowerPlaced()
 		}
 	}
 	InternalTowerPlaced.Broadcast();
-	//if (BulkheadPlayerState)
-	//{
-	//	switch (BulkheadPlayerState->SelectedTower)
-	//	{
-	//	case ETowerType::TESLA:
-	//		UGameplayStatics::PlaySound2D(this, SWTeslaTowerConstruction);
-	//		break;
-	//	case ETowerType::MORTAR:
-	//		UGameplayStatics::PlaySound2D(this, SWMortarTowerConstruction);
-	//		break;
-	//	case ETowerType::GATLING:
-	//		UGameplayStatics::PlaySound2D(this, SWGatlingTowerConstruction);
-	//		break;
-	//	}
-
-	//}
 	
 }
 
@@ -177,11 +170,77 @@ void ATowerBase::FireTimerTick()
 
 }
 
-//void ATowerBase::HandleFireEvent() 
+//void ATowerBase::TurnFirePointToTheEnemy()
 //{
-//	//Attack
-//	
+//	if (TargetEnemy)
+//	{
+//		FVector SocketLocation = GetMesh()->GetSocketLocation("FirePoint");
+//		FVector FirePointToEnemyVector = TargetEnemy->GetActorLocation() - SocketLocation;   //direction vector pointing from fire point to target enemy
+//		
+//		FirePointToEnemyVector.Normalize(0.01);
+//		SocketLocation.Normalize(0.01);
+//
+//		/*take 2d cross product of the two unit vector,
+//		* if the cross product > 0, Enemy is at the left side of the fire point, turn the fire point to left by substracting TurnSpeed
+//		* if the cross product < 0, enemy is at the right side of the fire point ....
+//		* if the cross product nearly 0, these two vectors are either overlapped or completely opposite
+//		* see the gif here "https://www.mathsisfun.com/algebra/vectors-cross-product.html"
+//		*/
+//		float Direction = FVector2D::CrossProduct(FVector2D(FirePointToEnemyVector.X, FirePointToEnemyVector.Y), FVector2D(SocketLocation.X, SocketLocation.Y));
+//		UE_LOG(LogTemp, Log, TEXT("CrossProduct: %s"), *FString::SanitizeFloat(Direction));
+//		if (!TowerAnim)
+//		{
+//			bIsAlignWithTarget = false;
+//			return;
+//		}
+//
+//		//case overlapped: two vector is aligned already
+//
+//		if (FMath::IsNearlyZero(Direction, FacingTolrence * (1.e-10f)))
+//		{
+//			bIsAlignWithTarget = true;
+//			return;
+//		}
+//
+//		if (Direction>0)
+//		{
+//			TowerAnim->DoomRotation.Yaw -= TurnSpeed;
+//		}
+//		else
+//		{
+//			TowerAnim->DoomRotation.Yaw += TurnSpeed;
+//		}
+//
+//		bIsAlignWithTarget = false;
+//		return;
+//	}
 //}
+
+
+void ATowerBase::TurnFirePointToTheEnemy()
+{
+	if (TargetEnemy)
+	{
+		FVector SocketLocation = GetMesh()->GetSocketLocation("FirePoint");
+		FVector EnemyLocation = TargetEnemy->GetActorLocation();   //direction vector pointing from fire point to target enemy
+
+
+
+
+	}
+}
+
+void ATowerBase::PitchFirePointToEnemy()
+{
+	if (TargetEnemy)
+	{
+		FVector SocketLocation = GetMesh()->GetSocketLocation("FirePoint");
+
+		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetEnemy->GetActorLocation());//the rotation this fire point eventually turns to
+
+
+	}
+}
 
 void ATowerBase::BulkheadInit()
 {
@@ -209,8 +268,6 @@ float& ATowerBase::GetTowerRange()
 	return GetCharacterData().Range;
 }
 
-
-
 void ATowerBase::OnConstructionCompleteEvent()
 {
 
@@ -220,20 +277,6 @@ void ATowerBase::SetTargetActor()
 {
 	
 }
-
-//void ATowerBase::FireTimer(float B)
-//{
-//	float GameTime;
-//	GameTime = GetGameTimeSinceCreation();
-//	//AEnemyBase* TargetActor = Cast<AEnemyBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-//	
-//	if ( GameTime > B)
-//	{
-//		FirePoint = GetMesh()->GetSocketLocation(FirePointName);
-//		this->TowerFire.Broadcast();
-//		NextFire = GameTime + FireInterval;
-//	}
-//}
 
 void ATowerBase::OnOverlapBegin(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

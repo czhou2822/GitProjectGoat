@@ -6,6 +6,7 @@
 
 UAnimTowerBase::UAnimTowerBase()
 	:DoomRotation(FRotator::ZeroRotator)
+	,BarrelRotation(FRotator::ZeroRotator)
 	,PawnOwner(nullptr)
 	,bIsPlaced(false)
 	,bIsConstructionComplete(false)
@@ -18,7 +19,6 @@ UAnimTowerBase::UAnimTowerBase()
 void UAnimTowerBase::NativeBeginPlay()
 {
 	PawnOwner = Cast<ATowerBase>(TryGetPawnOwner());
-
 }
 
 void UAnimTowerBase::NativeUpdateAnimation(float DeltaSeconds)
