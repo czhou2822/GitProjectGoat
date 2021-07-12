@@ -222,7 +222,7 @@ public:
 	void InputActionCancel();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
-	void BuildSuccessed();
+	void BuildSuccessed(FVector BuildingLocation);
 
 	UFUNCTION(BlueprintCallable, Category = "TowerBuilding")
 	void TurnConstructorIntoTower();
