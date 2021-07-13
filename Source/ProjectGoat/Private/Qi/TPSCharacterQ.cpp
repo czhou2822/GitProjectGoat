@@ -292,7 +292,7 @@ void ATPSCharacterQ::InputActionBuild()
 						if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
 						{
 							BulkheadPlayerState->ConsumeCoin(Cost);
-							BuildSuccessed();
+							BuildSuccessed(SpawnedTower->GetActorLocation());
 							//this->OnTowerPlaced.Broadcast();
 						}
 						else
