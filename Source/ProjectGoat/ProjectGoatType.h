@@ -39,6 +39,31 @@ enum class ETowerType : uint8
 };
 
 
+/*
+* used for Save system, specifially in class UBulkheadSaveGame
+* @param FrostMeter: the current FrostMeter
+* @param Gold: the current Gold
+*/
+USTRUCT(BlueprintType)
+struct FPlayerData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float FrostMeter = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int Gold = 0;
+};
+
+/*
+* used for Save system, specifially in class UBulkheadSaveGame
+*/
+USTRUCT(BlueprintType)
+struct FLevelData
+{
+	GENERATED_BODY()
+};
 
 
 /*
@@ -85,6 +110,8 @@ struct FMiniWaveDetail : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly, Category = "Monster Stat")
 	int32 BossNumber;
 };
+
+
 
 /*
 this struct specifies wave info for a SINGLE spawn point. especially how many mini waves are in this wave. 

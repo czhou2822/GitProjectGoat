@@ -20,7 +20,6 @@ private:
 	
 	int32 Gold;
 
-	void SetGold(int32 InGold);
 
 public:
 
@@ -63,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	int32& GetGold();
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	void SetGold(int32 InGold);
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	void SetTowerType(const ETowerType InTowerType);
