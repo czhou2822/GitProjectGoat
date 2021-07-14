@@ -84,7 +84,6 @@ public:
 	bool RemoveCharacterData(const FGuid& ID);
 
 
-
 	UFUNCTION(BlueprintCallable, Category = CharacterData)
 	FCharacterData& GetCharacterData(const FGuid& ID);
 

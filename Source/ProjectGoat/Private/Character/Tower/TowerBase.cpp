@@ -225,7 +225,7 @@ void ATowerBase::TurnFirePointToTheEnemy()
 		FVector EnemyLocation = TargetEnemy->GetActorLocation();   //direction vector pointing from fire point to target enemy
 
 
-
+		EnemyLocation;
 
 	}
 }
