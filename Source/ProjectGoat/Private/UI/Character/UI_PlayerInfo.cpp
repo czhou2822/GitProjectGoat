@@ -19,17 +19,12 @@ void UUI_PlayerInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-//	BulkheadPlayerState->OnSelectedTowerChanged.AddDynamic(this, &UUI_PlayerInfo::SelectTower);
 	BulkheadPlayerState->OnGoldChanged.AddDynamic(this, &UUI_PlayerInfo::UpdateGold);
+	BulkheadPlayerState->OnFrostCannonChangedPercentage.AddDynamic(this, &UUI_PlayerInfo::UpdateSnowMeterPG);
+	BulkheadPlayerState->OnSelectedTowerChanged.AddDynamic(this, &UUI_PlayerInfo::UpdateSelectedTower);
 
-
-
-	//ButtonArray.Add(TBMortar);
-	//ButtonArray.Add(TBTesla);
-	//ButtonArray.Add(TBGatling);
 
 	UpdateGold(BulkheadPlayerState->GetGold());
-//	SelectTower(BulkheadPlayerState->SelectedTower);
 }
 
 void UUI_PlayerInfo::SelectTower(ETowerType InTower)
@@ -40,7 +35,6 @@ void UUI_PlayerInfo::SelectTower(ETowerType InTower)
 
 void UUI_PlayerInfo::UpdateGold(int32 InGold)
 {
-	//FString NewGoldCount = "Gold: ";
 
 	FString NewGoldCount = "";
 
@@ -52,6 +46,17 @@ void UUI_PlayerInfo::UpdateGold(int32 InGold)
 	GoldCount->SetText(FText::FromString(NewGoldCount));
 
 
+}
+
+void UUI_PlayerInfo::UpdateSnowMeterPG(float InPercentage)
+{
+	PGSnowMeter->SetPercent(InPercentage);
+	HandleOnSnowChangedPercentage(InPercentage);
+}
+
+void UUI_PlayerInfo::UpdateSelectedTower(ETowerType InTowerType)
+{
+	HandleOnSelectedTowerChanged(InTowerType);
 }
 
 void UUI_PlayerInfo::ResetButtonOpacity()

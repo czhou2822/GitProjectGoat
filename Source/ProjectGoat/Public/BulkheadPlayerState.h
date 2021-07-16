@@ -20,6 +20,8 @@ private:
 	
 	int32 Gold;
 
+	float FrostMeter;
+
 
 public:
 
@@ -38,11 +40,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FOnGoldConsumeFailed OnGoldConsumeFailed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ETowerType SelectedTower;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrostCannonChangedPercentage, float, SnowPercentage);
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "CPP | Frost Cannon")
+	FOnFrostCannonChangedPercentage OnFrostCannonChangedPercentage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float FrostMeter;
+	ETowerType SelectedTower;
 
 
 public:
@@ -65,6 +69,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	void SetGold(int32 InGold);
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	float& GetFrostMeter();
+
+	UFUNCTION(BlueprintCallable, Category = "C++")
+	bool SetFrostMeter(float inFrostMeter);
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
 	void SetTowerType(const ETowerType InTowerType);

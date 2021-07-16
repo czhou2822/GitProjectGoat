@@ -18,6 +18,22 @@ void ABulkheadPlayerState::SetGold(int32 InGold)
 	OnGoldChanged.Broadcast(Gold);
 }
 
+float& ABulkheadPlayerState::GetFrostMeter()
+{
+	return FrostMeter;
+}
+
+bool ABulkheadPlayerState::SetFrostMeter(float inFrostMeter)
+{
+	if (inFrostMeter >= 0.f && inFrostMeter <= 1.f)
+	{
+		FrostMeter = inFrostMeter;
+		OnFrostCannonChangedPercentage.Broadcast(FrostMeter);
+		return true;
+	}
+	return false;
+}
+
 
 void ABulkheadPlayerState::AddCoinToPlayer(int32 InGold)
 {

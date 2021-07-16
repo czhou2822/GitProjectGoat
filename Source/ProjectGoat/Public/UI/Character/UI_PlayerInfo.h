@@ -52,5 +52,17 @@ public:
 	UFUNCTION()
 	void UpdateGold(int32 InGold);
 
+	UFUNCTION()
+	void UpdateSnowMeterPG(float InPercentage);
+
+	UFUNCTION()
+	void UpdateSelectedTower(ETowerType InTowerType);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HandleOnSnowChangedPercentage(float InPercentage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HandleOnSelectedTowerChanged(ETowerType InTowerType);
+
 	void ResetButtonOpacity();
 };

@@ -47,7 +47,7 @@ bool UBulkheadGameInstance::SavePlayerInfo()
 	auto PlayerState = Cast<ABulkheadPlayerState>(GetWorld()->GetGameState()->PlayerArray[0]);
 	if (PlayerState && BulkheadSaveGame)
 	{
-		BulkheadSaveGame->PlayerData.FrostMeter = PlayerState->FrostMeter;
+		BulkheadSaveGame->PlayerData.FrostMeter = PlayerState->GetFrostMeter();
 		BulkheadSaveGame->PlayerData.Gold = PlayerState->GetGold();
 	}
 	return true;
@@ -60,7 +60,7 @@ bool UBulkheadGameInstance::LoadPlayerInfo()
 		auto PlayerState = Cast<ABulkheadPlayerState>(GetWorld()->GetGameState()->PlayerArray[0]);
 		if (PlayerState)
 		{
-			PlayerState->FrostMeter = BulkheadSaveGame->PlayerData.FrostMeter;
+			PlayerState->SetFrostMeter(BulkheadSaveGame->PlayerData.FrostMeter);
 			PlayerState->SetGold(BulkheadSaveGame->PlayerData.Gold);
 		}
 

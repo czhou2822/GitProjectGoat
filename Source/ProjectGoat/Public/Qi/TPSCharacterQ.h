@@ -38,11 +38,11 @@ public:
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrostCannonChangedPercentage, float, SnowPercentage);
 
-	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
-	FOnTowerPlaced OnTowerPlaced;
-
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "Bulkhead | Frost Cannon")
 	FOnFrostCannonChangedPercentage OnFrostCannonChangedPercentage;
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
+	FOnTowerPlaced OnTowerPlaced;
 
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
