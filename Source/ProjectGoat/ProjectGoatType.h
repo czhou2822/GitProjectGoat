@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Data/CharacterData.h"
+
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "ProjectGoatType.generated.h"
@@ -63,6 +65,9 @@ USTRUCT(BlueprintType)
 struct FLevelData
 {
 	GENERATED_BODY()
+
+	TSet<TPair<FTransform, FCharacterData>> TowerList;
+	int32 WaveNumber;
 };
 
 

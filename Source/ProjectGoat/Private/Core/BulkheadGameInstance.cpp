@@ -81,3 +81,18 @@ bool UBulkheadGameInstance::LoadLevelInfo()
 	return true;
 
 }
+
+bool UBulkheadGameInstance::SaveTowerInfo()
+{
+	auto BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetGameState());
+	if (BulkheadGameState)
+	{
+
+	}
+	return true;
+}
+
+bool UBulkheadGameInstance::LoadTowerInfo()
+{
+	return true;
+}

@@ -32,7 +32,9 @@ private:
 	UDataTable* DebugWaveStructDataTable;
 
 	//used to store every live enemy in the scene
-	TSet<AEnemyBase*> ActiveEnemies;
+	TSet<AEnemyBase*> ActiveEnemies{};
+
+	TSet<ATowerBase*> ActiveTowers{};
 
 	//check if such enemy is invalid. e.g. pending death or already dead.
 	void CheckActiveEnemy(AEnemyBase* InEnemy);
@@ -43,6 +45,11 @@ public:
 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "BulkheadGameState")
 	FOnCharacterDead OnCharacterDead;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTowerPlaced, ATowerBase*, SpawnTower);
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
+	FOnTowerPlaced OnTowerPlaced;
 
 	UPROPERTY(SaveGame)
 	TMap<FGuid, FCharacterData> InGameCharacterData;
@@ -73,6 +80,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "C++")
 	int32 ActiveEnemyCounts;
+
+private:
+	void HandleOnTowerPlaced(ATowerBase* SpawnedTower);
 
 public:
 	ABulkheadGameState();

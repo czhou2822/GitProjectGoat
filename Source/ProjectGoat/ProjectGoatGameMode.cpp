@@ -362,35 +362,39 @@ void AProjectGoatGameMode::PostCombatCheck()
 }
 
 ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
-	const int32& CharacterID,
+	const int32& CharacterID, 
 	const ECharacterType& Type,
 	const FVector& Location,
-	const FRotator& Rotator)
+	const FRotator& Rotator,
+	FCharacterData DefaultData 
+	)
 {
-	if (FCharacterData* NewCharacterData = BulkheadGameState->GetCharacterDataByID(CharacterID, Type))
+	if (DefaultData.Name == EName::NAME_None)
 	{
-		UClass* NewClass = NewCharacterData->CharacterBlueprintKey.LoadSynchronous();
+		DefaultData = *BulkheadGameState->GetCharacterDataByID(CharacterID, Type);
+	}
 
-		if (GetWorld() && NewClass)
+	UClass* NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
+
+	if (GetWorld() && NewClass)
+	{
+		FActorSpawnParameters SpawnParam;
+		SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		ABulkheadCharacterBase* RuleOfTheCharacter = nullptr;
+		RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
+		if (RuleOfTheCharacter)
 		{
-			FActorSpawnParameters SpawnParam;
-			SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-			ABulkheadCharacterBase* RuleOfTheCharacter = nullptr;
-			RuleOfTheCharacter = GetWorld()->SpawnActor<ABulkheadCharacterBase>(NewClass, Location, Rotator, SpawnParam);
-			if (RuleOfTheCharacter)
+			DefaultData.UpdateStats();
+			RuleOfTheCharacter->ResetGUID();
+			if (BulkheadGameState)
 			{
-				NewCharacterData->UpdateStats();
-				RuleOfTheCharacter->ResetGUID();
-				if (BulkheadGameState)
-				{
-					BulkheadGameState->AddCharacterData(RuleOfTheCharacter->GUID, *NewCharacterData);
-					RuleOfTheCharacter->BulkheadInit();
-					return RuleOfTheCharacter;
-				}
+				BulkheadGameState->AddCharacterData(RuleOfTheCharacter->GUID, DefaultData);
+				RuleOfTheCharacter->BulkheadInit();
+				return RuleOfTheCharacter;
 			}
 		}
 	}
-
+	
 	return nullptr;
 }
 
@@ -402,9 +406,9 @@ AEnemyBase* AProjectGoatGameMode::SpawnMonster(const int32& CharacterID, const F
 	return newEnemy;
 }
 
-ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, const FVector& Location, const FRotator& Rotator)
+ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, FCharacterData DefaultData, const FVector& Location, const FRotator& Rotator)
 {
-	return SpawnCharacter<ATowerBase>(CharacterID, ECharacterType::TOWER, Location, Rotator);
+	return SpawnCharacter<ATowerBase>(CharacterID, ECharacterType::TOWER, Location, Rotator, DefaultData);
 }
 
 void AProjectGoatGameMode::ReadDataFromGM()

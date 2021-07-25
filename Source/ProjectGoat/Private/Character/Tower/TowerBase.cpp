@@ -58,12 +58,14 @@ void ATowerBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
-	if (TPSCharacter)
-	{
-		TPSCharacter->OnTowerPlaced.AddDynamic(this, &ATowerBase::HandleOnTowerPlaced);
-	}
+	ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
 	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetAuthGameMode()->GameState);
+	if (BulkheadGameState)
+	{
+		BulkheadGameState->OnTowerPlaced.AddDynamic(this, &ATowerBase::HandleOnTowerPlaced);
+	}
+
 	BulkheadPlayerState = Cast<ABulkheadPlayerState>(BulkheadGameState->PlayerArray[0]);
 	
 	TowerAnim = Cast< UAnimTowerBase>(GetMesh()->GetAnimInstance());
@@ -81,7 +83,7 @@ void ATowerBase::Tick(float DeltaTime)
 	
 }
 
-void ATowerBase::HandleOnTowerPlaced()
+void ATowerBase::HandleOnTowerPlaced(ATowerBase* SpawnedTower)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("TowerPlaced"));
 	GetCharacterData().bTeam = true;
@@ -89,7 +91,7 @@ void ATowerBase::HandleOnTowerPlaced()
 	ATPSCharacterQ* TPSCharacter = Cast<ATPSCharacterQ>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (TPSCharacter)
 	{
-		TPSCharacter->OnTowerPlaced.RemoveDynamic(this, &ATowerBase::HandleOnTowerPlaced);
+		BulkheadGameState->OnTowerPlaced.RemoveDynamic(this, &ATowerBase::HandleOnTowerPlaced);
 		TPSCharacter->OnCharacterStartPlacing.AddDynamic(this, &ATowerBase::HandleOnCharacterStartPlacing);
 	}
 	this->SetRangeVisibility(false);

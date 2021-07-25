@@ -29,21 +29,10 @@ class PROJECTGOAT_API ATPSCharacterQ : public ACharacter
 	GENERATED_BODY()
 
 public:
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTowerPlaced);
-
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterAims, bool, bIsCharacterAiming);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterStartPlacing, bool, bEnterPlacingMode);
 	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrostCannonChangedPercentage, float, SnowPercentage);
-
-	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "Bulkhead | Frost Cannon")
-	FOnFrostCannonChangedPercentage OnFrostCannonChangedPercentage;
-
-	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "TowerPlaced")
-	FOnTowerPlaced OnTowerPlaced;
-
 	UPROPERTY(BlueprintAssignable, Category = "TowerPlaced")
 	FOnCharacterStartPlacing OnCharacterStartPlacing;
 

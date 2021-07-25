@@ -114,7 +114,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
-	void HandleOnTowerPlaced();
+	void HandleOnTowerPlaced(ATowerBase* SpawnedTower);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "C++")
 	void TowerFire();

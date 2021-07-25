@@ -277,6 +277,7 @@ void ATPSCharacterQ::InputActionBuild()
 		{
 			if (IsCharacterPlacingTower == true)
 			{
+				//tower preview is valid
 				if (SpawnedTower)
 				{
 					IsCharacterPlacingTower = false;
@@ -325,12 +326,15 @@ void ATPSCharacterQ::TurnConstructorIntoTower()
 		SpawnedTower->Destroy();
 		SpawnedTower = nullptr;
 
-		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(BulkheadPlayerState->SelectedTower), NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
+		FCharacterData newData;
+
+		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(BulkheadPlayerState->SelectedTower), newData, NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
 		
 		if (TempTower) //if false->problem spawning 
 		{
 			//new tower has been built, reset the flag
 			bIsConstructorDown = true;
+			BulkheadGameState->OnTowerPlaced.Broadcast(TempTower);
 		}
 	}
 }
@@ -343,7 +347,9 @@ ATowerBase* ATPSCharacterQ::WhichTower()
 	NewRotator.Roll = 0;
 	NewRotator.Pitch = 0;
 
-	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, Transform.GetLocation(), NewRotator);  //3->preview tower
+	FCharacterData newData;
+
+	return Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(3, newData, Transform.GetLocation(), NewRotator);  //3->preview tower
 }
 
 void ATPSCharacterQ::InputActionCancel()

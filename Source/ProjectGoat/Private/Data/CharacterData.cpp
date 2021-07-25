@@ -7,8 +7,8 @@
 FCharacterData::FCharacterData()
 	:Name(NAME_None),
 	ID(INDEX_NONE),
-	Lv(1),
-	MaxHealth(100),
+	Lv(-1),
+	MaxHealth(0),
 	Health(MaxHealth), 
 	bIsBrittle(false),
 	bCanBeBrittle(true),
@@ -22,12 +22,3 @@ void FCharacterData::UpdateStats()
 }
 
 
-
-//FWaveStructData::FWaveStructData()
-//	:WaveNumber(0),
-//	 GruntNumber(0),
-//	 ReaverNumber(0),
-//     MiniBossNumber(0),
-//	 GoldDropRate(0)
-//{
-//}

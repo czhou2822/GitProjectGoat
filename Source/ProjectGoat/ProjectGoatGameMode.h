@@ -84,19 +84,24 @@ public:
 	void Init();
 	
 	/*Spawning*/
-	ABulkheadCharacterBase* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+	/*
+	* must pass a FCharacterData to the funciton
+	* if FCharacterData is valid (name != NAME_None), stick that to the new spawn
+	* if FCharacterData is not valid, create a new one
+	*/
+	ABulkheadCharacterBase* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator, FCharacterData DefaultData = FCharacterData());
 
 	template<class T>
-	T* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator)
+	T* SpawnCharacter(const int32& CharacterID, const ECharacterType& Type, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator, FCharacterData DefaultData = FCharacterData())
 	{
-		return Cast<T>(SpawnCharacter(CharacterID, Type, Location, Rotator));
+		return Cast<T>(SpawnCharacter(CharacterID, Type, Location, Rotator, DefaultData));
 	}
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	AEnemyBase* SpawnMonster(const int32& CharacterID, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-	ATowerBase* SpawnTower(const int32& CharacterID, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
+	ATowerBase* SpawnTower(const int32& CharacterID, FCharacterData DefaultData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
 	/*GM*/
 	void ReadDataFromGM();

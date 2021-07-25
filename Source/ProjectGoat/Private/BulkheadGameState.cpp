@@ -15,6 +15,8 @@
 FCharacterData CharacterDataNULL;
 
 
+
+
 ABulkheadGameState::ABulkheadGameState()
 	:ActiveEnemyCounts(0)
 {
@@ -34,6 +36,13 @@ ABulkheadGameState::ABulkheadGameState()
 
 	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
 
+	OnTowerPlaced.AddDynamic(this, &ABulkheadGameState::HandleOnTowerPlaced);
+
+}
+
+void ABulkheadGameState::HandleOnTowerPlaced(ATowerBase* SpawnedTower)
+{
+	ActiveTowers.Add(SpawnedTower);
 }
 
 void ABulkheadGameState::GetAllWaveStats(UDataTable* Input)

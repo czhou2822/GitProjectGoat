@@ -41,4 +41,9 @@ public:
 		bool SaveLevelInfo();
 	UFUNCTION(BlueprintCallable, Category = "CPP | Save")
 		bool LoadLevelInfo();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP | Save")
+		bool SaveTowerInfo();
+	UFUNCTION(BlueprintCallable, Category = "CPP | Save")
+		bool LoadTowerInfo();
 };
