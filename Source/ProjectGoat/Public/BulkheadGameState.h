@@ -34,7 +34,6 @@ private:
 	//used to store every live enemy in the scene
 	TSet<AEnemyBase*> ActiveEnemies{};
 
-	TSet<ATowerBase*> ActiveTowers{};
 
 	//check if such enemy is invalid. e.g. pending death or already dead.
 	void CheckActiveEnemy(AEnemyBase* InEnemy);
@@ -64,6 +63,9 @@ public:
 	//used to store intermidiated data between .uasset data and CacheTowerData
 	UPROPERTY()
 	UDataTable* TowerDataTable;
+
+	UPROPERTY(BlueprintReadOnly, Category = "CPP")
+	TSet<ATowerBase*> ActiveTowers{};
 	
 	//used to Tower store data read from UTable
 	TMap<int32, FCharacterData*> CacheTowerData;
@@ -81,7 +83,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "C++")
 	int32 ActiveEnemyCounts;
 
+
+
 private:
+	UFUNCTION()
 	void HandleOnTowerPlaced(ATowerBase* SpawnedTower);
 
 public:

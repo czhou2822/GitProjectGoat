@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Data/CharacterData.h"
+#include "Containers/Map.h"
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -66,7 +67,16 @@ struct FLevelData
 {
 	GENERATED_BODY()
 
-	TSet<TPair<FTransform, FCharacterData>> TowerList;
+	//UPROPERTY(BlueprintReadWrite)
+	//TArray<TPair<FTransform, FCharacterData>> TowerList;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FTransform> TowerLocationList;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FCharacterData> TowerDataList;
+	
+	UPROPERTY(BlueprintReadWrite)
 	int32 WaveNumber;
 };
 

@@ -42,6 +42,7 @@ ABulkheadGameState::ABulkheadGameState()
 
 void ABulkheadGameState::HandleOnTowerPlaced(ATowerBase* SpawnedTower)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("TowerPlaced"));
 	ActiveTowers.Add(SpawnedTower);
 }
 

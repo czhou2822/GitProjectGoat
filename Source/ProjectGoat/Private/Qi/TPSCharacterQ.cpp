@@ -319,8 +319,7 @@ void ATPSCharacterQ::InputActionBuild()
 * this function destroy uses preview's transform to spawn a new tower, and destroy the preview tower
 */
 void ATPSCharacterQ::TurnConstructorIntoTower()
-{
-	if (SpawnedTower)
+{	if (SpawnedTower)
 	{
 		FTransform NewTransform = SpawnedTower->GetActorTransform();
 		SpawnedTower->Destroy();
