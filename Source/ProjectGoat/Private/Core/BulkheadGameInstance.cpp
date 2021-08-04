@@ -167,12 +167,14 @@ bool UBulkheadGameInstance::LoadTowerInfo()
 			auto NewTower = GameMode->SpawnTower(SpawnData.ID, SpawnData, SpawnTransform.GetLocation(), SpawnTransform.GetRotation().Rotator());
 			if (NewTower)
 			{
-				auto NewAnimInstance = Cast<UAnimTowerBase>(NewTower->GetMesh()->GetAnimInstance());
-				if (NewAnimInstance)
-				{
-					NewAnimInstance->bIsPlaced = true;
-					NewAnimInstance->bIsConstructionComplete = true;
-				}
+				//auto NewAnimInstance = Cast<UAnimTowerBase>(NewTower->GetMesh()->GetAnimInstance());
+				//if (NewAnimInstance)
+				//{
+				//	NewAnimInstance->bIsPlaced = true;
+				//	NewAnimInstance->bIsConstructionComplete = true;
+				//}
+				NewTower->InternalTowerPlaced.Broadcast();
+				NewTower->OnConstructionComplete.Broadcast();
 			}
 		}
 

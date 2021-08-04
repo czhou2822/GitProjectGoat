@@ -15,14 +15,13 @@ UCLASS()
 class PROJECTGOAT_API ATowerBase : public ABulkheadCharacterBase
 {
 	GENERATED_BODY()
-	
-private:
+
+public:	
+
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInternalTowerPlaced);  //only used for this class, pass OnTowerPlaced from tpscharacter
 
 	UPROPERTY(BlueprintAssignable, Category = "C++")
 	FInternalTowerPlaced InternalTowerPlaced;
-
-public:	
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConstructionComplete);
 
