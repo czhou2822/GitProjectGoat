@@ -27,6 +27,8 @@ ATrap::ATrap()
 	NaviPoint = CreateDefaultSubobject<USceneComponent>(TEXT("NavPoint"));
 	NaviPoint->SetupAttachment(FacingArrow);
 
+	BaseHP = BaseHPDefault;
+
 }
 
 // Called when the game starts or when spawned

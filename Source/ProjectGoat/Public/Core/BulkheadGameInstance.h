@@ -21,7 +21,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CPP | Save")
 	FString SaveSlotName {};
 
-
+	UPROPERTY(BlueprintReadWrite, Category = "CPP | Save")
+	bool bIsLoaded = false;
 
 public:
 	/** virtual function to allow custom GameInstances an opportunity to set up what it needs */

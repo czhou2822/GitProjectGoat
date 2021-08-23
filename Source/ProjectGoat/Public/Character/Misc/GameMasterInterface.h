@@ -28,10 +28,13 @@ public:
 
 	/*Debug Params*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
-	bool StartGame;
+	bool bStartGame;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
-	bool IsDebug;
+	bool bSkipLoading;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
+	bool bIsDebug;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Debug Params")
 	UDataTable* WaveTable;
@@ -54,7 +57,7 @@ public:
 	float BuildingToCombatTickInterval;
 
 	/*PostCombat*/
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
 	float PostCombatWaitTime = 1.f;
 
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Phase Param")
