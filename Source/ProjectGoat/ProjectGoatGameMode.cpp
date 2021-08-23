@@ -1,18 +1,24 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+//user includes
 #include "ProjectGoatGameMode.h"
-#include "Engine/LevelStreaming.h"
 #include "ProjectGoatCharacter.h"
 #include "BulkheadGameState.h"
 #include "BulkheadPlayerState.h"
-#include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 #include "Character/Misc/GameMasterInterface.h"
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "Character/Enemy/EnemyBase.h"
 #include "Character/Tower/TowerBase.h"
 #include "Character/Misc/EnemySpawn.h"
+#include "Public/Core/BulkheadGameInstance.h"
+
+//engine includes
+#include "Engine/LevelStreaming.h"
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
+
+
 //#if PLATFORM_WINDOWS
 //#pragma optimize("", on)
 //#endif
@@ -44,7 +50,7 @@ void AProjectGoatGameMode::BeginPlay()
 	ReadDataFromGM();
 	if (GM)
 	{
-		if (GM->StartGame)
+		if (GM->bStartGame)
 		{
 			StartGame();
 		}
@@ -142,6 +148,11 @@ bool AProjectGoatGameMode::ConsumeGold(int InGold)
 void AProjectGoatGameMode::SetGamePhase(const EGamePhase& InGamePhase)
 {
 	GamePhase = InGamePhase;
+	auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
+	if (GameInstance)
+	{
+		GameInstance->SaveGame();
+	}
 	OnPhaseChanged.Broadcast(InGamePhase);
 }
 
@@ -413,13 +424,28 @@ ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, FCharacte
 
 void AProjectGoatGameMode::ReadDataFromGM()
 {
+
 	if (GM)
 	{
-		WaveNumber = GM->WaveNumber;
-		Base = GM->Base;
-		BulkheadGameState->CheckIfInDebug(GM->IsDebug);
-		BulkheadPlayerState->AddCoinToPlayer(GM->InitGold);
-		UE_LOG(LogTemp, Warning, TEXT("Added Coins %i"), GM->InitGold);
+		auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
+		if (GameInstance)
+		{
+			BulkheadGameState->CheckIfInDebug(GM->bIsDebug);
+			Base = GM->Base;
+
+			if (GM->bSkipLoading || !GameInstance->bIsLoaded)
+			{
+				WaveNumber = GM->WaveNumber;
+				BulkheadPlayerState->AddCoinToPlayer(GM->InitGold);
+				UE_LOG(LogTemp, Warning, TEXT("Added Coins %i"), GM->InitGold);
+			}
+			else
+			{
+				GameInstance->LoadGame();
+			}
+
+		}
+
 	}
 }
 

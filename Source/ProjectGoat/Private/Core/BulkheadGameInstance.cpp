@@ -9,6 +9,7 @@
 #include "../../Public/BulkheadPlayerState.h"
 #include "../../ProjectGoatGameMode.h"
 #include "../../ProjectGoatType.h"
+#include "Character/Misc/GameMasterInterface.h"
 
 
 //engine includes
@@ -20,12 +21,14 @@ void UBulkheadGameInstance::Init()
 
 	if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
 	{
-		BulkheadSaveGame = Cast< UBulkheadSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+		BulkheadSaveGame = Cast<UBulkheadSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	}
 	else
 	{
-		BulkheadSaveGame = NewObject< UBulkheadSaveGame>();
+		BulkheadSaveGame = NewObject<UBulkheadSaveGame>();
 	}
+
+	bIsLoaded = false;
 
 }
 
@@ -34,8 +37,11 @@ bool UBulkheadGameInstance::SaveGame()
 	SavePlayerInfo();
 	SaveLevelInfo();
 	UGameplayStatics::SaveGameToSlot(BulkheadSaveGame, SaveSlotName, 0);
-	return true;
 
+	UE_LOG(LogTemp, Warning, TEXT("Game Saved!"));
+
+
+	return true;
 }
 
 bool UBulkheadGameInstance::LoadGame()
@@ -55,7 +61,6 @@ bool UBulkheadGameInstance::SavePlayerInfo()
 	}
 	return true;
 }
-
 bool UBulkheadGameInstance::LoadPlayerInfo()
 {
 	if (BulkheadSaveGame)
@@ -77,6 +82,7 @@ bool UBulkheadGameInstance::SaveLevelInfo()
 	if (GameMode)
 	{
 		BulkheadSaveGame->LevelData.WaveNumber = GameMode->WaveNumber;
+		BulkheadSaveGame->LevelData.BaseHP = GameMode->GM->Base->BaseHP;
 	}
 
 	SaveTowerInfo();
@@ -87,8 +93,14 @@ bool UBulkheadGameInstance::SaveLevelInfo()
 
 bool UBulkheadGameInstance::LoadLevelInfo()
 {
-
 	LoadTowerInfo();
+
+	auto GameMode = GetWorld()->GetAuthGameMode<AProjectGoatGameMode>();
+	if (GameMode)
+	{
+		GameMode->WaveNumber = BulkheadSaveGame->LevelData.WaveNumber;
+		GameMode->GM->Base->BaseHP = BulkheadSaveGame->LevelData.BaseHP;
+	}
 
 	return true;
 }
@@ -96,24 +108,6 @@ bool UBulkheadGameInstance::LoadLevelInfo()
 bool UBulkheadGameInstance::SaveTowerInfo()
 {
 	auto GameState = GetWorld()->GetGameState<ABulkheadGameState>();
-
-	//if (GameState)
-	//{
-	//	int TowerNumber = GameState->ActiveTowers.Num();
-
-	//	if (TowerNumber)
-	//	{
-	//		BulkheadSaveGame->LevelData.TowerList.Empty();
-
-	//		for (auto Tower : GameState->ActiveTowers)
-	//		{
-	//			if (Tower)
-	//			{
-	//				BulkheadSaveGame->LevelData.TowerList.Add(TPair<FTransform, FCharacterData>(Tower->GetActorTransform(), Tower->GetCharacterData()));
-	//			}
-	//		}
-	//	}
-	//}
 
 	if (GameState)
 	{
@@ -144,22 +138,6 @@ bool UBulkheadGameInstance::LoadTowerInfo()
 	auto GameMode = GetWorld()->GetAuthGameMode<AProjectGoatGameMode>();
 	if (BulkheadSaveGame && GameMode)
 	{
-		//for (auto Tower : BulkheadSaveGame->LevelData.TowerList)
-		//{
-		//	FTransform SpawnTransform = Tower.Key;
-		//	FCharacterData SpawnData = Tower.Value;
-		//	auto NewTower = GameMode->SpawnTower(SpawnData.ID, SpawnData, SpawnTransform.GetLocation(), SpawnTransform.GetRotation().Rotator());
-		//	if (NewTower)
-		//	{
-		//		auto NewAnimInstance = Cast<UAnimTowerBase>(NewTower->GetMesh()->GetAnimInstance());
-		//		if (NewAnimInstance)
-		//		{
-		//			NewAnimInstance->bIsPlaced = true;
-		//			NewAnimInstance->bIsConstructionComplete = true;
-		//		}
-		//	}
-		//}
-
 		for (int i = 0; i<BulkheadSaveGame->LevelData.TowerDataList.Num(); i++)
 		{
 			FTransform SpawnTransform = BulkheadSaveGame->LevelData.TowerLocationList[i];
@@ -167,12 +145,6 @@ bool UBulkheadGameInstance::LoadTowerInfo()
 			auto NewTower = GameMode->SpawnTower(SpawnData.ID, SpawnData, SpawnTransform.GetLocation(), SpawnTransform.GetRotation().Rotator());
 			if (NewTower)
 			{
-				//auto NewAnimInstance = Cast<UAnimTowerBase>(NewTower->GetMesh()->GetAnimInstance());
-				//if (NewAnimInstance)
-				//{
-				//	NewAnimInstance->bIsPlaced = true;
-				//	NewAnimInstance->bIsConstructionComplete = true;
-				//}
 				NewTower->InternalTowerPlaced.Broadcast();
 				NewTower->OnConstructionComplete.Broadcast();
 			}

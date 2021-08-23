@@ -12,6 +12,13 @@ class PROJECTGOAT_API ATrap : public AActor
 	GENERATED_BODY()
 	
 public:	
+
+	UPROPERTY(BlueprintReadWrite, Category = "CPP")
+	int32 BaseHP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CPP")
+	int32 BaseHPDefault = 50;
+
 	// Sets default values for this actor's properties
 	ATrap();
 
@@ -32,6 +39,11 @@ protected:
 	class UArrowComponent* FacingArrow;
 
 public:	
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP")
+	void UpdateHealthUI();
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

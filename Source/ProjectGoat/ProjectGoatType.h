@@ -78,6 +78,10 @@ struct FLevelData
 	
 	UPROPERTY(BlueprintReadWrite)
 	int32 WaveNumber;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 BaseHP;
+
 };
 
 
