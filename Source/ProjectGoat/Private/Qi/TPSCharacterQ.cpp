@@ -259,7 +259,7 @@ void ATPSCharacterQ::SelectTowerEnd()
 
 void ATPSCharacterQ::InputActionBuild()
 {
-	if (bIsConstructorDown)
+	if (bIsConstructorPlacedDown)
 	{
 		if (BuildCounter == true)
 		{
@@ -281,8 +281,8 @@ void ATPSCharacterQ::InputActionBuild()
 				if (SpawnedTower)
 				{
 					IsCharacterPlacingTower = false;
-					//from here, the player has thrown the constructor out -> constructor is in the air -> IsConstructorDown = false
-					bIsConstructorDown = false;
+					//from here, the player has thrown the constructor out -> constructor is in the air -> IsConstructorPlacedDown = false
+					bIsConstructorPlacedDown = false;
 
 					if (BulkheadGameState && BulkheadPlayerState)
 					{
@@ -298,9 +298,11 @@ void ATPSCharacterQ::InputActionBuild()
 						}
 						else
 						{
+							//if the build action is invalid, reset hologram tower & reset flags
 							BuildCancelled();
 							SpawnedTower->Destroy();
 							SpawnedTower = nullptr;
+							bIsConstructorPlacedDown = true;
 						}
 					}
 					GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
@@ -332,7 +334,7 @@ void ATPSCharacterQ::TurnConstructorIntoTower()
 		if (TempTower) //if false->problem spawning 
 		{
 			//new tower has been built, reset the flag
-			bIsConstructorDown = true;
+			bIsConstructorPlacedDown = true;
 			BulkheadGameState->OnTowerPlaced.Broadcast(TempTower);
 		}
 	}
