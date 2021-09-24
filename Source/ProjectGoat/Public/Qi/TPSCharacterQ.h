@@ -107,7 +107,7 @@ public:
 	// used to notify whether a constructor is being throw (i.e. a tower being build) 
 	// player can only enter TowerPlacingMode when this is true(i.e. no tower is being build/all constructor is on the ground)
 	UPROPERTY(BlueprintReadwrite, Category = "C++")
-	bool bIsConstructorDown = true;
+	bool bIsConstructorPlacedDown = true;
 
 	bool BuildCounter = true;
 

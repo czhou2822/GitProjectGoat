@@ -43,6 +43,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP")
 	void UpdateHealthUI();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CPP")
+	void SetBaseHealth(int32 InHealth);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

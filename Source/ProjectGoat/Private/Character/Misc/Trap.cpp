@@ -38,6 +38,7 @@ void ATrap::BeginPlay()
 	
 }
 
+
 // Called every frame
 void ATrap::Tick(float DeltaTime)
 {
