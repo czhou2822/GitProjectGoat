@@ -99,7 +99,7 @@ bool UBulkheadGameInstance::LoadLevelInfo()
 	if (GameMode)
 	{
 		GameMode->WaveNumber = BulkheadSaveGame->LevelData.WaveNumber;
-		GameMode->GM->Base->BaseHP = BulkheadSaveGame->LevelData.BaseHP;
+		GameMode->GM->Base->SetBaseHealth(BulkheadSaveGame->LevelData.BaseHP);
 	}
 
 	return true;

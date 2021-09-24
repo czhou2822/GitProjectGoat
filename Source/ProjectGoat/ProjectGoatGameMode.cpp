@@ -148,11 +148,7 @@ bool AProjectGoatGameMode::ConsumeGold(int InGold)
 void AProjectGoatGameMode::SetGamePhase(const EGamePhase& InGamePhase)
 {
 	GamePhase = InGamePhase;
-	auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
-	if (GameInstance)
-	{
-		GameInstance->SaveGame();
-	}
+
 	OnPhaseChanged.Broadcast(InGamePhase);
 }
 
@@ -183,6 +179,7 @@ void AProjectGoatGameMode::HandleOnPhaseChanged(EGamePhase InPhase)
 
 	case EGamePhase::POSTCOMBAT:
 		StartPostCombatPhase();
+
 		UE_LOG(LogTemp, Warning, TEXT("Post Combat Phase"));
 		break;
 
@@ -307,6 +304,11 @@ void AProjectGoatGameMode::StartCombatPhase()
 
 void AProjectGoatGameMode::StartPostCombatPhase()
 {
+	auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
+	if (GameInstance)
+	{
+		GameInstance->SaveGame();
+	}
 	SetPhaseTimer(GM->PostCombatTickInterval, GM->PostCombatWaitTime);
 }
 
