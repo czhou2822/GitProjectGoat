@@ -21,11 +21,11 @@ ABulkheadCharacterBase::ABulkheadCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
-	HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//HealthWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
+	//HealthWidget->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	HomingPoint = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPoint"));
-	HomingPoint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//HomingPoint = CreateDefaultSubobject<USceneComponent>(TEXT("HomingPoint"));
+	//HomingPoint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 }
 
@@ -148,14 +148,14 @@ void ABulkheadCharacterBase::OnCharacterDying_Implementation()
 
 void ABulkheadCharacterBase::UpdateUI()
 {
-	if (HealthWidget)
-	{
-		if (UUI_Health* HealthUI = Cast<UUI_Health>(HealthWidget->GetUserWidgetObject()))
-		{
-			HealthUI->SetTitle(GetCharacterData().Name.ToString());
-			HealthUI->SetHealth(GetHealth() / GetMaxHealth());
-		}
-	}
+	//if (HealthWidget)
+	//{
+	//	if (UUI_Health* HealthUI = Cast<UUI_Health>(HealthWidget->GetUserWidgetObject()))
+	//	{
+	//		HealthUI->SetTitle(GetCharacterData().Name.ToString());
+	//		HealthUI->SetHealth(GetHealth() / GetMaxHealth());
+	//	}
+	//}
 
 }
 

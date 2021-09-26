@@ -16,8 +16,8 @@ class PROJECTGOAT_API ABulkheadCharacterBase : public ACharacter
 	GENERATED_BODY()
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BaseAttribute", meta = (AllowPrivateAccess = "true"))
-	class UWidgetComponent* HealthWidget;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BaseAttribute", meta = (AllowPrivateAccess = "true"))
+	//class UWidgetComponent* HealthWidget;
 
 
 public:
@@ -30,8 +30,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BulkheadCharacterBase")
 	FGuid GUID;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BulkheadCharacterBase")
-	class USceneComponent* HomingPoint;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BulkheadCharacterBase")
+	//class USceneComponent* HomingPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BulkheadCharacterBase")
 	bool bIsAttack;
