@@ -48,13 +48,13 @@ void AProjectGoatGameMode::BeginPlay()
 
 	Init();
 	ReadDataFromGM();
-	if (GM)
-	{
-		if (GM->bStartGame)
-		{
-			StartGame();
-		}
-	}
+	//if (GM)
+	//{
+	//	if (GM->bStartGame)
+	//	{
+	//		StartGame();
+	//	}
+	//}
 
 }
 

@@ -113,6 +113,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsBrittle(FGuid InID, bool result);
 
+	UFUNCTION(BlueprintCallable, Category = "C++")
 	void StartGame();
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
