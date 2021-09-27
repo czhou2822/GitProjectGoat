@@ -16,11 +16,9 @@
 #include "Sound/SoundWave.h"
 #include "TPSCharacterQ.generated.h"
 
-//#include "WidgetBlueprint'/Game/CC/widget/widget/UMG_Pause.UMG_Pause'"
 
 
-class UInventoryComponent;
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterPlacingDelegate);
+//class UInventoryComponent;
 
 
 UCLASS()
@@ -45,8 +43,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UCameraComponent* Camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UInventoryComponent* InventoryComp;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//UInventoryComponent* InventoryComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterialInstanceDynamic* HitSnowMaterial;
@@ -188,8 +186,8 @@ public:
 
 	void FireEnd();
 
-	UFUNCTION(BlueprintCallable)
-	void CoinCollect(int32 InGold);
+	//UFUNCTION(BlueprintCallable)
+	//void CoinCollect(int32 InGold);
 
 	void static CoinConsume();
 

@@ -38,7 +38,7 @@ public:
 		UStaticMeshComponent* RangeMeshC;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bCanBeBuilt = true;
+	bool bCanBeBuilt = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector FirePoint;

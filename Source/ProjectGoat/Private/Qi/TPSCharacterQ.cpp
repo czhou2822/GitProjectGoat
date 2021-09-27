@@ -50,7 +50,6 @@ ATPSCharacterQ::ATPSCharacterQ()
 	Camera = CreateDefaultSubobject<UCameraComponent>("tpsCamera");
 	Camera->SetupAttachment(SpringArm);
 
-	InventoryComp = CreateDefaultSubobject<UInventoryComponent>("InventoryComp");
 
 
 	WeaponSlot = CreateDefaultSubobject<UChildActorComponent>("WeaponSlot");
@@ -213,10 +212,10 @@ void ATPSCharacterQ::FireEnd()
 	}
 }
 
-void ATPSCharacterQ::CoinCollect(int32 InGold)
-{
-	InventoryComp->Gold += InGold;
-}
+//void ATPSCharacterQ::CoinCollect(int32 InGold)
+//{
+//	//InventoryComp->Gold += InGold;
+//}
 
 //void ATPSCharacterQ::CollectEnd()
 //{
@@ -261,7 +260,7 @@ void ATPSCharacterQ::InputActionBuild()
 {
 	if (bIsConstructorPlacedDown)
 	{
-		if (BuildCounter == true)
+		if (BuildCounter)
 		{
 			SpawnedTower = WhichTower();
 			if (SpawnedTower)
@@ -270,7 +269,7 @@ void ATPSCharacterQ::InputActionBuild()
 				IsCharacterPlacingTower = true;
 				this->OnCharacterStartPlacing.Broadcast(true);
 				GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
-				BuildCounter = !BuildCounter;
+				BuildCounter = false;
 			}
 		}
 		else
@@ -308,7 +307,7 @@ void ATPSCharacterQ::InputActionBuild()
 					GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
 					ResetBuildingCamera();
 					this->OnCharacterStartPlacing.Broadcast(false);
-					BuildCounter = !BuildCounter;
+					BuildCounter = true;
 				}
 			}
 		}
