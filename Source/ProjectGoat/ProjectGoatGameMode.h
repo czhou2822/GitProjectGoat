@@ -81,7 +81,7 @@ public:
 
 	virtual void BeginPlay() override;
 	
-	void Init();
+
 	
 	/*Spawning*/
 	/*
@@ -103,30 +103,35 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 	ATowerBase* SpawnTower(const int32& CharacterID, FCharacterData DefaultData, const FVector& Location, const FRotator& Rotator = FRotator::ZeroRotator);
 
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+	void Init();
+
+	void GetGMAndSpawnPointInScene();
+
 	/*GM*/
 	void ReadDataFromGM();
 
 	/*Gameplay*/
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void SetCanBeBrittle(FGuid InID, bool result);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void SetIsBrittle(FGuid InID, bool result);
 
-	UFUNCTION(BlueprintCallable, Category = "C++")
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void StartGame();
 
-	UFUNCTION(BlueprintCallable, Category = "C++")
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void RestartBulkheadGame();
 
 	/*Gold*/
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void CollectGold(int InGold);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	bool ConsumeGold(int InGold);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 	void SetGamePhase(const EGamePhase& InGamePhase);
 
 	/*GamePhase*/

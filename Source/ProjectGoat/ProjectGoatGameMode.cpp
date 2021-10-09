@@ -46,19 +46,19 @@ void AProjectGoatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Init();
-	ReadDataFromGM();
-	//if (GM)
-	//{
-	//	if (GM->bStartGame)
-	//	{
-	//		StartGame();
-	//	}
-	//}
-
 }
 
+
 void AProjectGoatGameMode::Init()
+{
+	GetGMAndSpawnPointInScene();
+	ReadDataFromGM();
+}
+
+/*
+* look for GM and spawn point.
+*/
+void AProjectGoatGameMode::GetGMAndSpawnPointInScene()
 {
 	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetGameState());
 	BulkheadPlayerState = Cast<ABulkheadPlayerState>(GetWorld()->GetGameState()->PlayerArray[0]);
@@ -95,6 +95,41 @@ void AProjectGoatGameMode::Init()
 
 	GamePhase = EGamePhase::UNDEFINE;
 }
+
+/*
+* gets data from GM and cache them. such as:
+* info of waves (how many, what are they, etc.)
+* info of tower (health of each enemies)
+*/
+void AProjectGoatGameMode::ReadDataFromGM()
+{
+
+	if (GM)
+	{
+		auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
+		if (GameInstance)
+		{
+			//if in debug mode, load data from debug table
+			//if not, load data from normal table
+			BulkheadGameState->CheckIfInDebug(GM->bIsDebug);
+			Base = GM->Base;
+
+			if (GM->bSkipLoading || !GameInstance->bIsLoaded)
+			{
+				WaveNumber = GM->WaveNumber;
+				BulkheadPlayerState->AddCoinToPlayer(GM->InitGold);
+				UE_LOG(LogTemp, Warning, TEXT("Added Coins %i"), GM->InitGold);
+			}
+			else
+			{
+				GameInstance->LoadGame();
+			}
+
+		}
+
+	}
+}
+
 
 void AProjectGoatGameMode::SetCanBeBrittle(FGuid InID, bool result)
 {
@@ -424,32 +459,6 @@ ATowerBase* AProjectGoatGameMode::SpawnTower(const int32& CharacterID, FCharacte
 	return SpawnCharacter<ATowerBase>(CharacterID, ECharacterType::TOWER, Location, Rotator, DefaultData);
 }
 
-void AProjectGoatGameMode::ReadDataFromGM()
-{
-
-	if (GM)
-	{
-		auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
-		if (GameInstance)
-		{
-			BulkheadGameState->CheckIfInDebug(GM->bIsDebug);
-			Base = GM->Base;
-
-			if (GM->bSkipLoading || !GameInstance->bIsLoaded)
-			{
-				WaveNumber = GM->WaveNumber;
-				BulkheadPlayerState->AddCoinToPlayer(GM->InitGold);
-				UE_LOG(LogTemp, Warning, TEXT("Added Coins %i"), GM->InitGold);
-			}
-			else
-			{
-				GameInstance->LoadGame();
-			}
-
-		}
-
-	}
-}
 
 //#if PLATFORM_WINDOWS
 //#pragma optimize("", off)
