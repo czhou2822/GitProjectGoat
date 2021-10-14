@@ -289,9 +289,9 @@ void ATPSCharacterQ::InputActionBuild()
 						int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
 						Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
 
-						if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
+						if (BulkheadPlayerState->ConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
 						{
-							BulkheadPlayerState->ConsumeCoin(Cost);
+							// BulkheadPlayerState->ConsumeCoin(Cost);
 							BuildSuccessed(SpawnedTower->GetActorLocation());
 							//this->OnTowerPlaced.Broadcast();
 						}

@@ -21,8 +21,8 @@ private:
 	FTimerHandle Timer;
 
 public:
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* TBTip;
+	// UPROPERTY(meta = (BindWidget))
+	// class UTextBlock* TBTip;
 
 
 public:

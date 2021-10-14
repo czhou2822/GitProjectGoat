@@ -18,17 +18,17 @@ void UUI_Anouncement::NativeConstruct()
 
 	BulkheadPlayerState->OnGoldConsumeFailed.AddDynamic(this, &UUI_Anouncement::StartAnouncement);
 
-	TBTip->SetVisibility(ESlateVisibility::Hidden);
+	// TBTip->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UUI_Anouncement::StartAnouncement()
 {
 	StartTimer(0.5, 2);
 
-	FString NewText = "Not Enough Money";
+	// FString NewText = "Not Enough Money";
 
-	TBTip->SetText(FText::FromString(NewText));
-	TBTip->SetVisibility(ESlateVisibility::Visible);
+	// TBTip->SetText(FText::FromString(NewText));
+	// TBTip->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UUI_Anouncement::StartTimer(const float& TickInterval, const float& ShownTime)
@@ -47,6 +47,6 @@ void UUI_Anouncement::AnouncementTick()
 	else
 	{
 		GetWorld()->GetTimerManager().ClearTimer(Timer);
-		TBTip->SetVisibility(ESlateVisibility::Hidden);
+		// TBTip->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
