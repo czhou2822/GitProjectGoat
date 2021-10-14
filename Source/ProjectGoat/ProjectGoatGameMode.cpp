@@ -329,12 +329,14 @@ void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
 	if (GM)
 	{
 		SetPhaseTimer(GM->BuildingToCombatTickInterval, GM->BuildingToCombatWaitTime);
+		OnStartCombatWave.Broadcast();
+
 	}
 }
 
 void AProjectGoatGameMode::StartCombatPhase()
 {
-	OnStartCombatWave.Broadcast();
+	// OnStartCombatWave.Broadcast();
 }
 
 void AProjectGoatGameMode::StartPostCombatPhase()
