@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Attribute")
 		float MaxHealth;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Character Attribute")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
 		float Health;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Attribute")
