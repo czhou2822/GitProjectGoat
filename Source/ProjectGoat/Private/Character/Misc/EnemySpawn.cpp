@@ -196,7 +196,7 @@ void AEnemySpawn::ParseRouteNumber(const FString& InRouteString)
 
 }
 
-int32 AEnemySpawn::GetNextMonsterID() const 
+int32 AEnemySpawn::GetNextMonsterID() const
 {
 	//UE_LOG(LogTemp, Warning, TEXT("EnemyToBeSpawn: %i, ReaverNumber: %i, BossNumber: %i"), EnemyToBeSpawn, CurrentMiniWaveStat.ReaversNumber, CurrentMiniWaveStat.BossNumber)
 	if (CurrentMiniWaveStat.ReaversNumber || CurrentMiniWaveStat.BossNumber)
