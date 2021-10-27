@@ -111,24 +111,48 @@ bool UBulkheadGameInstance::SaveTowerInfo()
 
 	if (GameState)
 	{
-		int TowerNumber = GameState->ActiveTowers.Num();
+		TArray<AActor*> FoundTowers;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATowerBase::StaticClass(), FoundTowers);
 
-		if (TowerNumber)
+		BulkheadSaveGame->LevelData.TowerDataList.Empty();
+		BulkheadSaveGame->LevelData.TowerLocationList.Empty();
+
+
+		for (auto Tower : FoundTowers)
 		{
-			BulkheadSaveGame->LevelData.TowerDataList.Empty();
-			BulkheadSaveGame->LevelData.TowerLocationList.Empty();
-
-			for (auto Tower : GameState->ActiveTowers)
+			ATowerBase* newTower = Cast<ATowerBase>(Tower);
+			if (newTower)
 			{
-				if (Tower)
-				{
-					BulkheadSaveGame->LevelData.TowerDataList.Add(Tower->GetCharacterData());
-					BulkheadSaveGame->LevelData.TowerLocationList.Add(Tower->GetActorTransform());
-				}
+				BulkheadSaveGame->LevelData.TowerDataList.Add(newTower->GetCharacterData());
+				BulkheadSaveGame->LevelData.TowerLocationList.Add(newTower->GetActorTransform());
 			}
-
 		}
+		
+		UE_LOG(LogTemp, Warning, TEXT("Saving. TowerNumber: %i"),FoundTowers.Num());
+
 	}
+
+
+	//if (GameState)
+	//{
+	//	int TowerNumber = GameState->ActiveTowers.Num();
+
+	//	if (TowerNumber)
+	//	{
+	//		BulkheadSaveGame->LevelData.TowerDataList.Empty();
+	//		BulkheadSaveGame->LevelData.TowerLocationList.Empty();
+
+	//		for (auto Tower : GameState->ActiveTowers)
+	//		{
+	//			if (Tower)
+	//			{
+	//				BulkheadSaveGame->LevelData.TowerDataList.Add(Tower->GetCharacterData());
+	//				BulkheadSaveGame->LevelData.TowerLocationList.Add(Tower->GetActorTransform());
+	//			}
+	//		}
+
+	//	}
+	//}
 
 	return true;
 }

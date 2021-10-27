@@ -301,6 +301,13 @@ void AProjectGoatGameMode::StartBuildingPhase()
 	{
 		return;
 	}
+
+	auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
+	if (GameInstance)
+	{
+		GameInstance->SaveGame();
+	}
+
 	if (!GM)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GM NULL. TickInterval 0, WaveNumber: %i, GamePhase: %i"), WaveNumber, GamePhase);
@@ -341,11 +348,7 @@ void AProjectGoatGameMode::StartCombatPhase()
 
 void AProjectGoatGameMode::StartPostCombatPhase()
 {
-	auto GameInstance = GetGameInstance<UBulkheadGameInstance>();
-	if (GameInstance)
-	{
-		GameInstance->SaveGame();
-	}
+
 	SetPhaseTimer(GM->PostCombatTickInterval, GM->PostCombatWaitTime);
 }
 
