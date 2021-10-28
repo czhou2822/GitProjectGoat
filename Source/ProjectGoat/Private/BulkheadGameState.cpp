@@ -26,7 +26,7 @@ ABulkheadGameState::ABulkheadGameState()
 	static ConstructorHelpers::FObjectFinder<UDataTable> TeslaTowerTable(TEXT("/Game/DataTable/DataTable_Tower"));
 	TowerDataTable = TeslaTowerTable.Object;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> WaveStructTable(TEXT("/Game/DataTable/DataTable_WaveStruct"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> WaveStructTable(TEXT("/Game/DataTable/DT_Waves"));
 	WaveStructDataTable = WaveStructTable.Object;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> DebugWaveStructTable(TEXT("/Game/DataTable/DataTable_Debug"));

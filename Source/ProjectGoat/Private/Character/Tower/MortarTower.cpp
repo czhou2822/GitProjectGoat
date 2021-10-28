@@ -40,6 +40,7 @@ void AMortarTower::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+/*
 void AMortarTower::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent)
 {
 	if (PropertyChangeEvent.GetPropertyName() == "AirTime" || PropertyChangeEvent.GetPropertyName() == "FiringVelocity")
@@ -53,5 +54,6 @@ void AMortarTower::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeE
 
 	}
 }
+*/
 
 

@@ -57,6 +57,8 @@ void AEnemySpawn::SpawnSingleEnemy()
 	{
 		int32 NextMonsterID = GetNextMonsterID();     //get next spawning monster's id
 
+		//TODO check if (NextMonsterID) then spawn if not just return
+
 		AEnemyBase* NewMonster = ProjectGoatGameMode->SpawnMonster(NextMonsterID, ArrowComp->GetComponentLocation(), ArrowComp->GetComponentRotation());  //spawning monster
 
 		if (NewMonster)
@@ -99,11 +101,20 @@ void AEnemySpawn::SpawnNextWave(const TArray<FMiniWaveDetail>& InWaveStat)
 
 void AEnemySpawn::SpawnMiniWave(const FMiniWaveDetail& InMiniWave)
 {
+
 	ParseRouteNumber(InMiniWave.Route);
 
 	EnemyToBeSpawn = InMiniWave.BossNumber + InMiniWave.GruntsNumber + InMiniWave.ReaversNumber;
 
+	GruntsLeft= InMiniWave.GruntsNumber;
+
+	ReaversLeft = InMiniWave.ReaversNumber;
+
+	MinotaursLeft = InMiniWave.BossNumber;
+
 	CurrentMiniWaveStat = InMiniWave;
+
+	//TODO create variables to track how many of each enemy has been spawned
 
 	GetWorld()->GetTimerManager().SetTimer(SpawningTimer, this, &AEnemySpawn::SpawnSingleEnemy, SpawnInterval, true, 0.f);
 }
@@ -196,32 +207,58 @@ void AEnemySpawn::ParseRouteNumber(const FString& InRouteString)
 
 }
 
-int32 AEnemySpawn::GetNextMonsterID() const
+int32 AEnemySpawn::GetNextMonsterID()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("EnemyToBeSpawn: %i, ReaverNumber: %i, BossNumber: %i"), EnemyToBeSpawn, CurrentMiniWaveStat.ReaversNumber, CurrentMiniWaveStat.BossNumber)
-	if (CurrentMiniWaveStat.ReaversNumber || CurrentMiniWaveStat.BossNumber)
+	//TODO this implementation doesn't work as intended
+	if (GruntsLeft)
 	{
-		if (EnemyToBeSpawn <= CurrentMiniWaveStat.BossNumber)
-		{
-			return CurrentMiniWaveStat.BossID;
-		}
-		else
+		if (ReaversLeft)
 		{
 			switch (EnemyToBeSpawn % 2)
 			{
 			case 0:
+				GruntsLeft--;
 				return CurrentMiniWaveStat.GruntsID;
 			case 1:
+				ReaversLeft--;
 				return CurrentMiniWaveStat.ReaversID;
 			}
 		}
-	}
-	else
-	{
+		GruntsLeft--;
 		return CurrentMiniWaveStat.GruntsID;
 	}
+	if (ReaversLeft)
+	{
+		ReaversLeft--;
+		return CurrentMiniWaveStat.ReaversID;
+	}
+	MinotaursLeft--;
+	return CurrentMiniWaveStat.BossID;
+	// if (CurrentMiniWaveStat.ReaversNumber || CurrentMiniWaveStat.BossNumber)
+	// {
+	// 	if (EnemyToBeSpawn <= CurrentMiniWaveStat.BossNumber)
+	// 	{
+	// 		MinotaursLeft--;
+	// 		return CurrentMiniWaveStat.BossID;
+	// 	}
+	// 	else
+	// 	{
+	// 		switch (EnemyToBeSpawn % 2)
+	// 		{
+	// 		case 0:
+	// 			return CurrentMiniWaveStat.GruntsID;
+	// 		case 1:
+	// 			return CurrentMiniWaveStat.ReaversID;
+	// 		}
+	// 	}
+	// }
+	// else
+	// {
+	// 	return CurrentMiniWaveStat.GruntsID;
+	// }
 
-	return 0;
+	// return 0;
 }
 
 /*

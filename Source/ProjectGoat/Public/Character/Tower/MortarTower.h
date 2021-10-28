@@ -49,9 +49,9 @@ protected:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-#if WITH_EDITOR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent) override;
-#endif
+// #if WITH_EDITOR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+// 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangeEvent) override;
+// #endif
 
 public:
 

@@ -426,8 +426,8 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 	{
 		DefaultData = *BulkheadGameState->GetCharacterDataByID(CharacterID, Type);
 	}
-
-	UClass* NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
+	//Read access violation
+    UClass* NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
 
 	if (GetWorld() && NewClass)
 	{

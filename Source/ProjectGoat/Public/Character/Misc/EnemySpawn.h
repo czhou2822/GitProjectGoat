@@ -25,7 +25,7 @@ private:
 	FTimerHandle WaitingTimer;
 
 	int32 TimerTickCount;
-	
+
 	//active enemy for THIS spawn point
 	//TSet<class AEnemyBase*> ActiveEnemy;
 
@@ -52,6 +52,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 EnemyToBeSpawn;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 GruntsLeft;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 ReaversLeft;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 MinotaursLeft;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UArrowComponent* ArrowComp;
@@ -101,7 +110,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleOnMiniWaveComplete();
 
-	int32 GetNextMonsterID() const;
+	int32 GetNextMonsterID();
 
 	//find possible routes in this wave and light them up
 	void GetPossibleRoutesAndLight();
