@@ -17,7 +17,7 @@ public:
 	int32 BaseHP;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CPP")
-	int32 BaseHPDefault = 50;
+	int32 BaseHPDefault = 6;
 
 	// Sets default values for this actor's properties
 	ATrap();

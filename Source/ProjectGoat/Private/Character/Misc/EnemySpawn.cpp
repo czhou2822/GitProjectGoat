@@ -57,21 +57,26 @@ void AEnemySpawn::SpawnSingleEnemy()
 	{
 		int32 NextMonsterID = GetNextMonsterID();     //get next spawning monster's id
 
-		//TODO check if (NextMonsterID) then spawn if not just return
-
-		AEnemyBase* NewMonster = ProjectGoatGameMode->SpawnMonster(NextMonsterID, ArrowComp->GetComponentLocation(), ArrowComp->GetComponentRotation());  //spawning monster
-
-		if (NewMonster)
+		if (NextMonsterID)
 		{
-			NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetBaseNavPoint();    //set monster's base(destination) location
+			AEnemyBase *NewMonster = ProjectGoatGameMode->SpawnMonster(NextMonsterID, ArrowComp->GetComponentLocation(), ArrowComp->GetComponentRotation()); //spawning monster
+			
+			if (NewMonster)
+			{
+				NewMonster->BaseLocation = ProjectGoatGameMode->Base->GetBaseNavPoint(); //set monster's base(destination) location
 
-			NewMonster->NavPoints = GetNavPoints(GetNextRoute());  //set monster's nav points
+				NewMonster->NavPoints = GetNavPoints(GetNextRoute()); //set monster's nav points
 
-			ProjectGoatGameState->AddActiveEnemy(NewMonster);      //add to global monster list
+				ProjectGoatGameState->AddActiveEnemy(NewMonster); //add to global monster list
 
-			//ActiveEnemy.Add(NewMonster);                         //add to local monster list
+				//ActiveEnemy.Add(NewMonster);                         //add to local monster list
 
-			EnemyToBeSpawn--;
+				EnemyToBeSpawn--;
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid Monster ID"));
 		}
 	}
 	else
@@ -148,7 +153,12 @@ int32 AEnemySpawn::GetNextRoute()
 	}
 	else
 	{
-		return CurrentRoutes[EnemyToBeSpawn % CurrentRoutes.Num()];
+		if(CurrentRoutes.Num())
+		{
+			return CurrentRoutes[EnemyToBeSpawn % CurrentRoutes.Num()];
+		}
+		UE_LOG(LogTemp, Error, TEXT("Invalid Route"));
+		return 0;
 	}
 
 }
