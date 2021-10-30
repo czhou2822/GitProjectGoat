@@ -46,6 +46,9 @@ void AProjectGoatGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetGameState());
+	BulkheadPlayerState = Cast<ABulkheadPlayerState>(GetWorld()->GetGameState()->PlayerArray[0]);
+
 }
 
 
@@ -60,8 +63,7 @@ void AProjectGoatGameMode::Init()
 */
 void AProjectGoatGameMode::GetGMAndSpawnPointInScene()
 {
-	BulkheadGameState = Cast<ABulkheadGameState>(GetWorld()->GetGameState());
-	BulkheadPlayerState = Cast<ABulkheadPlayerState>(GetWorld()->GetGameState()->PlayerArray[0]);
+
 
 	OnPhaseChanged.AddDynamic(this, &AProjectGoatGameMode::HandleOnPhaseChanged);
 

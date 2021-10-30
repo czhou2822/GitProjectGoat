@@ -123,10 +123,14 @@ FCharacterData* ABulkheadGameState::GetCharacterDataByID(const int32& ID, const 
 	}
 	case ECharacterType::MONSTER:
 	{
-		if (CacheMonsterData.Contains(ID))
+		if (CacheMonsterData.Num())
 		{
-			return CacheMonsterData[ID];
+			if (CacheMonsterData.Contains(ID))
+			{
+				return CacheMonsterData[ID];
+			}
 		}
+
 	}
 	}
 	return nullptr;
