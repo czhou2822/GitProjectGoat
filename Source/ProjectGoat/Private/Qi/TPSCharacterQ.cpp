@@ -258,6 +258,7 @@ void ATPSCharacterQ::SelectTowerEnd()
 
 void ATPSCharacterQ::InputActionBuild()
 {
+
 	if (bIsConstructorPlacedDown)
 	{
 		if (BuildCounter)
@@ -289,10 +290,15 @@ void ATPSCharacterQ::InputActionBuild()
 						int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
 						Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
 
-						if (BulkheadPlayerState->ConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
+						if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
 						{
-							// BulkheadPlayerState->ConsumeCoin(Cost);
-							BuildSuccessed(SpawnedTower->GetActorLocation());
+							//success, build tower
+							//which tower are we trying to build?
+							ETowerType TowerType = BulkheadPlayerState->SelectedTower;
+
+							BulkheadPlayerState->ConsumeCoin(Cost);
+							BuildSuccessed(SpawnedTower->GetActorLocation(), TowerType);
+
 							//this->OnTowerPlaced.Broadcast();
 						}
 						else
@@ -319,17 +325,16 @@ void ATPSCharacterQ::InputActionBuild()
 * when constructor hits the floor, call this function
 * this function destroy uses preview's transform to spawn a new tower, and destroy the preview tower
 */
-void ATPSCharacterQ::TurnConstructorIntoTower()
+void ATPSCharacterQ::TurnConstructorIntoTower(ETowerType TowerType)
 {	if (SpawnedTower)
 	{
 		FTransform NewTransform = SpawnedTower->GetActorTransform();
+		FCharacterData newData;
 		SpawnedTower->Destroy();
 		SpawnedTower = nullptr;
 
-		FCharacterData newData;
+		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(TowerType), newData, NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
 
-		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(BulkheadPlayerState->SelectedTower), newData, NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
-		
 		if (TempTower) //if false->problem spawning 
 		{
 			//new tower has been built, reset the flag
@@ -477,7 +482,7 @@ int32 ATPSCharacterQ::GetTowerID(const ETowerType& InTowerType) const
 	int32 SpawnTowerID = 0;
 	if (BulkheadPlayerState)
 	{
-		switch (BulkheadPlayerState->SelectedTower)
+		switch (InTowerType)
 		{
 		case ETowerType::TESLA:
 			break;

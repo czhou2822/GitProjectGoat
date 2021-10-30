@@ -209,10 +209,10 @@ public:
 	void InputActionCancel();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
-	void BuildSuccessed(FVector BuildingLocation);
+	void BuildSuccessed(FVector BuildingLocation, ETowerType TowerType);
 
 	UFUNCTION(BlueprintCallable, Category = "TowerBuilding")
-	void TurnConstructorIntoTower();
+	void TurnConstructorIntoTower(ETowerType TowerType);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "TowerBuilding")
 	void BuildCancelled();

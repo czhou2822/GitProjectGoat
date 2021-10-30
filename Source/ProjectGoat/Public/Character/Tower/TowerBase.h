@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProjectGoat/ProjectGoatType.h"
 #include "Character/Core/BulkheadCharacterBase.h"
 #include "Delegates/Delegate.h"
 #include "Components/BoxComponent.h"
 #include "Sound/SoundWave.h"
 #include "TowerBase.generated.h"
+
 
 
 
