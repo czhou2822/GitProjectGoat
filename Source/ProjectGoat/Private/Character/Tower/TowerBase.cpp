@@ -94,23 +94,8 @@ void ATowerBase::HandleOnTowerPlaced(ATowerBase* SpawnedTower)
 		BulkheadGameState->OnTowerPlaced.RemoveDynamic(this, &ATowerBase::HandleOnTowerPlaced);
 		TPSCharacter->OnCharacterStartPlacing.AddDynamic(this, &ATowerBase::HandleOnCharacterStartPlacing);
 	}
+	
 	this->SetRangeVisibility(false);
-	if (OverlappedTower.Num())   //overlapped tower exist, delete tower
-	{
-		this->Destroy();
-		for (auto It = OverlappedTower.CreateConstIterator(); It; ++It)
-		{	
-			ATowerBase* Tower = Cast<ATowerBase>(*It);
-			FString AMessage;
-			FString BMessage;
-			FString Message;
-			AMessage = "overlap with";
-			BMessage = UKismetSystemLibrary::GetDisplayName(Tower);
-			Message = AMessage.Append(BMessage);
-			UKismetSystemLibrary::PrintString(this->GetWorld(), Message, true, true, FLinearColor(1, 0, 0, 0.5), 2.0);
-			return;
-		}
-	}
 	InternalTowerPlaced.Broadcast();
 	
 }
@@ -118,7 +103,7 @@ void ATowerBase::HandleOnTowerPlaced(ATowerBase* SpawnedTower)
 void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
 //	//UDecalComponent* Decal;
-	RangeMeshC->SetVisibility(InVisibility, false);
+	// RangeMeshC->SetVisibility(InVisibility, false);
 	UE_LOG(LogTemp, Warning, TEXT("Visibility Set to %i"), InVisibility);
 }
 

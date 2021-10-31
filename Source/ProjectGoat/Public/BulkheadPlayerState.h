@@ -48,6 +48,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ETowerType SelectedTower;
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBuildFailed);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnBuildFailed OnBuildFailed;
 
 public:
 

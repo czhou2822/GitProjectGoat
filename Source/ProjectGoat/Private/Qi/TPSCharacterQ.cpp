@@ -258,46 +258,44 @@ void ATPSCharacterQ::SelectTowerEnd()
 
 void ATPSCharacterQ::InputActionBuild()
 {
-
-	if (bIsConstructorPlacedDown)
+	if (BuildCounter)
 	{
-		if (BuildCounter)
+		SpawnedTower = WhichTower();
+		if (SpawnedTower)
 		{
-			SpawnedTower = WhichTower();
+			PulloutBuildingCamera();
+			IsCharacterPlacingTower = true;
+			this->OnCharacterStartPlacing.Broadcast(true);
+			GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
+			BuildCounter = false;
+		}
+	}
+	else
+	{
+		if (IsCharacterPlacingTower == true)
+		{
+			//tower preview is valid
 			if (SpawnedTower)
 			{
-				PulloutBuildingCamera();
-				IsCharacterPlacingTower = true;
-				this->OnCharacterStartPlacing.Broadcast(true);
-				GetWorld()->GetTimerManager().SetTimer(TowerAdjustTimer, this, &ATPSCharacterQ::AdjustTowerLocation, 0.016667f, true, 0.f);
-				BuildCounter = false;
-			}
-		}
-		else
-		{
-			if (IsCharacterPlacingTower == true)
-			{
-				//tower preview is valid
-				if (SpawnedTower)
+				IsCharacterPlacingTower = false;
+				//from here, the player has thrown the constructor out -> constructor is in the air -> IsConstructorPlacedDown = false
+				bIsConstructorPlacedDown = false;
+
+				if (BulkheadGameState && BulkheadPlayerState)
 				{
-					IsCharacterPlacingTower = false;
-					//from here, the player has thrown the constructor out -> constructor is in the air -> IsConstructorPlacedDown = false
-					bIsConstructorPlacedDown = false;
+					int32 Cost = 0;
+					int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
+					Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
 
-					if (BulkheadGameState && BulkheadPlayerState)
+					if (SpawnedTower->bCanBeBuilt)
 					{
-						int32 Cost = 0;
-						int32 TowerID = GetTowerID(BulkheadPlayerState->SelectedTower);
-						Cost = BulkheadGameState->GetCharacterDataByID(TowerID)->Gold;
-
-						if (BulkheadPlayerState->CanConsumeCoin(Cost) && SpawnedTower->bCanBeBuilt)
+						if(BulkheadPlayerState->ConsumeCoin(Cost))
 						{
 							//success, build tower
 							//which tower are we trying to build?
 							ETowerType TowerType = BulkheadPlayerState->SelectedTower;
 
-							BulkheadPlayerState->ConsumeCoin(Cost);
-							BuildSuccessed(SpawnedTower->GetActorLocation(), TowerType);
+							BuildSuccessed(SpawnedTower, TowerType);
 
 							//this->OnTowerPlaced.Broadcast();
 						}
@@ -308,39 +306,46 @@ void ATPSCharacterQ::InputActionBuild()
 							SpawnedTower->Destroy();
 							SpawnedTower = nullptr;
 							bIsConstructorPlacedDown = true;
+							BulkheadPlayerState->OnBuildFailed.Broadcast();
 						}
 					}
-					GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
-					ResetBuildingCamera();
-					this->OnCharacterStartPlacing.Broadcast(false);
-					BuildCounter = true;
+					else
+					{
+						//if the build action is invalid, reset hologram tower & reset flags
+						BuildCancelled();
+						SpawnedTower->Destroy();
+						SpawnedTower = nullptr;
+						bIsConstructorPlacedDown = true;
+						BulkheadPlayerState->OnBuildFailed.Broadcast();
+					}
 				}
+				GetWorld()->GetTimerManager().ClearTimer(TowerAdjustTimer);
+				ResetBuildingCamera();
+				this->OnCharacterStartPlacing.Broadcast(false);
+				BuildCounter = true;
 			}
 		}
 	}
-
 }
 
 /*
 * when constructor hits the floor, call this function
 * this function destroy uses preview's transform to spawn a new tower, and destroy the preview tower
 */
-void ATPSCharacterQ::TurnConstructorIntoTower(ETowerType TowerType)
-{	if (SpawnedTower)
+void ATPSCharacterQ::TurnConstructorIntoTower(ATowerBase* HoloTower, ETowerType TowerType)
+{
+	FTransform NewTransform = HoloTower->GetActorTransform();
+	FCharacterData newData;
+	HoloTower->Destroy();
+	HoloTower = nullptr;
+
+	ATowerBase *TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(TowerType), newData, NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
+
+	if (TempTower) //if false->problem spawning
 	{
-		FTransform NewTransform = SpawnedTower->GetActorTransform();
-		FCharacterData newData;
-		SpawnedTower->Destroy();
-		SpawnedTower = nullptr;
-
-		ATowerBase* TempTower = Cast<AProjectGoatGameMode>(GetWorld()->GetAuthGameMode())->SpawnTower(GetTowerID(TowerType), newData, NewTransform.GetLocation(), NewTransform.GetRotation().Rotator());
-
-		if (TempTower) //if false->problem spawning 
-		{
-			//new tower has been built, reset the flag
-			bIsConstructorPlacedDown = true;
-			BulkheadGameState->OnTowerPlaced.Broadcast(TempTower);
-		}
+		//new tower has been built, reset the flag
+		bIsConstructorPlacedDown = true;
+		BulkheadGameState->OnTowerPlaced.Broadcast(TempTower);
 	}
 }
 

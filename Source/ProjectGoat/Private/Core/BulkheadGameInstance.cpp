@@ -81,7 +81,7 @@ bool UBulkheadGameInstance::SaveLevelInfo()
 	auto GameMode = GetWorld()->GetAuthGameMode<AProjectGoatGameMode>();
 	if (GameMode)
 	{
-		BulkheadSaveGame->LevelData.WaveNumber = GameMode->WaveNumber;
+		BulkheadSaveGame->LevelData.WaveNumber = GameMode->WaveNumber - 1;
 		BulkheadSaveGame->LevelData.BaseHP = GameMode->GM->Base->BaseHP;
 	}
 
