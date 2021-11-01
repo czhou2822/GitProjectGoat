@@ -15,6 +15,12 @@ class PROJECTGOAT_API UBulkheadGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameEnds, bool, bDidGameEndWithSuccess);
+
+	UPROPERTY(BlueprintAssignable, Category = "CPP")
+	FOnGameEnds OnGameEnds;
+
 	UPROPERTY(BlueprintReadWrite, Category = "CPP | Save")
 	class UBulkheadSaveGame* BulkheadSaveGame = nullptr;
 
@@ -47,4 +53,12 @@ public:
 		bool SaveTowerInfo();
 	UFUNCTION(BlueprintCallable, Category = "CPP | Save")
 		bool LoadTowerInfo();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP | Save")
+		void DeleteGameSave();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void BoardcastGameEnds(bool DidGameEndSuccess);
+
+
 };
