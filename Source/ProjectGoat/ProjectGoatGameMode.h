@@ -174,7 +174,10 @@ public:
 	*/
 	void PostCombatCheck();
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimerTick, int32, TickCount);
 
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnTimerTick OnTimerTick;
 
 };
 

@@ -271,6 +271,7 @@ void AProjectGoatGameMode::PhaseTimerTick()
 			return;
 		}
 		PhaseTickCount--;
+		OnTimerTick.Broadcast(PhaseTickCount);
 	}
 	else
 	{
@@ -345,7 +346,7 @@ void AProjectGoatGameMode::StartBuildingToCombatPhase(const int32& InWaveNumber)
 
 void AProjectGoatGameMode::StartCombatPhase()
 {
-	// OnStartCombatWave.Broadcast();
+	
 }
 
 void AProjectGoatGameMode::StartPostCombatPhase()
