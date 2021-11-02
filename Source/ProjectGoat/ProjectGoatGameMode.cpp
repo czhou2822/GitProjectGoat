@@ -389,7 +389,7 @@ void AProjectGoatGameMode::CheckIfGameEnd()
 	}
 }
 
-void AProjectGoatGameMode::EndGame(const bool& Success)
+void AProjectGoatGameMode::EndGame(const bool Success)
 {
 	UE_LOG(LogTemp, Warning, TEXT("end game function"));
 	bIsGameEnd = true;
@@ -401,7 +401,12 @@ void AProjectGoatGameMode::EndGame(const bool& Success)
 		//UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/EndGameLevel"), true);
 	}
 
-	OnGameEnd.Broadcast(Success);
+	//OnGameEnd.Broadcast(Success);
+	auto GameInstance = Cast< UBulkheadGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->BoardcastGameEnds(Success);
+	}
 }
 
 void AProjectGoatGameMode::PostCombatCheck()

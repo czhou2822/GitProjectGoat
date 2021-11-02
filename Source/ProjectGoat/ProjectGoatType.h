@@ -77,7 +77,7 @@ struct FLevelData
 	TArray<FCharacterData> TowerDataList;
 	
 	UPROPERTY(BlueprintReadWrite)
-	int32 WaveNumber;
+	int32 WaveNumber = 0;
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 BaseHP;

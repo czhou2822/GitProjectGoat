@@ -133,27 +133,6 @@ bool UBulkheadGameInstance::SaveTowerInfo()
 	}
 
 
-	//if (GameState)
-	//{
-	//	int TowerNumber = GameState->ActiveTowers.Num();
-
-	//	if (TowerNumber)
-	//	{
-	//		BulkheadSaveGame->LevelData.TowerDataList.Empty();
-	//		BulkheadSaveGame->LevelData.TowerLocationList.Empty();
-
-	//		for (auto Tower : GameState->ActiveTowers)
-	//		{
-	//			if (Tower)
-	//			{
-	//				BulkheadSaveGame->LevelData.TowerDataList.Add(Tower->GetCharacterData());
-	//				BulkheadSaveGame->LevelData.TowerLocationList.Add(Tower->GetActorTransform());
-	//			}
-	//		}
-
-	//	}
-	//}
-
 	return true;
 }
 
@@ -173,9 +152,28 @@ bool UBulkheadGameInstance::LoadTowerInfo()
 				NewTower->OnConstructionComplete.Broadcast();
 			}
 		}
-
-
 	}
 
 	return true;
+}
+
+void UBulkheadGameInstance::DeleteGameSave()
+{
+	///*
+	//reset the save data = > reset wave number to 0
+	//yes, we are not delete the game save and recreate it
+	//we simply reset the save data
+	//because the save button checks for whether the saved number is 0 
+	//if so, loading the 0th wave is equivelent to loading a new game => no save data
+	//if not, load the saved game
+	//*/
+	UGameplayStatics::DeleteGameInSlot(SaveSlotName, 0);
+	BulkheadSaveGame = NewObject<UBulkheadSaveGame>();
+}
+
+void UBulkheadGameInstance::BoardcastGameEnds(bool DidGameEndSuccess)
+{
+	if (DidGameEndSuccess)DeleteGameSave();
+
+	OnGameEnds.Broadcast(DidGameEndSuccess);
 }

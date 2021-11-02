@@ -22,10 +22,10 @@ class AProjectGoatGameMode : public AGameMode
 		
 public:
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameEnd, bool, bIsGameEndSuccess);
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameEnd, bool, bIsGameEndSuccess);
 
-	UPROPERTY(BlueprintAssignable, Category = "C++")
-	FOnGameEnd OnGameEnd;
+	//UPROPERTY(BlueprintAssignable, Category = "C++")
+	//FOnGameEnd OnGameEnd;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPhaseChanged, EGamePhase, OutGamePhase);
 
@@ -36,6 +36,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GamePhase")
 	FOnStartCombatWave OnStartCombatWave;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimerTick, int32, TickCount);
+
+	UPROPERTY(BlueprintAssignable, Category = "C++")
+	FOnTimerTick OnTimerTick;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ABulkheadGameState* BulkheadGameState;
@@ -167,17 +172,14 @@ public:
 	void CheckIfGameEnd();
 
 	UFUNCTION(BlueprintCallable, Category = "C++")
-	void EndGame(const bool& Success);
+	void EndGame(const bool Success);
 
 	/*
 	called when its postcombat. postcombat will be terminate early if all enemy were killed
 	*/
 	void PostCombatCheck();
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimerTick, int32, TickCount);
 
-	UPROPERTY(BlueprintAssignable, Category = "C++")
-	FOnTimerTick OnTimerTick;
 
 };
 
