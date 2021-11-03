@@ -166,7 +166,7 @@ void ATPSCharacterQ::AimStart()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->MaxWalkSpeed = 300;
-	SpringArm->SetRelativeLocation(AimOffsetTranslation);
+	// SpringArm->SetRelativeLocation(AimOffsetTranslation);
 	Camera->SetRelativeRotation(AimOffsetRotator);
 	AimStartBlueprintInterface();
 	OnCharacterAims.Broadcast(bAiming);
@@ -178,7 +178,7 @@ void ATPSCharacterQ::AimEnd()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = 600;
-	SpringArm->SetRelativeLocation(FVector(0, 0, 0));
+	// SpringArm->SetRelativeLocation(FVector(0, 0, 0));
 	Camera->SetRelativeRotation(FRotator(0, 0, 0));
 	AimEndBlueprintInterface();
 	OnCharacterAims.Broadcast(bAiming);
