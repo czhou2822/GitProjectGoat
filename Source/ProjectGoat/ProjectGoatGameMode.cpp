@@ -56,6 +56,8 @@ void AProjectGoatGameMode::Init()
 {
 	GetGMAndSpawnPointInScene();
 	ReadDataFromGM();
+
+	BulkheadGameState->StartCachingDataTableAndBPAsset();
 }
 
 /*
@@ -435,7 +437,20 @@ ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
 		DefaultData = *BulkheadGameState->GetCharacterDataByID(CharacterID, Type);
 	}
 	//Read access violation
-    UClass* NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
+	UClass* NewClass = nullptr; 
+
+	if (BulkheadGameState->CacheBPAsset.Contains(DefaultData.Name.ToString()))
+	{
+		NewClass = BulkheadGameState->CacheBPAsset[DefaultData.Name.ToString()];
+	}
+	else
+	{
+		NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
+	}
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("NewClass name: %s"), *NewClass->GetFName().ToString());
+
 
 	if (GetWorld() && NewClass)
 	{

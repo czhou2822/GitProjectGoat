@@ -75,13 +75,16 @@ public:
 
 	TMap<int32, FSpawnWaveDetail*> CacheSpawnWaveData;
 
+	UPROPERTY(BlueprintReadOnly, Category = "CPP")
+	TMap<FString, UClass*> CacheBPAsset;
+
 	//used to store prioritized enemy. e.g. the tower should attack whichever target thats slowed by player. 
 	//Only when these objects are out of range, can the tower attack the closest target within ITS range.
 	UPROPERTY(BlueprintReadWrite, Category = "C++")
 	TSet<AEnemyBase*> PrioritizedEnemyList;
 
 	UPROPERTY(BlueprintReadOnly, Category = "C++")
-	int32 ActiveEnemyCounts;
+	int32 ActiveEnemyCounts = 0;
 
 
 
@@ -142,6 +145,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PrioritizedList")
 	void DeleteFromPrioritizedList(AEnemyBase* InEnemy);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+	void StartCachingDataTableAndBPAsset();
 
 	void CheckIfInDebug(bool DebugMode);
 

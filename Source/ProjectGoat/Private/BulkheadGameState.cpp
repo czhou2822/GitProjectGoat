@@ -18,7 +18,6 @@ FCharacterData CharacterDataNULL;
 
 
 ABulkheadGameState::ABulkheadGameState()
-	:ActiveEnemyCounts(0)
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> GruntTable(TEXT("/Game/DataTable/DataTable_Monster"));
 	MonsterDataTable = GruntTable.Object;
@@ -32,9 +31,11 @@ ABulkheadGameState::ABulkheadGameState()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DebugWaveStructTable(TEXT("/Game/DataTable/DataTable_Debug"));
 	DebugWaveStructDataTable = DebugWaveStructTable.Object;
 
-	CacheTowerData = ReadDataFromTable(TowerDataTable);
+	CacheBPAsset.Empty();
 
-	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
+	CacheTowerData.Empty();
+
+	CacheMonsterData.Empty();
 
 	OnTowerPlaced.AddDynamic(this, &ABulkheadGameState::HandleOnTowerPlaced);
 
@@ -103,6 +104,7 @@ TMap<int32, FCharacterData*> ABulkheadGameState::ReadDataFromTable(UDataTable* I
 	for (FCharacterData* Tmp : TempArray)
 	{
 		OutTMap.Add(Tmp->ID, Tmp);
+		CacheBPAsset.Add(Tmp->Name.ToString(), Tmp->CharacterBlueprintKey.LoadSynchronous());
 	}
 
 	return OutTMap;
@@ -217,6 +219,13 @@ void ABulkheadGameState::DeleteFromPrioritizedList(AEnemyBase* InEnemy)
 	{
 		PrioritizedEnemyList.Remove(InEnemy);
 	}
+}
+
+void ABulkheadGameState::StartCachingDataTableAndBPAsset()
+{
+	CacheTowerData = ReadDataFromTable(TowerDataTable);
+
+	CacheMonsterData = ReadDataFromTable(MonsterDataTable);
 }
 
 void ABulkheadGameState::CheckIfInDebug(bool DebugMode)

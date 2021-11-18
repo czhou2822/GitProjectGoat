@@ -104,13 +104,13 @@ void ATowerBase::SetRangeVisibility(bool InVisibility)
 {
 //	//UDecalComponent* Decal;
 	// RangeMeshC->SetVisibility(InVisibility, false);
-	UE_LOG(LogTemp, Warning, TEXT("Visibility Set to %i"), InVisibility);
+	UE_LOG(LogTemp, Verbose, TEXT("Visibility Set to %i"), InVisibility);
 }
 
 void ATowerBase::HandleOnCharacterStartPlacing(bool PlacingMode)
 {
 	this->SetRangeVisibility(PlacingMode);
-	UE_LOG(LogTemp, Warning, TEXT("handle on character start placing by %s"), *GetName());
+	UE_LOG(LogTemp, Verbose, TEXT("handle on character start placing by %s"), *GetName());
 
 }
 
