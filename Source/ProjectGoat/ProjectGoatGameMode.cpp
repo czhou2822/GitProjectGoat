@@ -425,28 +425,37 @@ void AProjectGoatGameMode::PostCombatCheck()
 }
 
 ABulkheadCharacterBase* AProjectGoatGameMode::SpawnCharacter(
-	const int32& CharacterID, 
+	const int32& CharacterID,
 	const ECharacterType& Type,
 	const FVector& Location,
 	const FRotator& Rotator,
-	FCharacterData DefaultData 
-	)
+	FCharacterData DefaultData
+)
 {
+	FCharacterData* FoundData = nullptr;
+	UClass* NewClass = nullptr;
+
 	if (DefaultData.Name == EName::NAME_None)
 	{
-		DefaultData = *BulkheadGameState->GetCharacterDataByID(CharacterID, Type);
-	}
-	//Read access violation
-	UClass* NewClass = nullptr; 
+		FoundData = BulkheadGameState->GetCharacterDataByID(CharacterID, Type);
 
-	if (BulkheadGameState->CacheBPAsset.Contains(DefaultData.Name.ToString()))
-	{
-		NewClass = BulkheadGameState->CacheBPAsset[DefaultData.Name.ToString()];
+		//if found (data successfully cached)
+		if (FoundData)
+		{
+			DefaultData = *FoundData;
+			if (BulkheadGameState->CacheBPAsset.Contains(DefaultData.Name.ToString()))
+			{
+				NewClass = BulkheadGameState->CacheBPAsset[DefaultData.Name.ToString()];
+			}
+		}
+
+		if(!NewClass)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("CharacterID: %i, Type: %i is not valid. "), CharacterID, Type);
+			return nullptr;
+		}
 	}
-	else
-	{
-		NewClass = DefaultData.CharacterBlueprintKey.LoadSynchronous();
-	}
+
 
 	
 	UE_LOG(LogTemp, Warning, TEXT("NewClass name: %s"), *NewClass->GetFName().ToString());

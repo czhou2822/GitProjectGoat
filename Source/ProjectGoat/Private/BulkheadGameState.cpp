@@ -116,24 +116,24 @@ FCharacterData* ABulkheadGameState::GetCharacterDataByID(const int32& ID, const 
 {
 	switch (Type)
 	{
-	case ECharacterType::TOWER:
-	{
-		if (CacheTowerData.Contains(ID))
+		case ECharacterType::TOWER:
 		{
-			return CacheTowerData[ID];
-		}
-	}
-	case ECharacterType::MONSTER:
-	{
-		if (CacheMonsterData.Num())
-		{
-			if (CacheMonsterData.Contains(ID))
+			if (CacheTowerData.Contains(ID))
 			{
-				return CacheMonsterData[ID];
+				return CacheTowerData[ID];
 			}
 		}
+		case ECharacterType::MONSTER:
+		{
+			if (CacheMonsterData.Num())
+			{
+				if (CacheMonsterData.Contains(ID))
+				{
+					return CacheMonsterData[ID];
+				}
+			}
 
-	}
+		}
 	}
 	return nullptr;
 }
